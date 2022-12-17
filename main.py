@@ -147,15 +147,28 @@ class NodeBase(Base):
                          amount_needed_per_craft)
         NodeBase.instances += 1
         self.parent = parent
-        if self.parent is not None and not isinstance(self.parent,NodeBase):
+        if self.parent is not None and not isinstance(self.parent, NodeBase):
             raise TypeError('')
         self.generation = 0
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
 
+def head(node : NodeBase)-> NodeBase:
+    """add docstring"""
+    while node.parent is not None:
+        node = node.parent
+    return node
+def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
+    """add docstring"""
+    return NodeBase(ingredient, parent_node)
+
+
+def populate(parent_node: NodeBase) -> NodeBase:
+    """add docstring"""
+    return parent_node
 
 if __name__ == '__main__':
     itemname: str = input('What is the name of the item you want to create')
-#!    ingredient_tree: Node = populate(Node(itemname))
+    ingredient_tree: NodeBase = populate(NodeBase(itemname))
     print('terminating process')
