@@ -4,7 +4,7 @@ final version of the python process map
 """
 
 
-class Node:
+class QueueNode:
     """Node class for Queue"""
     index: int
     data = None
@@ -36,13 +36,13 @@ class Queue:
     - implement in csv -> node creation method
     - implement in populate()
     """
-    head: Node = None
+    head: QueueNode = None
     size: int = 0
 
     # functions
-    def __get_end(self) -> Node:
+    def __get_end(self) -> QueueNode:
         """get the endpoint node of the data structure"""
-        current: Node = self.head
+        current: QueueNode = self.head
         while current.after is not None:
             current = current.after
         return current
@@ -50,14 +50,14 @@ class Queue:
     def __set_index(self):
         """set the index of all the nodes"""
         if not self.is_empty():
-            current: Node = self.head
+            current: QueueNode = self.head
             new_index: int = 0
             while current.after is not None:
                 current.set_index(new_index)
                 current = current.after
 
     @classmethod
-    def __check_data_typing(cls, old_node: Node, new_data):
+    def __check_data_typing(cls, old_node: QueueNode, new_data):
         """make sure that the data enqueued is the same type"""
         if not isinstance(old_node.data, type(new_data)):
             raise TypeError('data is not an instance of', type(old_node.data))
@@ -75,13 +75,13 @@ class Queue:
     def enqueue(self, data):
         """enqueue data into the queue instance"""
         if self.is_empty():
-            self.head = Node(None, data, None)
+            self.head = QueueNode(None, data, None)
         else:
             # append a new node to the end of the queue
-            old_endpoint: Node = self.__get_end()
+            old_endpoint: QueueNode = self.__get_end()
             self.__check_data_typing(old_endpoint, data)
             # link Node pointers of old and new endpoint
-            new_endpoint: Node = Node(old_endpoint, data, None)
+            new_endpoint: QueueNode = QueueNode(old_endpoint, data, None)
             old_endpoint.after = new_endpoint
         # set the new indicies
         self.__set_index()
@@ -91,9 +91,9 @@ class Queue:
     def dequeue(self) -> None:
         """dequeue data from the queue instance"""
         if not self.is_empty():
-            old_head_node: Node = self.head
+            old_head_node: QueueNode = self.head
             return_data = old_head_node.data
-            new_head_node: Node = None
+            new_head_node: QueueNode = None
             if old_head_node.after is not None:
                 new_head_node = old_head_node.after
                 new_head_node.before = None
@@ -109,6 +109,50 @@ class Queue:
         self.head = None
         self.size = 0
 # end def
+
+
+class Base:
+    """add docstring"""
+    ingredient: str = ''
+    amount_on_hand: int = 0
+    amount_made_per_craft: int = 0
+    amount_needed_per_craft: int = 0
+    amount_resulted: int = 0
+
+    def __init__(self, ingredient: str = '',
+                 amount_on_hand: int = 0,
+                 amount_made_per_craft: int = 0,
+                 amount_needed_per_craft: int = 0) -> None:
+        self.ingredient = ingredient
+        self.amount_on_hand = amount_on_hand
+        self.amount_made_per_craft = amount_made_per_craft
+        self.amount_needed_per_craft = amount_needed_per_craft
+        self.amount_resulted = 0
+
+
+class NodeBase(Base):
+    """add docstring"""
+    parent = None
+    children: list = []
+    instances: int = -1
+    generation: int = -1
+
+    def __init__(self, ingredient: str = '',
+                 parent=None,
+                 amount_on_hand: int = 0,
+                 amount_made_per_craft: int = 0,
+                 amount_needed_per_craft: int = 0) -> None:
+        super().__init__(ingredient, amount_on_hand,
+                         amount_made_per_craft,
+                         amount_needed_per_craft)
+        NodeBase.instances += 1
+        self.parent = parent
+        if self.parent is not None and not isinstance(self.parent,NodeBase):
+            raise TypeError('')
+        self.generation = 0
+        if self.parent is not None:
+            self.parent.children.append(self)
+            self.generation = self.parent.generation+1
 
 
 if __name__ == '__main__':
