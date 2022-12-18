@@ -157,7 +157,7 @@ class Ingredient(Base):
         Ingredient.instances += 1
 
 
-def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:  # todo debug
+def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:  # todo finish
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
@@ -220,15 +220,21 @@ def populate(parent_node: Ingredient) -> Ingredient:
     return parent_node
 
 
-def population_count(head_node: Ingredient, node_count: int = 1) -> int: #todo debug
-    """counts the amount of nodes present in the ingredient tree"""
-    for sub_node in head_node.children:
-        population_count(sub_node, node_count)
-        node_count += 1
-    return node_count
+def population_count(head_node: Ingredient) -> int:  # ! re-do/fix later
+    """
+    creates a queue of all ingredient names from each node then returns the size of that
+    queue which is equal to the population of the ingredient tree
+    """
+    if head_node is not None:
+        node_queue: Queue = find_all(head_node, Queue())
+        node_count: int = node_queue.size
+        while not node_queue.is_empty():
+            node_queue.dequeue()
+        return node_count
+    return 0
 
 
-def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue: #! remove later
+def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove later
     """debug function - see how many ingredients are in the queue"""
     queue_nodes.enqueue(head_node)
     for sub_node in head_node.children:
