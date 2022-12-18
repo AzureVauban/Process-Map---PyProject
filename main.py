@@ -173,30 +173,49 @@ class Stack:
     def push(self, data):
         """
         push data onto the stack instance
-        
+
         stack : -----   empty
         stack : 0|      size = 1
         stack : 0|1     size = 2
         stack : 0|1|2   size = 3
         popping order:  2,1,0,None (if pop is repeated > size, output None)
-        """ 
+        """
         if self.is_empty():
-            #? overwrite the head Node
-            self.head = Node(None,data,None)
-        #? get the endpoint node and append a new node after that
-        
+            # ? overwrite the head Node
+            self.head = Node(None, data, None)
+        else:
+            # ? get the endpoint node and append a new node after that
+            old_endpoint: Node = self.__get_end()
+            new_endpoint: Node = Node(old_endpoint, data, None)
+            old_endpoint.after = new_endpoint
+            self.__set_index()
+        self.size += 1
 
-    def pop(self) -> None: #! remove the first node (last-in, first-out), make a new head node
-        """
-         stack : -----   empty
-        stack : 0|      size = 1
-        stack : 0|1     size = 2
-        stack : 0|1|2   size = 3
-        popping order:  2,1,0,None (if pop is repeated > size, output None)
-        """
-        if not self.is_empty():
-            pass
+    def pop(self) -> None:  # ! remove the first node (last-in, first-out), make a new endpoint node
+        """pop the node last inserted into the stack instance"""
+        if not self.is_empty() and self.size != 1:
+            old_endpoint : Node = self.__get_end()
+            return_value = old_endpoint.data
+            new_endpoint : Node = None
+            if old_endpoint.before is not None:
+                #? destroy the link the the endpoint and the node before it (if its not NULL)
+                new_endpoint = old_endpoint.before
+                new_endpoint.after = None
+                old_endpoint.before = None
+                old_endpoint = None
+                del old_endpoint
+            self.size -=1
+            return return_value
+        if not self.is_empty() and self.size == 1:
+            return_value = self.head.data
+            self.head = None
+            self.size
+            return return_value
         return None
+
+    def __init__(self) -> None:
+        self.head = None
+        self.size = 0
 
 
 class Base:
@@ -352,15 +371,11 @@ if __name__ == '__main__':
     #!queue_of_ingredient.help(True)  # ! remove later, for debug purposes
     # for _ in range(queue_of_ingredient.size):
     #    print(_+1, queue_of_ingredient.dequeue().ingredient_name)
-    queue_of_num: Queue = Queue()
     stack_of_num: Stack = Stack()
-    for _ in range(10):
-        nth_term: int = fib(2+_)
-        queue_of_num.enqueue(nth_term)
-        stack_of_num.push(nth_term)
-    for _ in range(10):
-        print('\x1B[34mdequeuing\x1B[0m/\x1B[31mpopping\x1B[0m: ' +
-              '\x1B[34m'+str(queue_of_num.dequeue()) +
-              '\x1B[0m/\x1B[31m'+str(stack_of_num.pop()) +
-              '\x1B[0m')
+    stack_of_num.push(0)
+    stack_of_num.push(1)
+    stack_of_num.push(2)
+    for _ in range(4):
+        popped_value = stack_of_num.pop()
+        print(popped_value)
     print('terminating process')
