@@ -12,7 +12,10 @@ class ProgramState(Enum):
     """
     MODE_A = 0  # recursive arithmetic (amountresulted)
     MODE_B = 1  # inverse recursive arithmetic (amountonhand)
-PROGRAM_MODE_ENUM: ProgramState = ProgramState.MODE_A
+
+
+program_mode: ProgramState = ProgramState.MODE_A
+
 
 class Node:
     """Node class for Queue and Stack"""
@@ -358,44 +361,6 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
 
 def superpopulate() -> Ingredient:
     """main process for creating ingredient tree"""
-    # prompt the user for what program mode they want to use
-    # prompt program mode
-    print('Welcome to Process Map (Python) v2.0!\n')
-    # program runtime loop
-    while True:
-        print('Which mode do you want to use:')
-        print('Mode A - You are trying to figure out how much of your desired'
-              ' item you can make with the current supply of materials'
-              ' (Type in A)')
-        print('Mode B - You are trying to figure out how much base materials'
-              ' you need to create a certain amount of your desired item, ('
-              'Type in B)')
-        print("Type in 'H' if you need a reminder of the prompt\n")
-        # prompt user which mode they want to run the program in
-        while True:
-            userinput = input('').strip().upper()
-            if userinput not in ('A', 'B', 'H'):
-                print("That input is not valid, please type in 'A' or 'B'")
-            elif len(userinput) > 1:
-                print('Your input is too long, please only type in one'
-                      'character')
-            elif userinput == 'B':
-                program_mode = ProgramState.MODE_B
-                break
-            elif userinput == 'H':
-                # print prompt again
-                print('Which mode do you want to use:')
-                print('Mode A - You are trying to figure out how much of your'
-                      ' desired item you can make with the current supply of'
-                      ' materials (Type in A)')
-                print('Mode B - You are trying to figure out how much base'
-                      ' materials you need to create a certain amount of your'
-                      ' desired item, (Type in B)')
-                print("Type in 'H' if you need a reminder of the prompt\n")
-            else:
-                program_mode = ProgramState.MODE_A
-                break
-            
     # prompt the user for the name of the item they want to create
     while True:
         itemname: str = input(
@@ -409,6 +374,7 @@ def superpopulate() -> Ingredient:
 
 
 if __name__ == '__main__':
+    # create ingredient tree
     ingredient_tree: Ingredient = superpopulate()
     population_count_str: str = str(population_count(ingredient_tree))
     print('current population: ', end=population_count_str+'\n')
