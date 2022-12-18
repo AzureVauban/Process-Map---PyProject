@@ -261,7 +261,7 @@ class Ingredient(Base):
         Ingredient.instances += 1
 
 
-def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:  # todo finish
+def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
@@ -346,7 +346,7 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
     return queue_nodes
 
 
-def superpopulate() -> Ingredient:  # todo finish (should tree be written in queue order or stack order onto the csv file)
+def superpopulate() -> Ingredient:
     """main process for creating ingredient tree"""
     while True:
         itemname: str = input(
