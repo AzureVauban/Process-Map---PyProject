@@ -130,7 +130,7 @@ class Base:
         self.amount_resulted = 0
 
 
-class NodeBase(Base):
+class Ingredient(Base):
     """add docstring"""
     parent = None
     children: list = []
@@ -148,16 +148,16 @@ class NodeBase(Base):
                          amount_needed_per_craft)
         self.parent = parent
         self.children = []
-        if self.parent is not None and not isinstance(self.parent, NodeBase):
-            raise TypeError('must be an instance of', NodeBase, 'or None')
+        if self.parent is not None and not isinstance(self.parent, Ingredient):
+            raise TypeError('must be an instance of', Ingredient, 'or None')
         self.generation = 0
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
-        NodeBase.instances += 1
+        Ingredient.instances += 1
 
 
-def search(parent_node: NodeBase, ingredient_name: str, current_results: dict) -> dict:
+def search(parent_node: Ingredient, ingredient_name: str, current_results: dict) -> dict:  # todo debug
     """return a dictionary of nodes with the same ingredient name"""
     for sub_node in parent_node.children:
         if sub_node.ingredient_name == ingredient_name:
@@ -169,31 +169,32 @@ def search(parent_node: NodeBase, ingredient_name: str, current_results: dict) -
     return current_results
 
 
-def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
+def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:  # todo debug
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
     # check if nodes with the same ingredient name exist
-    search_results: dict = search(parent_node, ingredient_name, {})
+    #! search_results: dict = search(parent_node, ingredient_name, {})
+    search_results: dict = {-1: None}
     if search_results == {-1: None}:
         # ? if there are no nodes with the same ingredient name found
-        return NodeBase(ingredient_name, parent_node)
+        return Ingredient(ingredient_name, parent_node)
     # output choices
     index_node: int = 0
     for sub_node in search_results.items():
-        if not isinstance(sub_node[1], NodeBase):
+        if not isinstance(sub_node[1], Ingredient):
             raise TypeError(
-                'search dictionary is not a key value pair of instances of', NodeBase)
+                'search dictionary is not a key value pair of instances of', Ingredient)
         print(index_node,
               sub_node[1].amount_on_hand,
               sub_node[1].amount_made_per_craft,
               sub_node[1].amount_needed_per_craft)
     # ? if the user does not want to select any nodes with the same ingredient name
-    return NodeBase(ingredient_name, parent_node)
+    return Ingredient(ingredient_name, parent_node)
 
 
-def trail(current: NodeBase):
+def trail(current: Ingredient):
     """
     print the ingredient trail leading up to the parent most Node
     Args:
@@ -209,14 +210,14 @@ def trail(current: NodeBase):
             break
 
 
-def head(node: NodeBase) -> NodeBase:
+def head(node: Ingredient) -> Ingredient:
     """add docstring"""
     while node.parent is not None:
         node = node.parent
     return node
 
 
-def populate(parent_node: NodeBase) -> NodeBase:
+def populate(parent_node: Ingredient) -> Ingredient:
     """
     creates an ingredient tree by prompting the user to type in the name of the sub-ingredients
     """
@@ -224,6 +225,8 @@ def populate(parent_node: NodeBase) -> NodeBase:
     print('what do you need to create', parent_node.ingredient_name, end=':\n')
     user_inputs: Queue = Queue()
     ingredient_blacklist: list = [parent_node.ingredient_name]
+    for sub_node in parent_node.children:
+        ingredient_blacklist.append(sub_node.ingredient_name)
     # output ingredient trail
     if parent_node.parent is not None:
         trail(parent_node)
@@ -246,7 +249,7 @@ def populate(parent_node: NodeBase) -> NodeBase:
     return parent_node
 
 
-def population_count(head_node: NodeBase, node_count: int = 1) -> int:
+def population_count(head_node: Ingredient, node_count: int = 1) -> int:
     """counts the amount of nodes present in the ingredient tree"""
     for sub_node in head_node.children:
         node_count += 1
@@ -256,7 +259,7 @@ def population_count(head_node: NodeBase, node_count: int = 1) -> int:
 
 if __name__ == '__main__':
     itemname: str = input('What is the name of the item you want to create: ')
-    ingredient_tree: NodeBase = populate(NodeBase(itemname))
+    ingredient_tree: Ingredient = populate(Ingredient(itemname))
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
     print('terminating process')
