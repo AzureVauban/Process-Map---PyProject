@@ -4,8 +4,8 @@ final version of the python process map
 """
 
 
-class QueueNode:
-    """Node class for Queue"""
+class Node:
+    """Node class for Queue and Stack"""
     index: int
     data = None
     after = None
@@ -30,18 +30,24 @@ class QueueNode:
 # end def
 
 
+def fib(nth_term: int) -> int:
+    """output the nth term of the fibonacci sequence"""
+    if nth_term <= 1:
+        return 1
+    return fib(nth_term-1) + fib(nth_term-2)
+
+
 class Queue:
-    """dynamic queue class
+    """dynamic queue class ("First-In, First-Out")
     #! remove below docstring comment lines later
-    - implement in csv -> node creation method
     """
-    head: QueueNode = None
+    head: Node = None
     size: int = 0
 
     # functions
-    def __get_end(self) -> QueueNode:
+    def __get_end(self) -> Node:
         """get the endpoint node of the data structure"""
-        current: QueueNode = self.head
+        current: Node = self.head
         while current.after is not None:
             current = current.after
         return current
@@ -49,7 +55,7 @@ class Queue:
     def __set_index(self):
         """set the index of all the nodes"""
         if not self.is_empty():
-            current: QueueNode = self.head
+            current: Node = self.head
             new_index: int = 0
             while current.after is not None:
                 current.set_index(new_index)
@@ -57,7 +63,7 @@ class Queue:
                 new_index += 1
 
     @classmethod
-    def __check_data_typing(cls, old_node: QueueNode, new_data):
+    def __check_data_typing(cls, old_node: Node, new_data):
         """make sure that the data enqueued is the same type"""
         if not isinstance(old_node.data, type(new_data)):
             raise TypeError('data is not an instance of', type(old_node.data))
@@ -75,13 +81,13 @@ class Queue:
     def enqueue(self, data):
         """enqueue data into the queue instance"""
         if self.is_empty():
-            self.head = QueueNode(None, data, None)
+            self.head = Node(None, data, None)
         else:
             # append a new node to the end of the queue
-            old_endpoint: QueueNode = self.__get_end()
+            old_endpoint: Node = self.__get_end()
             self.__check_data_typing(old_endpoint, data)
             # link Node pointers of old and new endpoint
-            new_endpoint: QueueNode = QueueNode(old_endpoint, data, None)
+            new_endpoint: Node = Node(old_endpoint, data, None)
             old_endpoint.after = new_endpoint
         # set the new indicies
         self.__set_index()
@@ -91,9 +97,9 @@ class Queue:
     def dequeue(self) -> None:
         """dequeue data from the queue instance"""
         if not self.is_empty():
-            old_head_node: QueueNode = self.head
+            old_head_node: Node = self.head
             return_data = old_head_node.data
-            new_head_node: QueueNode = None
+            new_head_node: Node = None
             if old_head_node.after is not None:
                 new_head_node = old_head_node.after
                 new_head_node.before = None
@@ -126,12 +132,30 @@ class Queue:
         print('stored at: '+str(self))
         self.__help__printborder()
         if output_node_help and not self.is_empty():
-            current: QueueNode = self.head
+            current: Node = self.head
             while current.after is not None:
                 current.help()
                 current = current.after
                 self.__help__printborder()
 # end def
+
+
+class Stack:
+    """
+    dynamic stack class ("Last-In, First-Out")
+    - implement in csv -> node creation method
+    - implement in node -> csv writing method
+    """
+    head: Node = None
+    size: int
+
+    def push(self, data):
+        """push data onto the stack instance"""
+        return None
+
+    def pop(self) -> None:
+        """remove data from the stack instance"""
+        return None
 
 
 class Base:
@@ -274,16 +298,26 @@ def superpopulate() -> Ingredient:
             break
         print('your input cannot be empty')
     # create ingredient tree
-    return populate(Ingredient(itemname))
-
-
-if __name__ == '__main__':
-    ingredient_tree: Ingredient = superpopulate()
+    ingredient_tree: Ingredient = populate(Ingredient(itemname))
     # output data
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
     queue_of_ingredient: Queue = find_all(ingredient_tree, Queue())
-    queue_of_ingredient.help(True)  # ! remove later, for debug purposes
-    for _ in range(queue_of_ingredient.size):
-        print(_+1, queue_of_ingredient.dequeue().ingredient_name)
+    return ingredient_tree
+
+
+if __name__ == '__main__':
+    #ingredient_tree: Ingredient = superpopulate()
+    #!queue_of_ingredient.help(True)  # ! remove later, for debug purposes
+    # for _ in range(queue_of_ingredient.size):
+    #    print(_+1, queue_of_ingredient.dequeue().ingredient_name)
+    queue_of_num: Queue = Queue()
+    stack_of_num: Stack = Stack()
+    for _ in range(10):
+        nth_term: int = fib(2+_)
+        queue_of_num.enqueue(nth_term)
+        stack_of_num.push(nth_term)
+    for _ in range(10):
+        print('\x1B[34mdequeuing\x1B[0m/\x1B[31mpopping\x1B[0m: '+str(queue_of_num.dequeue()) +
+              '/'+str(stack_of_num.pop()))
     print('terminating process')
