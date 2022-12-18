@@ -171,15 +171,7 @@ class Stack:
                 new_index += 1
 
     def push(self, data):
-        """
-        push data onto the stack instance
-
-        stack : -----   empty
-        stack : 0|      size = 1
-        stack : 0|1     size = 2
-        stack : 0|1|2   size = 3
-        popping order:  2,1,0,None (if pop is repeated > size, output None)
-        """
+        """adds a node onto the top of the stack"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = Node(None, data, None)
@@ -191,25 +183,31 @@ class Stack:
             self.__set_index()
         self.size += 1
 
-    def pop(self) -> None:  # ! remove the first node (last-in, first-out), make a new endpoint node
+    def peak(self) -> None:
+        """get the data stored at the top of the stack without destroying the node"""
+        if not self.is_empty():
+            return self.__get_end().data
+        return None
+
+    def pop(self) -> None:
         """pop the node last inserted into the stack instance"""
         if not self.is_empty() and self.size != 1:
-            old_endpoint : Node = self.__get_end()
+            old_endpoint: Node = self.__get_end()
             return_value = old_endpoint.data
-            new_endpoint : Node = None
+            new_endpoint: Node = None
             if old_endpoint.before is not None:
-                #? destroy the link the the endpoint and the node before it (if its not NULL)
+                # ? destroy the link the the endpoint and the node before it (if its not NULL)
                 new_endpoint = old_endpoint.before
                 new_endpoint.after = None
                 old_endpoint.before = None
                 old_endpoint = None
                 del old_endpoint
-            self.size -=1
+            self.size -= 1
             return return_value
         if not self.is_empty() and self.size == 1:
             return_value = self.head.data
             self.head = None
-            self.size
+            self.size -= 1
             return return_value
         return None
 
@@ -371,10 +369,6 @@ if __name__ == '__main__':
     #!queue_of_ingredient.help(True)  # ! remove later, for debug purposes
     # for _ in range(queue_of_ingredient.size):
     #    print(_+1, queue_of_ingredient.dequeue().ingredient_name)
-    stack_of_num: Stack = Stack()
-    stack_of_num.push(0)
-    stack_of_num.push(1)
-    stack_of_num.push(2)
     for _ in range(4):
         popped_value = stack_of_num.pop()
         print(popped_value)
