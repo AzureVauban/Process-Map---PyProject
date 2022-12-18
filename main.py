@@ -134,8 +134,8 @@ class NodeBase(Base):
     """add docstring"""
     parent = None
     children: list = []
-    instances: int = -1
-    generation: int = -1
+    instances: int = 0
+    generation: int = 0
 
     def __init__(self, ingredient: str = '',
                  parent=None,
@@ -145,14 +145,14 @@ class NodeBase(Base):
         super().__init__(ingredient, amount_on_hand,
                          amount_made_per_craft,
                          amount_needed_per_craft)
-        NodeBase.instances += 1
         self.parent = parent
         if self.parent is not None and not isinstance(self.parent, NodeBase):
-            raise TypeError('')
+            raise TypeError('must be an instance of',NodeBase,'or None')
         self.generation = 0
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
+        NodeBase.instances += 1
 
 def head(node : NodeBase)-> NodeBase:
     """add docstring"""
@@ -167,13 +167,22 @@ def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
 def populate(parent_node: NodeBase) -> NodeBase: #todo finish this functon
     """add docstring"""
     # prompt userinput
-    userinputs : Queue = Queue()
-    # create subnodes 
+    print('what do you need to create',parent_node.ingredient,end=':\n')
+    user_inputs : Queue = Queue()
     while True:
+        ingredient_name : str = input('')
+        if len(ingredient_name) == 0:
+            break
+        user_inputs.enqueue(ingredient_name)
+    # create subnodes 
+    for _ in range(user_inputs.size):
+        subpopulate(parent_node,user_inputs.dequeue())
     # recursively populate the ingredient tree
+    for sub_node in parent_node.children:
+        populate(sub_node)
     return parent_node
 
 if __name__ == '__main__':
-    itemname: str = input('What is the name of the item you want to create')
+    itemname: str = input('What is the name of the item you want to create: ')
     ingredient_tree: NodeBase = populate(NodeBase(itemname))
     print('terminating process')
