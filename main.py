@@ -110,6 +110,7 @@ class Queue:
         self.size = 0
 
     def __help__printborder(self):
+        """helper method for public help()"""
         border: str = ''
         for _ in range(15+len(str(self))):
             border += '_'
