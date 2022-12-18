@@ -149,6 +149,27 @@ class Stack:
     head: Node = None
     size: int
 
+    def is_empty(self) -> bool:
+        """checks if there is any data in the queue"""
+        return self.head is None
+
+    def __get_end(self) -> Node:
+        """get the endpoint node of the data structure"""
+        current: Node = self.head
+        while current.after is not None:
+            current = current.after
+        return current
+
+    def __set_index(self):
+        """set the index of all the nodes"""
+        if not self.is_empty():
+            current: Node = self.head
+            new_index: int = 0
+            while current.after is not None:
+                current.set_index(new_index)
+                current = current.after
+                new_index += 1
+
     def push(self, data):
         """push data onto the stack instance"""
         return None
@@ -318,6 +339,8 @@ if __name__ == '__main__':
         queue_of_num.enqueue(nth_term)
         stack_of_num.push(nth_term)
     for _ in range(10):
-        print('\x1B[34mdequeuing\x1B[0m/\x1B[31mpopping\x1B[0m: '+str(queue_of_num.dequeue()) +
-              '/'+str(stack_of_num.pop()))
+        print('\x1B[34mdequeuing\x1B[0m/\x1B[31mpopping\x1B[0m: ' +
+              '\x1B[34m'+str(queue_of_num.dequeue()) +
+              '\x1B[0m/\x1B[31m'+str(stack_of_num.pop()) +
+              '\x1B[0m')
     print('terminating process')
