@@ -38,9 +38,7 @@ def fib(nth_term: int) -> int:
 
 
 class Queue:
-    """dynamic queue class ("First-In, First-Out")
-    #! remove below docstring comment lines later
-    """
+    """dynamic queue class ("First-In, First-Out")"""
     head: Node = None
     size: int = 0
 
@@ -223,7 +221,7 @@ class Base:
     amount_made_per_craft: int = 0
     amount_needed_per_craft: int = 0
     amount_resulted: int = 0
-
+    buffer_amount_resulted : dict = {}
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
