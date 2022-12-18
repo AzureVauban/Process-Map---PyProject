@@ -164,8 +164,13 @@ def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
     return NodeBase(ingredient, parent_node)
 
 
-def populate(parent_node: NodeBase) -> NodeBase:
+def populate(parent_node: NodeBase) -> NodeBase: #todo finish this functon
     """add docstring"""
+    # prompt userinput
+    userinputs : Queue = Queue()
+    # create subnodes 
+    while True:
+    # recursively populate the ingredient tree
     return parent_node
 
 if __name__ == '__main__':
