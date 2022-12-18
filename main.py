@@ -265,8 +265,8 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
     return queue_nodes
 
 
-if __name__ == '__main__':
-    # prompt head ingredient name
+def superpopulate() -> Ingredient:
+    """main process for creating ingredient tree"""
     while True:
         itemname: str = input(
             'What is the name of the item you want to create: ')
@@ -274,7 +274,11 @@ if __name__ == '__main__':
             break
         print('your input cannot be empty')
     # create ingredient tree
-    ingredient_tree: Ingredient = populate(Ingredient(itemname))
+    return populate(Ingredient(itemname))
+
+
+if __name__ == '__main__':
+    ingredient_tree: Ingredient = superpopulate()
     # output data
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
