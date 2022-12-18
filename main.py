@@ -158,11 +158,15 @@ class NodeBase(Base):
 
 
 def search(parent_node: NodeBase, ingredient_name: str, current_results: dict) -> dict:
+    """return a dictionary of nodes with the same ingredient name"""
     for sub_node in parent_node.children:
-        
-    #? if there are no nodes with the ingredient names, default return path
-    if len(current_results)
-    return {-1: None}
+        if sub_node.ingredient == ingredient_name:
+            #! later make the key the instance-key of the sub-node
+            current_results.update({len(current_results): ingredient_name})
+    if len(current_results) == 0:
+        # ? if there are no nodes with the ingredient names, default return path
+        return {-1: None}
+    return current_results
 
 
 def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
@@ -171,7 +175,7 @@ def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
     ingredient name as already been typed
     """
     # check if nodes with the same ingredient name exist
-    search_results: dict = search(parent_node, ingredient_name)
+    search_results: dict = search(parent_node, ingredient_name, {})
     if search_results == {-1: None}:
         # ? if there are no nodes with the same ingredient name found
         return NodeBase(ingredient_name, parent_node)
