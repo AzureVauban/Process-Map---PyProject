@@ -171,11 +171,31 @@ class Stack:
                 new_index += 1
 
     def push(self, data):
-        """push data onto the stack instance"""
-        return None
+        """
+        push data onto the stack instance
+        
+        stack : -----   empty
+        stack : 0|      size = 1
+        stack : 0|1     size = 2
+        stack : 0|1|2   size = 3
+        popping order:  2,1,0,None (if pop is repeated > size, output None)
+        """ 
+        if self.is_empty():
+            #? overwrite the head Node
+            self.head = Node(None,data,None)
+        #? get the endpoint node and append a new node after that
+        
 
-    def pop(self) -> None:
-        """remove data from the stack instance"""
+    def pop(self) -> None: #! remove the first node (last-in, first-out), make a new head node
+        """
+         stack : -----   empty
+        stack : 0|      size = 1
+        stack : 0|1     size = 2
+        stack : 0|1|2   size = 3
+        popping order:  2,1,0,None (if pop is repeated > size, output None)
+        """
+        if not self.is_empty():
+            pass
         return None
 
 
