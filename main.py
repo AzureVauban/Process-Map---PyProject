@@ -220,27 +220,28 @@ def populate(parent_node: Ingredient) -> Ingredient:
     return parent_node
 
 
-def population_count(head_node: Ingredient, node_count: int = 1) -> int:
+def population_count(head_node: Ingredient, node_count: int = 1) -> int: #todo debug
     """counts the amount of nodes present in the ingredient tree"""
     for sub_node in head_node.children:
-        node_count += 1
         population_count(sub_node, node_count)
+        node_count += 1
     return node_count
 
-def find_all(head_node : Ingredient,queue_nodes : Queue)->Queue:
+
+def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue: #! remove later
     """debug function - see how many ingredients are in the queue"""
     queue_nodes.enqueue(head_node)
     for sub_node in head_node.children:
-        find_all(sub_node,queue_nodes)
+        find_all(sub_node, queue_nodes)
     return queue_nodes
+
+
 if __name__ == '__main__':
     itemname: str = input('What is the name of the item you want to create: ')
     ingredient_tree: Ingredient = populate(Ingredient(itemname))
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
-    queue_of_ingredient : Queue = find_all(ingredient_tree,Queue())
+    queue_of_ingredient: Queue = find_all(ingredient_tree, Queue())
     for _ in range(queue_of_ingredient.size):
-        print(_+1,queue_of_ingredient.dequeue().ingredient_name)
-    print('current population: ', end=str(
-        population_count(ingredient_tree))+'\n')
+        print(_+1, queue_of_ingredient.dequeue().ingredient_name)
     print('terminating process')
