@@ -12,7 +12,7 @@ class ProgramState(Enum):
     """
     MODE_A = 0  # recursive arithmetic (amountresulted)
     MODE_B = 1  # inverse recursive arithmetic (amountonhand)
-
+PROGRAM_MODE_ENUM: ProgramState = ProgramState.MODE_A
 
 class Node:
     """Node class for Queue and Stack"""
@@ -359,7 +359,6 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
 def superpopulate() -> Ingredient:
     """main process for creating ingredient tree"""
     # prompt the user for what program mode they want to use
-    MODE: ProgramState = ProgramState.MODE_A
     # prompt program mode
     print('Welcome to Process Map (Python) v2.0!\n')
     # program runtime loop
@@ -381,7 +380,7 @@ def superpopulate() -> Ingredient:
                 print('Your input is too long, please only type in one'
                       'character')
             elif userinput == 'B':
-                MODE = ProgramState.MODE_B
+                program_mode = ProgramState.MODE_B
                 break
             elif userinput == 'H':
                 # print prompt again
@@ -394,8 +393,9 @@ def superpopulate() -> Ingredient:
                       ' desired item, (Type in B)')
                 print("Type in 'H' if you need a reminder of the prompt\n")
             else:
-                MODE = ProgramState.MODE_A
+                program_mode = ProgramState.MODE_A
                 break
+            
     # prompt the user for the name of the item they want to create
     while True:
         itemname: str = input(
