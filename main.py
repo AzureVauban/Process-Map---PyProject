@@ -157,40 +157,11 @@ class Ingredient(Base):
         Ingredient.instances += 1
 
 
-def search(parent_node: Ingredient, ingredient_name: str, current_results: dict) -> dict:  # todo debug
-    """return a dictionary of nodes with the same ingredient name"""
-    for sub_node in parent_node.children:
-        if sub_node.ingredient_name == ingredient_name:
-            #! later make the key the instance-key of the sub-node
-            current_results.update({len(current_results): ingredient_name})
-    if len(current_results) == 0:
-        # ? if there are no nodes with the ingredient names, default return path
-        return {-1: None}
-    return current_results
-
-
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:  # todo debug
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
-    # check if nodes with the same ingredient name exist
-    #! search_results: dict = search(parent_node, ingredient_name, {})
-    search_results: dict = {-1: None}
-    if search_results == {-1: None}:
-        # ? if there are no nodes with the same ingredient name found
-        return Ingredient(ingredient_name, parent_node)
-    # output choices
-    index_node: int = 0
-    for sub_node in search_results.items():
-        if not isinstance(sub_node[1], Ingredient):
-            raise TypeError(
-                'search dictionary is not a key value pair of instances of', Ingredient)
-        print(index_node,
-              sub_node[1].amount_on_hand,
-              sub_node[1].amount_made_per_craft,
-              sub_node[1].amount_needed_per_craft)
-    # ? if the user does not want to select any nodes with the same ingredient name
     return Ingredient(ingredient_name, parent_node)
 
 
