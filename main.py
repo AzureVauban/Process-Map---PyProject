@@ -360,7 +360,7 @@ def superpopulate() -> Ingredient:
     # output data
     queue_of_ingredients: Queue = find_all(tree, Queue())
     for _ in range(queue_of_ingredients.size):
-        print(queue_of_ingredients.dequeue())
+        print(queue_of_ingredients.dequeue().ingredient_name)
     return tree
 
 
@@ -368,4 +368,5 @@ if __name__ == '__main__':
     ingredient_tree: Ingredient = superpopulate()
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
+
     print('terminating process')
