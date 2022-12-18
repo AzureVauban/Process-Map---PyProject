@@ -291,7 +291,9 @@ class DeQueue: #todo make a DS that combines the functionality of a stack and a 
         if self.is_empty():
             # ? overwrite the head Node
             self.head = Node(None, data, None)
-
+        else:
+            # prepend a new node to the front of the queue
+            old_head : Node = self.
 class Base:
     """add docstring"""
     ingredient_name: str = ''
