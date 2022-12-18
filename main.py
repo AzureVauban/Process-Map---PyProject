@@ -273,6 +273,7 @@ class DeQueue: #todo make a DS that combines the functionality of a stack and a 
     def push_back(self,data): #! makes a new endpoint node
         """add data to the back of the data structure"""
         if self.is_empty():
+            # ? overwrite the head Node
             self.head = Node(None, data, None)
         else:
             # append a new node to the end of the queue
@@ -285,9 +286,11 @@ class DeQueue: #todo make a DS that combines the functionality of a stack and a 
         self.__set_index()
         # change the size of the queue
         self.size += 1
-    def push_front(self,data): #! make a new head node
+    def push_front(self,data): #! makes a new head node
         """add data to the front of the data structure"""
-        pass
+        if self.is_empty():
+            # ? overwrite the head Node
+            self.head = Node(None, data, None)
 
 class Base:
     """add docstring"""
