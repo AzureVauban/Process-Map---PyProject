@@ -168,13 +168,31 @@ def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
     return NodeBase(ingredient, parent_node)
 
 
-def populate(parent_node: NodeBase) -> NodeBase:  # todo finish this functon
-    """add docstring"""
+def trail(current: NodeBase):
+    """
+    print the ingredient trail leading up to the parent most Node
+    Args:
+        node (Node): starting Node
+    """
+    print('TRAIL: ', end='')
+    while True:
+        if current.parent is not None:
+            print(current.ingredient, '-> ', end='')
+            current = current.parent
+        else:
+            print(current.ingredient)
+            break
+
+
+def populate(parent_node: NodeBase) -> NodeBase:
+    """
+    creates an ingredient tree by prompting the user to type in the name of the sub-ingredients
+    """
     # prompt user inputs & output current ingredient trail
     print('what do you need to create', parent_node.ingredient, end=':\n')
     user_inputs: Queue = Queue()
-    ingredient_blacklist : list = [parent_node.ingredient]
-    # output ingredient trail 
+    ingredient_blacklist: list = [parent_node.ingredient]
+    # output ingredient trail
     if parent_node.parent is not None:
         trail(parent_node)
     while True:
