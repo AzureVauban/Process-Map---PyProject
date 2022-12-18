@@ -7,14 +7,12 @@ from enum import Enum
 
 
 class ProgramState(Enum):
-    """
-    Enum for which mode the user selected during runtime
-    """
+    """Enum for which mode the user selected during runtime"""
     MODE_A = 0  # recursive arithmetic (amountresulted)
     MODE_B = 1  # inverse recursive arithmetic (amountonhand)
 
 
-program_mode: ProgramState = ProgramState.MODE_A
+program_mode_enum: ProgramState = ProgramState.MODE_A
 
 
 class Node:
@@ -254,24 +252,39 @@ class Ingredient(Base):
     instances: int = 0
     generation: int = 0
 
+    prompt_amounts_to_user : bool = False
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
-                 amount_made_per_craft: int = 0,
-                 amount_needed_per_craft: int = 0) -> None:
+                 amount_made_per_craft: int = 1,
+                 amount_needed_per_craft: int = 1) -> None:
         super().__init__(ingredient_name,
                          amount_on_hand,
                          amount_made_per_craft,
                          amount_needed_per_craft)
         self.parent = parent
         self.children = []
+        self.prompt_amounts_to_user = False
         if self.parent is not None and not isinstance(self.parent, Ingredient):
             raise TypeError('must be an instance of', Ingredient, 'or None')
         self.generation = 0
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
+            self.prompt_amounts_to_user = self.parent.prompt_amounts_to_user
+        # prompt user amounts
+        if self.parent is not None and self.prompt_amounts_to_user:
+            self.__prompt_amounts()
         Ingredient.instances += 1
+
+    def __prompt_amounts(self):
+        """
+        - only in mode A: prompt amount_on_hand
+        - if not head node(regardless of enum state):
+            - prompt amount_made_per_craft
+            - prompt amount_needed_per_craft (only for eldest sibiling node)
+        """
+        
 
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
