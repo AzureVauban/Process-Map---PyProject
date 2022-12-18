@@ -356,20 +356,16 @@ def superpopulate() -> Ingredient:
             break
         print('your input cannot be empty')
     # create ingredient tree
-    ingredient_tree: Ingredient = populate(Ingredient(itemname))
+    tree: Ingredient = populate(Ingredient(itemname))
     # output data
-    print('current population: ', end=str(
-        population_count(ingredient_tree))+'\n')
-    queue_of_ingredient: Queue = find_all(ingredient_tree, Queue())
-    return ingredient_tree
+    queue_of_ingredients: Queue = find_all(tree, Queue())
+    for _ in range(queue_of_ingredients.size):
+        print(queue_of_ingredients.dequeue())
+    return tree
 
 
 if __name__ == '__main__':
-    #ingredient_tree: Ingredient = superpopulate()
-    #!queue_of_ingredient.help(True)  # ! remove later, for debug purposes
-    # for _ in range(queue_of_ingredient.size):
-    #    print(_+1, queue_of_ingredient.dequeue().ingredient_name)
-    for _ in range(4):
-        popped_value = stack_of_num.pop()
-        print(popped_value)
+    ingredient_tree: Ingredient = superpopulate()
+    print('current population: ', end=str(
+        population_count(ingredient_tree))+'\n')
     print('terminating process')
