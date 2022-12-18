@@ -221,7 +221,8 @@ class Base:
     amount_made_per_craft: int = 0
     amount_needed_per_craft: int = 0
     amount_resulted: int = 0
-    buffer_amount_resulted : dict = {}
+    buffer_amount_resulted: dict = {}
+
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
@@ -328,13 +329,13 @@ def population_count(head_node: Ingredient) -> int:  # ! rework later
     creates a queue of all ingredient names from each node then returns the size of that
     queue which is equal to the population of the ingredient tree
     """
+    node_count: int = 0
     if head_node is not None:
         node_queue: Queue = find_all(head_node, Queue())
-        node_count: int = node_queue.size
+        node_count = node_queue.size
         while not node_queue.is_empty():
             node_queue.dequeue()
-        return node_count
-    return 0
+    return node_count
 
 
 def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove later
@@ -355,16 +356,15 @@ def superpopulate() -> Ingredient:  # todo finish (should tree be written in que
         print('your input cannot be empty')
     # create ingredient tree
     tree: Ingredient = populate(Ingredient(itemname))
-    # output data
-    queue_of_ingredients: Queue = find_all(tree, Queue())
-    for _ in range(queue_of_ingredients.size):
-        print(queue_of_ingredients.dequeue().ingredient_name)
     return tree
 
 
 if __name__ == '__main__':
     ingredient_tree: Ingredient = superpopulate()
-    print('current population: ', end=str(
-        population_count(ingredient_tree))+'\n')
-
+    population_count_str: str = str(population_count(ingredient_tree))
+    print('current population: ', end=population_count_str+'\n')
+    # output data
+    queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
+    for _ in range(queue_of_ingredients.size):
+        print(queue_of_ingredients.dequeue().ingredient_name)
     print('terminating process')
