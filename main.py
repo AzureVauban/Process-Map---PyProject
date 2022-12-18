@@ -34,7 +34,6 @@ class Queue:
     """dynamic queue class
     #! remove below docstring comment lines later
     - implement in csv -> node creation method
-    - implement in populate()
     """
     head: QueueNode = None
     size: int = 0
@@ -55,6 +54,7 @@ class Queue:
             while current.after is not None:
                 current.set_index(new_index)
                 current = current.after
+                new_index += 1
 
     @classmethod
     def __check_data_typing(cls, old_node: QueueNode, new_data):
@@ -108,6 +108,28 @@ class Queue:
     def __init__(self) -> None:
         self.head = None
         self.size = 0
+
+    def __help__printborder(self):
+        border: str = ''
+        for _ in range(15+len(str(self))):
+            border += '_'
+        print(border)
+
+    def help(self, output_node_help: bool = False):
+        """print debug data for the Queue instance"""
+        queue_data_type: str = 'None'
+        if not self.is_empty():
+            queue_data_type = str(type(self.head.data))
+        print('stored data type: '+queue_data_type)
+        print('size: '+str(self.size))
+        print('stored at: '+str(self))
+        self.__help__printborder()
+        if output_node_help and not self.is_empty():
+            current: QueueNode = self.head
+            while current.after is not None:
+                current.help()
+                current = current.after
+                self.__help__printborder()
 # end def
 
 
@@ -256,6 +278,7 @@ if __name__ == '__main__':
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
     queue_of_ingredient: Queue = find_all(ingredient_tree, Queue())
+    queue_of_ingredient.help(True)  # ! remove later, for debug purposes
     for _ in range(queue_of_ingredient.size):
         print(_+1, queue_of_ingredient.dequeue().ingredient_name)
     print('terminating process')
