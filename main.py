@@ -220,7 +220,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
     return parent_node
 
 
-def population_count(head_node: Ingredient) -> int:  # ! re-do/fix later
+def population_count(head_node: Ingredient) -> int:  # ! rework later
     """
     creates a queue of all ingredient names from each node then returns the size of that
     queue which is equal to the population of the ingredient tree
@@ -243,8 +243,16 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
 
 
 if __name__ == '__main__':
-    itemname: str = input('What is the name of the item you want to create: ')
+    # prompt head ingredient name
+    while True:
+        itemname: str = input(
+            'What is the name of the item you want to create: ')
+        if len(itemname) != 0:
+            break
+        print('your input cannot be empty')
+    # create ingredient tree
     ingredient_tree: Ingredient = populate(Ingredient(itemname))
+    # output data
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
     queue_of_ingredient: Queue = find_all(ingredient_tree, Queue())
