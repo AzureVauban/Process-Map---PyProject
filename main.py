@@ -160,7 +160,7 @@ class NodeBase(Base):
 def search(parent_node: NodeBase, ingredient_name: str, current_results: dict) -> dict:
     """return a dictionary of nodes with the same ingredient name"""
     for sub_node in parent_node.children:
-        if sub_node.ingredient == ingredient_name:
+        if sub_node.ingredient_name == ingredient_name:
             #! later make the key the instance-key of the sub-node
             current_results.update({len(current_results): ingredient_name})
     if len(current_results) == 0:
@@ -187,7 +187,8 @@ def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
                 'search dictionary is not a key value pair of instances of', NodeBase)
         print(index_node,
               sub_node[1].amount_on_hand,
-              sub_node[1].amount_made_per_craft)
+              sub_node[1].amount_made_per_craft,
+              sub_node[1].amount_needed_per_craft)
     # ? if the user does not want to select any nodes with the same ingredient name
     return NodeBase(ingredient_name, parent_node)
 
