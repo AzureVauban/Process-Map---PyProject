@@ -157,11 +157,12 @@ class NodeBase(Base):
         NodeBase.instances += 1
 
 
-def head(node: NodeBase) -> NodeBase:
-    """add docstring"""
-    while node.parent is not None:
-        node = node.parent
-    return node
+def search(parent_node: NodeBase, ingredient_name: str, current_results: dict) -> dict:
+    for sub_node in parent_node.children:
+        
+    #? if there are no nodes with the ingredient names, default return path
+    if len(current_results)
+    return {-1: None}
 
 
 def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
@@ -169,6 +170,21 @@ def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
+    # check if nodes with the same ingredient name exist
+    search_results: dict = search(parent_node, ingredient_name)
+    if search_results == {-1: None}:
+        # ? if there are no nodes with the same ingredient name found
+        return NodeBase(ingredient_name, parent_node)
+    # output choices
+    index_node: int = 0
+    for sub_node in search_results.items():
+        if not isinstance(sub_node[1], NodeBase):
+            raise TypeError(
+                'search dictionary is not a key value pair of instances of', NodeBase)
+        print(index_node,
+              sub_node[1].amount_on_hand,
+              sub_node[1].amount_made_per_craft)
+    # ? if the user does not want to select any nodes with the same ingredient name
     return NodeBase(ingredient_name, parent_node)
 
 
@@ -186,6 +202,13 @@ def trail(current: NodeBase):
         else:
             print(current.ingredient_name)
             break
+
+
+def head(node: NodeBase) -> NodeBase:
+    """add docstring"""
+    while node.parent is not None:
+        node = node.parent
+    return node
 
 
 def populate(parent_node: NodeBase) -> NodeBase:
