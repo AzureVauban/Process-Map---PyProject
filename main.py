@@ -225,7 +225,7 @@ class Stack:
         self.size = 0
 
 
-class DeQueue:
+class DeQueue: #todo make a DS that combines the functionality of a stack and a queue
     """
     double ended Queue,
     allows for 'FIFO' and 'LIFO'"""
@@ -269,9 +269,22 @@ class DeQueue:
             return self.head.data
         return None
 
-    def push_back(self,data): #! make a new endpoint node
+   
+    def push_back(self,data): #! makes a new endpoint node
         """add data to the back of the data structure"""
-        pass
+        if self.is_empty():
+            self.head = Node(None, data, None)
+        else:
+            # append a new node to the end of the queue
+            old_endpoint: Node = self.__get_end()
+            self.__check_data_typing(old_endpoint, data)
+            # link Node pointers of old and new endpoint
+            new_endpoint: Node = Node(old_endpoint, data, None)
+            old_endpoint.after = new_endpoint
+        # set the new indicies
+        self.__set_index()
+        # change the size of the queue
+        self.size += 1
     def push_front(self,data): #! make a new head node
         """add data to the front of the data structure"""
         pass
