@@ -259,7 +259,7 @@ class Ingredient(Base):
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
         Ingredient.instances += 1
-
+    def 
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
     """
