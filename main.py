@@ -170,10 +170,13 @@ def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
 
 def populate(parent_node: NodeBase) -> NodeBase:  # todo finish this functon
     """add docstring"""
-    # prompt userinput
+    # prompt user inputs & output current ingredient trail
     print('what do you need to create', parent_node.ingredient, end=':\n')
     user_inputs: Queue = Queue()
     ingredient_blacklist : list = [parent_node.ingredient]
+    # output ingredient trail 
+    if parent_node.parent is not None:
+        trail(parent_node)
     while True:
         ingredient_name: str = input('')
         if ingredient_name in ingredient_blacklist:
