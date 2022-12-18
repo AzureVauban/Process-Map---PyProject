@@ -3,6 +3,16 @@ final version of the python process map
 - use python 3.11
 """
 
+from enum import Enum
+
+
+class ProgramState(Enum):
+    """
+    Enum for which mode the user selected during runtime
+    """
+    MODE_A = 0  # recursive arithmetic (amountresulted)
+    MODE_B = 1  # inverse recursive arithmetic (amountonhand)
+
 
 class Node:
     """Node class for Queue and Stack"""
@@ -30,7 +40,7 @@ class Node:
 # end def
 
 
-def fib(nth_term: int) -> int:
+def fib(nth_term: int) -> int:  # ! remove this later
     """output the nth term of the fibonacci sequence"""
     if nth_term <= 1:
         return 1
@@ -259,7 +269,7 @@ class Ingredient(Base):
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
         Ingredient.instances += 1
-    def 
+
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
     """
@@ -348,6 +358,45 @@ def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove la
 
 def superpopulate() -> Ingredient:
     """main process for creating ingredient tree"""
+    # prompt the user for what program mode they want to use
+    MODE: ProgramState = ProgramState.MODE_A
+    # prompt program mode
+    print('Welcome to Process Map (Python) v2.0!\n')
+    # program runtime loop
+    while True:
+        print('Which mode do you want to use:')
+        print('Mode A - You are trying to figure out how much of your desired'
+              ' item you can make with the current supply of materials'
+              ' (Type in A)')
+        print('Mode B - You are trying to figure out how much base materials'
+              ' you need to create a certain amount of your desired item, ('
+              'Type in B)')
+        print("Type in 'H' if you need a reminder of the prompt\n")
+        # prompt user which mode they want to run the program in
+        while True:
+            userinput = input('').strip().upper()
+            if userinput not in ('A', 'B', 'H'):
+                print("That input is not valid, please type in 'A' or 'B'")
+            elif len(userinput) > 1:
+                print('Your input is too long, please only type in one'
+                      'character')
+            elif userinput == 'B':
+                MODE = ProgramState.MODE_B
+                break
+            elif userinput == 'H':
+                # print prompt again
+                print('Which mode do you want to use:')
+                print('Mode A - You are trying to figure out how much of your'
+                      ' desired item you can make with the current supply of'
+                      ' materials (Type in A)')
+                print('Mode B - You are trying to figure out how much base'
+                      ' materials you need to create a certain amount of your'
+                      ' desired item, (Type in B)')
+                print("Type in 'H' if you need a reminder of the prompt\n")
+            else:
+                MODE = ProgramState.MODE_A
+                break
+    # prompt the user for the name of the item they want to create
     while True:
         itemname: str = input(
             'What is the name of the item you want to create: ')
