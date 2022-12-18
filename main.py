@@ -113,17 +113,17 @@ class Queue:
 
 class Base:
     """add docstring"""
-    ingredient: str = ''
+    ingredient_name: str = ''
     amount_on_hand: int = 0
     amount_made_per_craft: int = 0
     amount_needed_per_craft: int = 0
     amount_resulted: int = 0
 
-    def __init__(self, ingredient: str = '',
+    def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0) -> None:
-        self.ingredient = ingredient
+        self.ingredient_name = ingredient_name
         self.amount_on_hand = amount_on_hand
         self.amount_made_per_craft = amount_made_per_craft
         self.amount_needed_per_craft = amount_needed_per_craft
@@ -137,12 +137,13 @@ class NodeBase(Base):
     instances: int = 0
     generation: int = 0
 
-    def __init__(self, ingredient: str = '',
+    def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0) -> None:
-        super().__init__(ingredient, amount_on_hand,
+        super().__init__(ingredient_name,
+                         amount_on_hand,
                          amount_made_per_craft,
                          amount_needed_per_craft)
         self.parent = parent
@@ -163,9 +164,12 @@ def head(node: NodeBase) -> NodeBase:
     return node
 
 
-def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
-    """add docstring"""
-    return NodeBase(ingredient, parent_node)
+def subpopulate(parent_node: NodeBase, ingredient_name: str) -> NodeBase:
+    """
+    creates a new sub-node, prompt user if they want to clone it if
+    ingredient name as already been typed
+    """
+    return NodeBase(ingredient_name, parent_node)
 
 
 def trail(current: NodeBase):
@@ -177,10 +181,10 @@ def trail(current: NodeBase):
     print('TRAIL: ', end='')
     while True:
         if current.parent is not None:
-            print(current.ingredient, '-> ', end='')
+            print(current.ingredient_name, '-> ', end='')
             current = current.parent
         else:
-            print(current.ingredient)
+            print(current.ingredient_name)
             break
 
 
@@ -189,9 +193,9 @@ def populate(parent_node: NodeBase) -> NodeBase:
     creates an ingredient tree by prompting the user to type in the name of the sub-ingredients
     """
     # prompt user inputs & output current ingredient trail
-    print('what do you need to create', parent_node.ingredient, end=':\n')
+    print('what do you need to create', parent_node.ingredient_name, end=':\n')
     user_inputs: Queue = Queue()
-    ingredient_blacklist: list = [parent_node.ingredient]
+    ingredient_blacklist: list = [parent_node.ingredient_name]
     # output ingredient trail
     if parent_node.parent is not None:
         trail(parent_node)
