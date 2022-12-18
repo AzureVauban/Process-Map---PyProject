@@ -148,42 +148,62 @@ class NodeBase(Base):
         self.parent = parent
         self.children = []
         if self.parent is not None and not isinstance(self.parent, NodeBase):
-            raise TypeError('must be an instance of',NodeBase,'or None')
+            raise TypeError('must be an instance of', NodeBase, 'or None')
         self.generation = 0
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
         NodeBase.instances += 1
 
-def head(node : NodeBase)-> NodeBase:
+
+def head(node: NodeBase) -> NodeBase:
     """add docstring"""
     while node.parent is not None:
         node = node.parent
     return node
+
+
 def subpopulate(parent_node: NodeBase, ingredient: str) -> NodeBase:
     """add docstring"""
     return NodeBase(ingredient, parent_node)
 
 
-def populate(parent_node: NodeBase) -> NodeBase: #todo finish this functon
+def populate(parent_node: NodeBase) -> NodeBase:  # todo finish this functon
     """add docstring"""
     # prompt userinput
-    print('what do you need to create',parent_node.ingredient,end=':\n')
-    user_inputs : Queue = Queue()
+    print('what do you need to create', parent_node.ingredient, end=':\n')
+    user_inputs: Queue = Queue()
+    ingredient_blacklist : list = [parent_node.ingredient]
     while True:
-        ingredient_name : str = input('')
-        if len(ingredient_name) == 0:
+        ingredient_name: str = input('')
+        if ingredient_name in ingredient_blacklist:
+            print('you cannot repeat your input')
+        elif len(ingredient_name) == 0:
             break
-        user_inputs.enqueue(ingredient_name)
+        else:
+            user_inputs.enqueue(ingredient_name)
+            ingredient_blacklist.append(ingredient_name)
     # create subnodes
     for _ in range(user_inputs.size):
-        subpopulate(parent_node,user_inputs.dequeue())
+        subpopulate(parent_node, user_inputs.dequeue())
+    del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
         populate(sub_node)
     return parent_node
-def population_count(head_node)
+
+
+def population_count(head_node: NodeBase, node_count: int = 1) -> int:
+    """counts the amount of nodes present in the ingredient tree"""
+    for sub_node in head_node.children:
+        node_count += 1
+        population_count(sub_node, node_count)
+    return node_count
+
+
 if __name__ == '__main__':
     itemname: str = input('What is the name of the item you want to create: ')
     ingredient_tree: NodeBase = populate(NodeBase(itemname))
+    print('current population: ', end=str(
+        population_count(ingredient_tree))+'\n')
     print('terminating process')
