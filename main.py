@@ -238,9 +238,7 @@ if __name__ == '__main__':
     ingredient_tree: Ingredient = populate(Ingredient(itemname))
     print('current population: ', end=str(
         population_count(ingredient_tree))+'\n')
-    queue_of_ingredient : Queue = Queue()
-    find_all(ingredient_tree,queue_of_ingredient)
+    queue_of_ingredient : Queue = find_all(ingredient_tree,Queue())
     for _ in range(queue_of_ingredient.size):
         print(_+1,queue_of_ingredient.dequeue().ingredient_name)
-
     print('terminating process')
