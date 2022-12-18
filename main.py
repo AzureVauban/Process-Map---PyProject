@@ -224,12 +224,58 @@ class Stack:
         self.head = None
         self.size = 0
 
+
 class DeQueue:
-    """double ended Queue,
+    """
+    double ended Queue,
     allows for 'FIFO' and 'LIFO'"""
-    head : Node = None
-    size : int = 0
-    
+    head: Node = None
+    size: int = 0
+
+    def __init__(self) -> None:
+        self.head = None
+        self.size = 0
+
+    def __get_end(self) -> Node:
+        """get the endpoint node of the data structure"""
+        current: Node = self.head
+        while current.after is not None:
+            current = current.after
+        return current
+
+    def __set_index(self):
+        """set the index of all the nodes"""
+        if not self.is_empty():
+            current: Node = self.head
+            new_index: int = 0
+            while current.after is not None:
+                current.set_index(new_index)
+                current = current.after
+                new_index += 1
+
+    @classmethod
+    def __check_data_typing(cls, old_node: Node, new_data):
+        """make sure that the data enqueued is the same type"""
+        if not isinstance(old_node.data, type(new_data)):
+            raise TypeError('data is not an instance of', type(old_node.data))
+
+    def is_empty(self) -> bool:
+        """checks if there is any data in the queue"""
+        return self.head is None
+
+    def peak(self) -> None:
+        """see who is at the front of the queue without dequeueing the element"""
+        if not self.is_empty():
+            return self.head.data
+        return None
+
+    def push_back(self,data): #! make a new endpoint node
+        """add data to the back of the data structure"""
+        pass
+    def push_front(self,data): #! make a new head node
+        """add data to the front of the data structure"""
+        pass
+
 class Base:
     """add docstring"""
     ingredient_name: str = ''
@@ -257,7 +303,8 @@ class Ingredient(Base):
     instances: int = 0
     generation: int = 0
 
-    prompt_amounts_to_user : bool = False
+    prompt_amounts_to_user: bool = False
+
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
@@ -289,7 +336,6 @@ class Ingredient(Base):
             - prompt amount_made_per_craft
             - prompt amount_needed_per_craft (only for eldest sibiling node)
         """
-
 
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
