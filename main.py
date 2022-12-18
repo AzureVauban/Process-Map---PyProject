@@ -224,7 +224,12 @@ class Stack:
         self.head = None
         self.size = 0
 
-
+class DeQueue:
+    """double ended Queue,
+    allows for 'FIFO' and 'LIFO'"""
+    head : Node = None
+    size : int = 0
+    
 class Base:
     """add docstring"""
     ingredient_name: str = ''
@@ -284,7 +289,7 @@ class Ingredient(Base):
             - prompt amount_made_per_craft
             - prompt amount_needed_per_craft (only for eldest sibiling node)
         """
-        
+
 
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
