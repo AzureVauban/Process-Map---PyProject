@@ -146,6 +146,7 @@ class NodeBase(Base):
                          amount_made_per_craft,
                          amount_needed_per_craft)
         self.parent = parent
+        self.children = []
         if self.parent is not None and not isinstance(self.parent, NodeBase):
             raise TypeError('must be an instance of',NodeBase,'or None')
         self.generation = 0
@@ -174,14 +175,14 @@ def populate(parent_node: NodeBase) -> NodeBase: #todo finish this functon
         if len(ingredient_name) == 0:
             break
         user_inputs.enqueue(ingredient_name)
-    # create subnodes 
+    # create subnodes
     for _ in range(user_inputs.size):
         subpopulate(parent_node,user_inputs.dequeue())
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
         populate(sub_node)
     return parent_node
-
+def population_count(head_node)
 if __name__ == '__main__':
     itemname: str = input('What is the name of the item you want to create: ')
     ingredient_tree: NodeBase = populate(NodeBase(itemname))
