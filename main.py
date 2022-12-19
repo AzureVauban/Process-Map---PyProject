@@ -333,7 +333,7 @@ class Ingredient(Base):
             self.prompt_amount_needed_per_craft()
 
 
-def find_ingredients_with_same_name(ingredient_name: str,  # todo finish & implement
+def find_ingredients_with_same_name(ingredient_name: str,
                                     ingredient_node: Ingredient,
                                     pillar_of_ingredients2: Pillar = Pillar()) -> Pillar:
     """find other ingredient nodes with the same ingredient name"""
@@ -344,6 +344,24 @@ def find_ingredients_with_same_name(ingredient_name: str,  # todo finish & imple
                                         subingredient,
                                         pillar_of_ingredients2)
     return pillar_of_ingredients2
+
+
+def make_all_names_unique(sub_node: Ingredient):  # todo test method out
+    """makes all subnode ingredient alias unique"""
+    if sub_node.parent is not None:
+        nodes_with_same_name: Pillar = find_ingredients_with_same_name(sub_node.ingredient_name,
+                                                                       head(
+                                                                           sub_node),
+                                                                       Pillar())
+        if len(nodes_with_same_name) > 1:
+            nodes_with_same_name.remove_front()
+            variant_num: int = 1
+            for _ in range(nodes_with_same_name.size):
+                ingredient_node: Ingredient = nodes_with_same_name.remove_back()
+                ingredient_node.ingredient_name_alias += variant_num
+                variant_num += 1
+    for sub_node in sub_node.children:
+        make_all_names_unique(sub_node)
 
 
 def subpopulate(parent_node: Ingredient,
@@ -357,7 +375,7 @@ def subpopulate(parent_node: Ingredient,
     return Ingredient(ingredient_name,
                       parent_node,
                       amount_made_per_craft=amount_made_per_craft,
-                      )
+                      prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
 
 
 def trail(current: Ingredient):
