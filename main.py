@@ -293,7 +293,7 @@ class Pillar:
         # change the size of the queue
         self.size += 1
 
-    def push_front(self, data):
+    def push_front(self, data): 
         """add data to the front of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -310,7 +310,7 @@ class Pillar:
         # change the size of the queue
         self.size += 1
 
-    def pop_front(self) -> None:
+    def dequeue(self) -> None: #! should be called pop front
         """remove data from the back of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
