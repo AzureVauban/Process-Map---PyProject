@@ -50,8 +50,10 @@ def fib(nth_term: int) -> int:  # ! remove this later
 
 class Pillar:
     """
-    double ended Queue,
-    allows for 'FIFO' and 'LIFO' usage
+    dynamically-size data structure, allows insert/remove operations
+    from both ends (no middle access)
+    - when empty, is typeless
+    - allows for 'First-In,First-Out' & 'Last-In,First-Out' usage
     """
     head: Node = None
     size: int = 0
@@ -61,7 +63,7 @@ class Pillar:
         self.size = 0
 
     def __get_end(self) -> Node:
-        """get the endpoint node of the data structure"""
+        """get the endpoint node of the container instance"""
         current: Node = self.head
         while current.after is not None:
             current = current.after
@@ -88,19 +90,19 @@ class Pillar:
         return self.head is None
 
     def peak_front(self) -> None:
-        """see what is at the front of the data structure without popping the element"""
+        """see what is at the front of the container instance without popping the element"""
         if not self.is_empty():
             return self.head.data
         raise ValueError('the container is empty, there are no values to peak')
 
     def peak_back(self) -> None:
-        """see what is at the front of the data structure without popping the element"""
+        """see what is at the front of the container instance without popping the element"""
         if not self.is_empty():
             return self.__get_end().data
         raise ValueError('the container is empty, there are no values to peak')
 
-    def append(self, data):  # ! should be called push back/append
-        """add data to the back of the data structure"""
+    def insert_back(self, data):  # ! should be called push back/append
+        """add data to the back of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = Node(None, data, None)
@@ -116,8 +118,8 @@ class Pillar:
         # change the size of the queue
         self.size += 1
 
-    def prepend(self, data):  # ! should be called push front/prepend
-        """add data to the front of the data structure"""
+    def insert_front(self, data):  # ! should be called push front/prepend
+        """add data to the front of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = Node(None, data, None)
@@ -134,7 +136,7 @@ class Pillar:
         self.size += 1
 
     def remove_front(self) -> None:  # ! should be called pop front/remove front
-        """remove data from the back of the data structure"""
+        """remove data from the back of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
         old_head_node: Node = self.head
@@ -151,7 +153,7 @@ class Pillar:
         return return_data
 
     def remove_back(self) -> None:  # ! should be called pop back/remove back
-        """remove data from the front of the data structure"""
+        """remove data from the front of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
         return_value = self.head.data
@@ -285,7 +287,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
         elif len(ingredient_name) == 0:
             break
         else:
-            user_inputs.append(ingredient_name)
+            user_inputs.insert_back(ingredient_name)
             ingredient_blacklist.append(ingredient_name)
     # create subnodes
     for _ in range(user_inputs.size):
@@ -313,7 +315,7 @@ def population_count(head_node: Ingredient) -> int:  # ! rework later
 
 def find_all(head_node: Ingredient, pillar_nodes: Pillar) -> Pillar:  # ! remove later
     """debug function - see how many ingredients are in the queue"""
-    pillar_nodes.append(head_node)
+    pillar_nodes.insert_back(head_node)
     for sub_node in head_node.children:
         find_all(sub_node, pillar_nodes)
     return pillar_nodes
@@ -340,10 +342,10 @@ def pillar_test():  # ! remove later
     for __ in range(0, 10):
         nth_term_i += fib(__+2)
         if __ % 2 == 0:
-            nani.append(nth_term_i)
+            nani.insert_back(nth_term_i)
             nth_term_i *= -3
         else:
-            nani.prepend(nth_term_i)
+            nani.insert_front(nth_term_i)
     del nth_term_i
     for __ in range(nani.size):
         print(nani.remove_back())
