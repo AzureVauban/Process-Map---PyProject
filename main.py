@@ -86,7 +86,7 @@ class Pillar:
             raise TypeError('data is not an instance of', type(old_node.data))
 
     def is_empty(self) -> bool:
-        """checks if there is any data in the queue"""
+        """checks if there is any data in the pillar instance"""
         return self.head is None
 
     def peak_front(self) -> None:
@@ -336,6 +336,7 @@ def superpopulate() -> Ingredient:
 
 
 def pillar_test():  # ! remove later
+    """a function for testing the operations of the pillar data structure"""
     nani: Pillar = Pillar()
   #  print(test_dequeue.peak())
     nth_term_i: int = 0
@@ -346,7 +347,7 @@ def pillar_test():  # ! remove later
             nth_term_i *= -3
         else:
             nani.insert_front(nth_term_i)
-    del nth_term_i
+    del nth_term_i #? remove variable from debug view pass this line
     for __ in range(nani.size):
         print(nani.remove_back())
 
