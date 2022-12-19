@@ -290,8 +290,8 @@ class Ingredient(Base):
         tentative docstring description
         """
         self.amount_resulted = desiredamount
-        red: float = ((self.amount_made_per_craft/self.amount_needed_per_craft)
-                      ** -1)*self.amount_resulted
+        red: float = ((self.amount_made_per_craft /
+                      self.amount_needed_per_craft)**-1)*self.amount_resulted
         green: float = round(ceil(red))  # ? math.ceil()
         self.amount_on_hand = int(max(red, green))
         traceback: bool = green > red
@@ -401,14 +401,14 @@ def populate(parent_node: Ingredient) -> Ingredient:
     # create subnodes
     # todo implement eldest sibling amount_made_per_craft auto-input
     for _ in range(user_inputs.size):
-        subpopulate(parent_node, user_inputs.remove_front(), 0)
+        subpopulate(parent_node, user_inputs.remove_back(), 0)
     del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
         populate(sub_node)
     # if on mode A, call recursive upward math method
-    if program_mode_enum == ProgramState.MODE_A and len(parent_node.children) == 0:
-        parent_node.recursivearithmetic()
+    # if program_mode_enum == ProgramState.MODE_A and len(parent_node.children) == 0:
+    #    parent_node.recursivearithmetic()
     return head(parent_node)
 
 
@@ -445,7 +445,7 @@ def superpopulate() -> Ingredient:
         print('your input cannot be empty')
     # create ingredient tree
     tree: Ingredient = Ingredient(itemname)
-    tree.prompt_amounts_to_user = True
+    tree.prompt_amounts_to_user = False
     tree = populate(tree)
     return tree
 
@@ -482,7 +482,7 @@ if __name__ == '__main__':
     print('current population: ', end=population_count_str+'\n\n')
     # output data
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
-    ingredient_tree.reversearithmetic(100)
+   # ingredient_tree.reversearithmetic(100)
     pillar_of_endpoints: Pillar = Pillar()
     pillar_of_endpoints: Pillar = find_endpoints(
         ingredient_tree, pillar_of_endpoints)
@@ -490,6 +490,6 @@ if __name__ == '__main__':
         print(pillar_of_endpoints.peak_front().ingredient_name, str(
             pillar_of_endpoints.peak_front().amount_on_hand)+'x')
         pillar_of_endpoints.remove_front()
-        
-    adadssa : int = find_ingredients_with_same_name('b',ingredient_tree,Pillar()).size
+    adadssa: int = find_ingredients_with_same_name(
+        'b', ingredient_tree, Pillar()).size
     print('terminating process')
