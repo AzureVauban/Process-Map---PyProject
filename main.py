@@ -225,10 +225,11 @@ class Stack:
         self.size = 0
 
 
-class DeQueue:  # todo make a DS that combines the functionality of a stack and a queue
+class Pillar:
     """
     double ended Queue,
-    allows for 'FIFO' and 'LIFO'"""
+    allows for 'FIFO' and 'LIFO' usage
+    """
     head: Node = None
     size: int = 0
 
@@ -255,7 +256,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
 
     @classmethod
     def __check_data_typing(cls, old_node: Node, new_data):
-        """make sure that the data enqueued is the same type"""
+        """make sure that the data being added is the same type"""
         if not isinstance(old_node.data, type(new_data)):
             raise TypeError('data is not an instance of', type(old_node.data))
 
@@ -263,14 +264,19 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         """checks if there is any data in the queue"""
         return self.head is None
 
-    def peak(self) -> None:
-        """see who is at the front of the queue without dequeueing the element"""
+    def peak_front(self) -> None:
+        """see what is at the front of the data structure without popping the element"""
         if not self.is_empty():
             return self.head.data
-        # ! raise an error (peaking from head when it is null)
         raise ValueError('the container is empty, there are no values to peak')
 
-    def push_back(self, data):  # ! makes a new endpoint node
+    def peak_back(self) -> None:
+        """see what is at the front of the data structure without popping the element"""
+        if not self.is_empty():
+            return self.__get_end().data
+        raise ValueError('the container is empty, there are no values to peak')
+
+    def push_back(self, data):
         """add data to the back of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -287,7 +293,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         # change the size of the queue
         self.size += 1
 
-    def push_front(self, data):  # ! makes a new head node
+    def push_front(self, data):
         """add data to the front of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -321,7 +327,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         self.__set_index()
         return return_data
 
-    def pop_back(self) -> None:
+    def pop_back(self) -> None: #! should be called pop back
         """remove data from the front of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -513,17 +519,17 @@ if __name__ == '__main__':
     #!!queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
     #!!for _ in range(queue_of_ingredients.size):
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
-    nani: DeQueue = DeQueue()
+    nani: Pillar = Pillar()
   #  print(test_dequeue.peak())
-    nth_term: int = 0
+    nth_term_i: int = 0
     for __ in range(0, 10):
-        nth_term += fib(__+2)
+        nth_term_i += fib(__+2)
         if __ % 2 == 0:
-            nani.push_back(nth_term)
-            nth_term *= -3
+            nani.push_back(nth_term_i)
+            nth_term_i *= -3
         else:
-            nani.push_front(nth_term)
-    del nth_term
+            nani.push_front(nth_term_i)
+    del nth_term_i
    # print(test_dequeue.size)
     for __ in range(nani.size):
         print(nani.pop_back())
