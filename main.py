@@ -329,12 +329,28 @@ class Ingredient(Base):
             self.prompt_amount_needed_per_craft()
 
 
-def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
+def find_ingredients_with_same_name(ingredient_name: str,  # todo finish & implement
+                                    ingredient_node: Ingredient,
+                                    pillar_of_ingredients2: Pillar = Pillar()) -> Pillar:
+    """find other ingredient nodes with the same ingredient name"""
+    if ingredient_node.ingredient_name == ingredient_name:
+        pillar_of_ingredients2.insert_back(ingredient_node)
+    for subingredient in ingredient_node.children:
+        find_ingredients_with_same_name(ingredient_name,
+                                        subingredient,
+                                        pillar_of_ingredients2)
+    return pillar_of_ingredients2
+
+
+def subpopulate(parent_node: Ingredient,
+                ingredient_name: str,
+                amount_made_per_craft: int) -> Ingredient:
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
-    return Ingredient(ingredient_name, parent_node)
+    return Ingredient(ingredient_name, parent_node,
+                      amount_made_per_craft=amount_made_per_craft)
 
 
 def trail(current: Ingredient):
@@ -380,11 +396,12 @@ def populate(parent_node: Ingredient) -> Ingredient:
         elif len(ingredient_name) == 0:
             break
         else:
-            user_inputs.insert_back(ingredient_name)
+            user_inputs.insert_front(ingredient_name)
             ingredient_blacklist.append(ingredient_name)
     # create subnodes
+    # todo implement eldest sibling amount_made_per_craft auto-input
     for _ in range(user_inputs.size):
-        subpopulate(parent_node, user_inputs.remove_back())
+        subpopulate(parent_node, user_inputs.remove_front(), 0)
     del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
