@@ -353,12 +353,12 @@ def make_all_names_unique(sub_node: Ingredient):  # todo test method out
                                                                        head(
                                                                            sub_node),
                                                                        Pillar())
-        if len(nodes_with_same_name) > 1:
+        if nodes_with_same_name.size > 1:
             nodes_with_same_name.remove_front()
             variant_num: int = 1
             for _ in range(nodes_with_same_name.size):
                 ingredient_node: Ingredient = nodes_with_same_name.remove_back()
-                ingredient_node.ingredient_name_alias += variant_num
+                ingredient_node.ingredient_name_alias += str(variant_num)
                 variant_num += 1
     for sub_node in sub_node.children:
         make_all_names_unique(sub_node)
@@ -526,5 +526,6 @@ if __name__ == '__main__':
         pillar_of_endpoints.remove_front()
     make_all_names_unique(ingredient_tree)
     foo:Pillar = find_all(ingredient_tree,Pillar())
-    for _ in range(foo.)
+    for _ in range(foo.size):
+        print(foo.remove_back().ingredient_name)
     print('terminating process')
