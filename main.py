@@ -349,6 +349,10 @@ def subpopulate(parent_node: Ingredient,
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
+    #? search for nodes with the same name
+    search_ingredient_nodes : Pillar = find_ingredients_with_same_name(ingredient_name,
+                                                                       parent_node,
+                                                                       Pillar())
     return Ingredient(ingredient_name, parent_node,
                       amount_made_per_craft=amount_made_per_craft)
 
