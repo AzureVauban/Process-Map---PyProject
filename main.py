@@ -520,10 +520,11 @@ if __name__ == '__main__':
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
     ingredient_tree.reversearithmetic(100)
     pillar_of_endpoints: Pillar = Pillar()
-    pillar_of_endpoints: Pillar = find_endpoints(
-        ingredient_tree, pillar_of_endpoints)
+    pillar_of_endpoints: Pillar = find_endpoints(ingredient_tree, pillar_of_endpoints)
     for _ in range(pillar_of_endpoints.size):
-        print(pillar_of_endpoints.peak_front().ingredient_name, str(
-            pillar_of_endpoints.peak_front().amount_on_hand)+'x')
+        print(pillar_of_endpoints.peak_front().ingredient_name, str(pillar_of_endpoints.peak_front().amount_on_hand)+'x')
         pillar_of_endpoints.remove_front()
+    make_all_names_unique(ingredient_tree)
+    foo:Pillar = find_all(ingredient_tree,Pillar())
+    
     print('terminating process')
