@@ -15,32 +15,6 @@ class ProgramState(Enum):
 program_mode_enum: ProgramState = ProgramState.MODE_A
 
 
-class Node:
-    """Node class for pillar data container"""
-    index: int
-    data = None
-    after = None
-    before = None
-
-    def __init__(self, before, data, after) -> None:
-        self.before = before
-        self.data = data
-        self.after = after
-        self.index = 0
-
-    def set_index(self, index):
-        """set the index of the node instance"""
-        self.index = index
-
-    def help(self):
-        """print debug data for the Node instance"""
-        print('index: '+str(self.index))
-        print('data: '+str(self.data))
-        print('after: '+str(self.after))
-        print('before: '+str(self.before))
-# end def
-
-
 def fib(nth_term: int) -> int:  # ! remove this later
     """output the nth term of the fibonacci sequence"""
     if nth_term <= 1:
@@ -55,6 +29,29 @@ class Pillar:
     - when empty, is typeless
     - allows for 'First-In,First-Out' & 'Last-In,First-Out' usage
     """
+    class Node:
+        """Node class for pillar data structure"""
+        index: int
+        data = None
+        after = None
+        before = None
+
+        def __init__(self, before, data, after) -> None:
+            self.before = before
+            self.data = data
+            self.after = after
+            self.index = 0
+
+        def set_index(self, index):
+            """set the index of the node instance"""
+            self.index = index
+
+        def help(self):
+            """print debug data for the Node instance"""
+            print('index: '+str(self.index))
+            print('data: '+str(self.data))
+            print('after: '+str(self.after))
+            print('before: '+str(self.before))
     head: Node = None
     size: int = 0
 
@@ -64,7 +61,7 @@ class Pillar:
 
     def __get_end(self) -> Node:
         """get the endpoint node of the container instance"""
-        current: Node = self.head
+        current: self.Node = self.head
         while current.after is not None:
             current = current.after
         return current
@@ -72,7 +69,7 @@ class Pillar:
     def __set_index(self):
         """set the index of all the nodes"""
         if not self.is_empty():
-            current: Node = self.head
+            current: self.Node = self.head
             new_index: int = 0
             while current.after is not None:
                 current.set_index(new_index)
@@ -105,13 +102,13 @@ class Pillar:
         """add data to the back of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
-            self.head = Node(None, data, None)
+            self.head = self.Node(None, data, None)
         else:
             # append a new node to the end of the container instance
-            old_endpoint: Node = self.__get_end()
+            old_endpoint: self.Node = self.__get_end()
             self.__check_data_typing(old_endpoint, data)
             # link Node pointers of old and new endpoint
-            new_endpoint: Node = Node(old_endpoint, data, None)
+            new_endpoint: self.Node = self.Node(old_endpoint, data, None)
             old_endpoint.after = new_endpoint
         # set the new indicies
         self.__set_index()
@@ -122,12 +119,12 @@ class Pillar:
         """add data to the front of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
-            self.head = Node(None, data, None)
+            self.head = self.Node(None, data, None)
         else:
             # prepend a new node to the front of the container instance
-            old_head: Node = self.head
+            old_head: self.Node = self.head
             self.__check_data_typing(old_head, data)
-            new_head: Node = Node(None, data, old_head)
+            new_head: self.Node = self.Node(None, data, old_head)
             old_head.before = new_head
             self.head = new_head
         # set the new indicies
@@ -139,9 +136,9 @@ class Pillar:
         """remove data from the back of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
-        old_head_node: Node = self.head
+        old_head_node: self.Node = self.head
         return_data = old_head_node.data
-        new_head_node: Node = None
+        new_head_node: self.Node = None
         if old_head_node.after is not None:
             new_head_node = old_head_node.after
             new_head_node.before = None
@@ -160,9 +157,9 @@ class Pillar:
         if self.size == 1:
             self.head = None
         else:
-            old_endpoint: Node = self.__get_end()
+            old_endpoint: self.Node = self.__get_end()
             return_value = old_endpoint.data
-            new_endpoint: Node = None
+            new_endpoint: self.Node = None
             if old_endpoint.before is not None:
                 # ? destroy the link the the endpoint and the node before it (if its not NULL)
                 new_endpoint = old_endpoint.before
@@ -301,7 +298,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
 
 def population_count(head_node: Ingredient) -> int:  # ! rework later
     """
-    creates a container instance of all ingredient names from each node then returns the size of that
+    creates a pillar instance of all ingredient names from each node then returns the size of that
     container instance which is equal to the population of the ingredient tree
     """
     node_count: int = 0
@@ -313,12 +310,12 @@ def population_count(head_node: Ingredient) -> int:  # ! rework later
     return node_count
 
 
-def find_all(head_node: Ingredient, pillar_nodes: Pillar) -> Pillar:  # ! remove later
+def find_all(head_node: Ingredient, container_nodes: Pillar) -> Pillar:  # ! remove later
     """debug function - see how many ingredients are in the container instance"""
-    pillar_nodes.insert_back(head_node)
+    container_nodes.insert_back(head_node)
     for sub_node in head_node.children:
-        find_all(sub_node, pillar_nodes)
-    return pillar_nodes
+        find_all(sub_node, container_nodes)
+    return container_nodes
 
 
 def superpopulate() -> Ingredient:
@@ -346,7 +343,7 @@ def pillar_test():  # ! remove later
             nth_term_i *= -3
         else:
             nani.insert_front(nth_term_i)
-    del nth_term_i #? remove variable from debug view pass this line
+    del nth_term_i  # ? remove variable from debug view pass this line
     for __ in range(nani.size):
         print(nani.remove_back())
 
@@ -355,9 +352,9 @@ if __name__ == '__main__':
     # create ingredient tree
     ingredient_tree: Ingredient = superpopulate()
     population_count_str: str = str(population_count(ingredient_tree))
-    print('current population: ', end=population_count_str+'\n')
+    print('current population: ', end=population_count_str+'\n\n')
     # output data
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
     for _ in range(pillar_of_ingredients.size):
-        print(pillar_of_ingredients.remove_front().ingredient_name)
+        print(pillar_of_ingredients.remove_back().ingredient_name)
     print('terminating process')
