@@ -349,7 +349,8 @@ def subpopulate(parent_node: Ingredient,
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
-    return Ingredient(ingredient_name, parent_node,
+    return Ingredient(ingredient_name,
+                      parent_node,
                       amount_made_per_craft=amount_made_per_craft)
 
 
