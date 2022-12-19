@@ -306,20 +306,20 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
 
     def pop_back(self) -> None:
         """remove data from the back of the data structure"""
-        if not self.is_empty():
-            old_head_node: Node = self.head
-            return_data = old_head_node.data
-            new_head_node: Node = None
-            if old_head_node.after is not None:
-                new_head_node = old_head_node.after
-                new_head_node.before = None
-            self.head = new_head_node
-            del old_head_node
-            self.size -= 1
-            # set the new indicies
-            self.__set_index()
-            return return_data
-        raise ValueError('cannot pop any values from an empty container')
+        if self.is_empty():
+            raise ValueError('cannot pop any values from an empty container')
+        old_head_node: Node = self.head
+        return_data = old_head_node.data
+        new_head_node: Node = None
+        if old_head_node.after is not None:
+            new_head_node = old_head_node.after
+            new_head_node.before = None
+        self.head = new_head_node
+        del old_head_node
+        self.size -= 1
+        # set the new indicies
+        self.__set_index()
+        return return_data
 
 
 class Base:
@@ -494,13 +494,13 @@ if __name__ == '__main__':
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
     test_dequeue: DeQueue = DeQueue()
   #  print(test_dequeue.peak())
-    for __ in range(0, 10):
+    for __ in range(0, 3):
         if __ % 2 == 0:
             print('even')
         else:
             print('odd')
 
-    print(test_dequeue.size)
+   # print(test_dequeue.size)
     for __ in range(test_dequeue.size):
         print('popped value', test_dequeue.pop_back())
     print('terminating process')
