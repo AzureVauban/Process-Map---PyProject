@@ -344,7 +344,8 @@ def find_ingredients_with_same_name(ingredient_name: str,  # todo finish & imple
 
 def subpopulate(parent_node: Ingredient,
                 ingredient_name: str,
-                amount_made_per_craft: int) -> Ingredient:
+                amount_made_per_craft: int,
+                prompt_amount_made_per_craft: bool) -> Ingredient:
     """
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
@@ -401,8 +402,14 @@ def populate(parent_node: Ingredient) -> Ingredient:
             ingredient_blacklist.append(ingredient_name)
     # create subnodes
     # todo implement eldest sibling amount_made_per_craft auto-input
+    eldest_sibling: Ingredient = None
     for _ in range(user_inputs.size):
-        subpopulate(parent_node, user_inputs.remove_front(), 0)
+        if eldest_sibling is None:
+            eldest_sibling = subpopulate(
+                parent_node, user_inputs.remove_front(), 1, True)
+        else:
+            subpopulate(parent_node, user_inputs.remove_front(),
+                        eldest_sibling.amount_made_per_craft, False)
     del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
