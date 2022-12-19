@@ -92,29 +92,6 @@ class Pillar:
             return self.head.data
         raise ValueError('the container is empty, there are no values to peak')
 
-    def peak_back(self) -> None:
-        """see what is at the front of the container instance without popping the element"""
-        if not self.is_empty():
-            return self.__get_end().data
-        raise ValueError('the container is empty, there are no values to peak')
-
-    def insert_back(self, data):  # ! should be called push back/append
-        """add data to the back of the container instance"""
-        if self.is_empty():
-            # ? overwrite the head Node
-            self.head = self.Node(None, data, None)
-        else:
-            # append a new node to the end of the container instance
-            old_endpoint: self.Node = self.__get_end()
-            self.__check_data_typing(old_endpoint, data)
-            # link Node pointers of old and new endpoint
-            new_endpoint: self.Node = self.Node(old_endpoint, data, None)
-            old_endpoint.after = new_endpoint
-        # set the new indicies
-        self.__set_index()
-        # change the size of the container instance
-        self.size += 1
-
     def insert_front(self, data):  # ! should be called push front/prepend
         """add data to the front of the container instance"""
         if self.is_empty():
@@ -148,6 +125,29 @@ class Pillar:
         # set the new indicies
         self.__set_index()
         return return_data
+
+    def peak_back(self) -> None:
+        """see what is at the front of the container instance without popping the element"""
+        if not self.is_empty():
+            return self.__get_end().data
+        raise ValueError('the container is empty, there are no values to peak')
+
+    def insert_back(self, data):  # ! should be called push back/append
+        """add data to the back of the container instance"""
+        if self.is_empty():
+            # ? overwrite the head Node
+            self.head = self.Node(None, data, None)
+        else:
+            # append a new node to the end of the container instance
+            old_endpoint: self.Node = self.__get_end()
+            self.__check_data_typing(old_endpoint, data)
+            # link Node pointers of old and new endpoint
+            new_endpoint: self.Node = self.Node(old_endpoint, data, None)
+            old_endpoint.after = new_endpoint
+        # set the new indicies
+        self.__set_index()
+        # change the size of the container instance
+        self.size += 1
 
     def remove_back(self) -> None:  # ! should be called pop back/remove back
         """remove data from the front of the container instance"""
