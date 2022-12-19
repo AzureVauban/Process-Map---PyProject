@@ -360,7 +360,4 @@ if __name__ == '__main__':
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
     for _ in range(pillar_of_ingredients.size):
         print(pillar_of_ingredients.remove_front().ingredient_name)
-    #!print('popped value', test_dequeue.pop_back()
     print('terminating process')
-    # * pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
-    # pop_front order : [-198,25,-24,2,-3,2,2,15,10,114]
