@@ -254,11 +254,12 @@ class Ingredient(Base):
         if self.parent is not None and not isinstance(self.parent, Ingredient):
             raise TypeError('must be an instance of', Ingredient, 'or None')
         self.generation = 0
+        self.prompt_amount_made_per_craft_bool = prompt_amount_made_per_craft_bool
         if self.parent is not None:
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
             self.prompt_amounts_to_user = self.parent.prompt_amounts_to_user
-        self.prompt_amount_made_per_craft_bool = prompt_amount_made_per_craft_bool
+            self.prompt_amount_made_per_craft_bool = self.parent.prompt_amount_made_per_craft_bool
         # prompt user amounts
         if self.parent is not None and self.prompt_amounts_to_user:
             self.__prompt_amounts()
@@ -322,10 +323,11 @@ class Ingredient(Base):
         if program_mode_enum == ProgramState.MODE_A:
             print('How much', self.ingredient_name, 'do you have on hand?')
             self.prompt_amount_on_hand()
-        if self.parent is not None:
+        if self.parent is not None and self.prompt_amount_made_per_craft_bool:
             print('How much', self.parent.ingredient_name,
                   'do you make each time you craft it?')
             self.prompt_amount_made_per_craft()
+        if self.parent is not None:
             print('How much', self.ingredient_name,
                   'do you need to craft', self.parent.ingredient_name, 'once?')
             self.prompt_amount_needed_per_craft()
@@ -459,7 +461,7 @@ def superpopulate() -> Ingredient:
         print('your input cannot be empty')
     # create ingredient tree
     tree: Ingredient = Ingredient(itemname)
-    tree.prompt_amounts_to_user = True
+    tree.prompt_amounts_to_user = False
     tree = populate(tree)
     return tree
 
