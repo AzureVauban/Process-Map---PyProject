@@ -492,15 +492,17 @@ if __name__ == '__main__':
     #!!queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
     #!!for _ in range(queue_of_ingredients.size):
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
-    test_dequeue: DeQueue = DeQueue()
+    nani: DeQueue = DeQueue()
   #  print(test_dequeue.peak())
-    for __ in range(0, 3):
+    for __ in range(0, 10):
+        nth_term: int = fib(__+2)
         if __ % 2 == 0:
-            print('even')
+            nani.push_back(nth_term)
         else:
-            print('odd')
+            nani.push_front(nth_term*-1)
 
    # print(test_dequeue.size)
-    for __ in range(test_dequeue.size):
-        print('popped value', test_dequeue.pop_back())
+    for __ in range(nani.size):
+        print('popped value', nani.pop_back())
+    #!print('popped value', test_dequeue.pop_back())
     print('terminating process')
