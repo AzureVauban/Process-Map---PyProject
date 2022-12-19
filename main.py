@@ -16,7 +16,7 @@ program_mode_enum: ProgramState = ProgramState.MODE_A
 
 
 class Node:
-    """Node class for Queue and Stack"""
+    """Node class for pillar data container"""
     index: int
     data = None
     after = None
@@ -86,7 +86,7 @@ class Pillar:
             raise TypeError('data is not an instance of', type(old_node.data))
 
     def is_empty(self) -> bool:
-        """checks if there is any data in the pillar instance"""
+        """checks if there is any data in the container instance"""
         return self.head is None
 
     def peak_front(self) -> None:
@@ -107,7 +107,7 @@ class Pillar:
             # ? overwrite the head Node
             self.head = Node(None, data, None)
         else:
-            # append a new node to the end of the queue
+            # append a new node to the end of the container instance
             old_endpoint: Node = self.__get_end()
             self.__check_data_typing(old_endpoint, data)
             # link Node pointers of old and new endpoint
@@ -115,7 +115,7 @@ class Pillar:
             old_endpoint.after = new_endpoint
         # set the new indicies
         self.__set_index()
-        # change the size of the queue
+        # change the size of the container instance
         self.size += 1
 
     def insert_front(self, data):  # ! should be called push front/prepend
@@ -124,7 +124,7 @@ class Pillar:
             # ? overwrite the head Node
             self.head = Node(None, data, None)
         else:
-            # prepend a new node to the front of the queue
+            # prepend a new node to the front of the container instance
             old_head: Node = self.head
             self.__check_data_typing(old_head, data)
             new_head: Node = Node(None, data, old_head)
@@ -132,7 +132,7 @@ class Pillar:
             self.head = new_head
         # set the new indicies
         self.__set_index()
-        # change the size of the queue
+        # change the size of the container instance
         self.size += 1
 
     def remove_front(self) -> None:  # ! should be called pop front/remove front
@@ -301,8 +301,8 @@ def populate(parent_node: Ingredient) -> Ingredient:
 
 def population_count(head_node: Ingredient) -> int:  # ! rework later
     """
-    creates a queue of all ingredient names from each node then returns the size of that
-    queue which is equal to the population of the ingredient tree
+    creates a container instance of all ingredient names from each node then returns the size of that
+    container instance which is equal to the population of the ingredient tree
     """
     node_count: int = 0
     if head_node is not None:
@@ -314,7 +314,7 @@ def population_count(head_node: Ingredient) -> int:  # ! rework later
 
 
 def find_all(head_node: Ingredient, pillar_nodes: Pillar) -> Pillar:  # ! remove later
-    """debug function - see how many ingredients are in the queue"""
+    """debug function - see how many ingredients are in the container instance"""
     pillar_nodes.insert_back(head_node)
     for sub_node in head_node.children:
         find_all(sub_node, pillar_nodes)
@@ -338,7 +338,6 @@ def superpopulate() -> Ingredient:
 def pillar_test():  # ! remove later
     """a function for testing the operations of the pillar data structure"""
     nani: Pillar = Pillar()
-  #  print(test_dequeue.peak())
     nth_term_i: int = 0
     for __ in range(0, 10):
         nth_term_i += fib(__+2)
