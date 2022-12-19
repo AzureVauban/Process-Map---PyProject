@@ -406,10 +406,12 @@ def populate(parent_node: Ingredient) -> Ingredient:
     for _ in range(user_inputs.size):
         if eldest_sibling is None:
             eldest_sibling = subpopulate(
-                parent_node, user_inputs.remove_front(), 1, True)
+                parent_node, user_inputs.remove_front(),
+                1, True)
         else:
             subpopulate(parent_node, user_inputs.remove_front(),
-                        eldest_sibling.amount_made_per_craft, False)
+                        eldest_sibling.amount_made_per_craft,
+                        False)
     del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
