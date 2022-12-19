@@ -367,7 +367,7 @@ def subpopulate(parent_node: Ingredient,
                           parent_node,
                           amount_made_per_craft=amount_made_per_craft,
                           prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
-    if len(search_for_nodes) > 1:
+    if len(search_results) > 1:
         print('FINISH ME, do you want to make a clone of any of these nodes:')
         new_node_index: int = 1
         for foo_object in search_results:  # ! rework with start=1 later on
