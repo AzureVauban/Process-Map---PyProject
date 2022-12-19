@@ -268,7 +268,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         if not self.is_empty():
             return self.head.data
         # ! raise an error (peaking from head when it is null)
-        raise ValueError('cannot peak from an empty container')
+        raise ValueError('the container is empty, there are no values to peak')
 
     def push_back(self, data):  # ! makes a new endpoint node
         """add data to the back of the data structure"""
@@ -319,7 +319,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
             # set the new indicies
             self.__set_index()
             return return_data
-        return None
+        raise ValueError('cannot pop any values from an empty container')
 
 
 class Base:
@@ -492,18 +492,15 @@ if __name__ == '__main__':
     #!!queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
     #!!for _ in range(queue_of_ingredients.size):
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
-    test_dequeue :DeQueue = DeQueue()
-    print(test_dequeue.peak())
+    test_dequeue: DeQueue = DeQueue()
+  #  print(test_dequeue.peak())
+    for __ in range(0, 10):
+        if __ % 2 == 0:
+            print('even')
+        else:
+            print('odd')
 
-    for io in range(0,5):
-        if io == 2:
-            test_dequeue.push_front(0)
-            print(test_dequeue.peak())
-        test_dequeue.push_back(fib(io+10))
-            
-    for io in range(0,5):
-        test_dequeue.push_front(-fib(io+10))
     print(test_dequeue.size)
-    for io in range(test_dequeue.size):
-        print('popped value',test_dequeue.pop_back())
+    for __ in range(test_dequeue.size):
+        print('popped value', test_dequeue.pop_back())
     print('terminating process')
