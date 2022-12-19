@@ -24,6 +24,22 @@ def fib(nth_term: int) -> int:  # ! remove this later
     return fib(nth_term-1) + fib(nth_term-2)
 
 
+def promptint() -> int:
+    """
+    prompts the user for an postive integer and returns it
+    Returns:
+        int: postive integer from user input
+    """
+    while True:
+        myinput = input('').strip()
+        if not myinput.isdigit():
+            print('you can only type in a positive integer')
+        elif int(myinput) < 0:
+            print('please type in a postive integer')
+        else:
+            return int(myinput)
+
+
 class Pillar:
     """
     dynamically-size data structure, allows insert/remove operations
@@ -176,26 +192,39 @@ class Pillar:
 
 class Base:
     """add docstring"""
-    ingredient: str = ''
-    amountonhand: int = 0  # ! original name : amount_on_hand
-    amountparentmadepercraft: int = 0  # ! original name : amount_made_per_craft
-    amountneeded: int = 0  # ! original name : amount_needed_per_craft
-    amountresulted: int = 0  # ! original name : amount_resulted
-    queueamountresulted: dict = {}  # ! original name : buffer_amount_resulted
-
+    ingredient_name: str = ''
+    amount_on_hand: int = 0  # ! original name : amount_on_hand
+    amount_made_per_craft: int = 0  # ! original name : amount_made_per_craft
+    amount_needed_per_craft: int = 0  # ! original name : amount_needed_per_craft
+    amount_resulted: int = 0  # ! original name : amount_resulted
+    buffer_amount_resulted: dict = {}  # ! original name : buffer_amount_resulted
+    ingredient_name_alias : str = '' # todo make a method that make this unique for all duplicates in the tree
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0) -> None:
-        self.ingredient = ingredient_name
-        self.amountonhand = amount_on_hand
-        self.amountparentmadepercraft = amount_made_per_craft
-        self.amountneeded = amount_needed_per_craft
-        self.amountresulted = 0
+        self.ingredient_name = ingredient_name
+        self.amount_on_hand = amount_on_hand
+        self.amount_made_per_craft = amount_made_per_craft
+        self.amount_needed_per_craft = amount_needed_per_craft
+        self.ingredient_name_alias = self.ingredient_name
+        self.amount_resulted = 0
 
     def clear_buffer(self):
         """clear the amount resulted buffer"""
-        self.queueamountresulted.clear()
+        self.buffer_amount_resulted.clear()
+
+    def prompt_amount_on_hand(self):
+        """add docstring"""
+        self.amount_on_hand = promptint()
+
+    def prompt_amount_made_per_craft(self):
+        """add docstring"""
+        self.amount_made_per_craft = promptint()
+
+    def prompt_amount_needed_per_craft(self):
+        """add docstring"""
+        self.amount_needed_per_craft = promptint()
 
 
 class Ingredient(Base):
@@ -237,45 +266,45 @@ class Ingredient(Base):
         """
         # check and set minimum resulted if queue is not empty
         tentative_integer: int = maxsize  # ? sys.maxsize
-        if len(self.queueamountresulted) == 0:
+        if len(self.buffer_amount_resulted) == 0:
             tentative_integer = 0
         else:
-            for myinteger in self.queueamountresulted.items():
+            for myinteger in self.buffer_amount_resulted.items():
                 if myinteger[1] < tentative_integer:
                     tentative_integer = myinteger[1]
-        red = (self.amountparentmadepercraft / self.amountneeded)
-        blue = (red*self.amountonhand) + (red*tentative_integer)
+        red = (self.amount_made_per_craft / self.amount_needed_per_craft)
+        blue = (red*self.amount_on_hand) + (red*tentative_integer)
         blue = round(floor(blue))  # ? math.floor()
-        self.amountresulted = blue
+        self.amount_resulted = blue
         # recursively call the method
         if self.parent is not None:
-            self.parent.queueamountresulted.update(
-                {self.ingredient: self.amountresulted})
+            self.parent.buffer_amount_resulted.update(
+                {self.ingredient_name: self.amount_resulted})
             self.parent.recursivearithmetic()
-        return self.amountresulted
+        return self.amount_resulted
 
     def reversearithmetic(self, desiredamount: int = 0) -> int:  # ! downward recursion
         """
         tentative docstring description
         """
-        self.amountresulted = desiredamount
-        red: float = ((self.amountparentmadepercraft/self.amountneeded)
-                      ** -1)*self.amountresulted
+        self.amount_resulted = desiredamount
+        red: float = ((self.amount_made_per_craft/self.amount_needed_per_craft)
+                      ** -1)*self.amount_resulted
         green: float = round(ceil(red))  # ? math.ceil()
-        self.amountonhand = int(max(red, green))
+        self.amount_on_hand = int(max(red, green))
         traceback: bool = green > red
         if traceback:  # traverse upward and increase the amount on hand by 1
             temp: Ingredient = self
             while temp.parent is not None:
                 temp = temp.parent
-                temp.amountonhand += 1
+                temp.amount_on_hand += 1
         # continue method recursively
         if len(self.children) > 0:
             for child in self.children:
                 if not isinstance(child, Ingredient):
                     raise TypeError('object is not an instance of', Ingredient)
-                child.reversearithmetic(self.amountonhand)
-        return self.amountonhand
+                child.reversearithmetic(self.amount_on_hand)
+        return self.amount_on_hand
 
     def __prompt_amounts(self):
         """
@@ -303,10 +332,10 @@ def trail(current: Ingredient):
     print('TRAIL: ', end='')
     while True:
         if current.parent is not None:
-            print(current.ingredient, '-> ', end='')
+            print(current.ingredient_name, '-> ', end='')
             current = current.parent
         else:
-            print(current.ingredient)
+            print(current.ingredient_name)
             break
 
 
@@ -322,9 +351,9 @@ def populate(parent_node: Ingredient) -> Ingredient:
     creates an ingredient tree by prompting the user to type in the name of the sub-ingredients
     """
     # prompt user inputs & output current ingredient trail
-    print('what do you need to create', parent_node.ingredient, end=':\n')
+    print('what do you need to create', parent_node.ingredient_name, end=':\n')
     user_inputs: Pillar = Pillar()
-    ingredient_blacklist: list = [parent_node.ingredient]
+    ingredient_blacklist: list = [parent_node.ingredient_name]
     for sub_node in parent_node.children:
         ingredient_blacklist.append(sub_node.ingredient_name)
     # output ingredient trail
@@ -349,7 +378,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
     # if on mode A, call recursive upward math method
     if program_mode_enum == ProgramState.MODE_A and len(parent_node.children) == 0:
         parent_node.recursivearithmetic()
-    return parent_node
+    return head(parent_node)
 
 
 def population_count(head_node: Ingredient) -> int:  # ! rework later
@@ -372,6 +401,7 @@ def find_all(head_node: Ingredient, container_nodes: Pillar) -> Pillar:  # ! rem
     for sub_node in head_node.children:
         find_all(sub_node, container_nodes)
     return container_nodes
+
 
 
 def superpopulate() -> Ingredient:
@@ -404,6 +434,15 @@ def pillar_test():  # ! remove later
         print(nani.remove_back())
 
 
+def find_endpoints(ingredient_object: Ingredient, pillar_of_nodes: Pillar = Pillar()) -> Pillar:
+    """find all endpoint instances in the ingredient tree"""
+    for sub_node in ingredient_object.children:
+        find_endpoints(sub_node, pillar_of_nodes)
+    if len(ingredient_object.children) == 0:
+        pillar_of_nodes.insert_back(ingredient_object)
+    return pillar_of_nodes  # ! use return value as a stack
+
+
 if __name__ == '__main__':
     # create ingredient tree
     ingredient_tree: Ingredient = superpopulate()
@@ -411,6 +450,12 @@ if __name__ == '__main__':
     print('current population: ', end=population_count_str+'\n\n')
     # output data
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
-    for _ in range(pillar_of_ingredients.size):
-        print(pillar_of_ingredients.remove_back().ingredient_name)
+    ingredient_tree.reversearithmetic(100)
+    pillar_of_endpoints: Pillar = Pillar()
+    pillar_of_endpoints: Pillar = find_endpoints(
+        ingredient_tree, pillar_of_endpoints)
+    for _ in range(pillar_of_endpoints.size):
+        print(pillar_of_endpoints.peak_front().ingredient_name, str(
+            pillar_of_endpoints.peak_front().amount_on_hand)+'x')
+        pillar_of_endpoints.remove_front()
     print('terminating process')
