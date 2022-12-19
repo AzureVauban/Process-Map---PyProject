@@ -526,12 +526,13 @@ if __name__ == '__main__':
             nth_term *= -3
         else:
             nani.push_front(nth_term)
-
+    del nth_term
    # print(test_dequeue.size)
     for __ in range(nani.size):
-        print(nani.pop_front())
-    #!print('popped value', test_dequeue.pop_back()    print('terminating process')
-"""
-# pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
-# pop_front order : [-198,25,-24,2,-3,2,2,15,10,114]
-"""
+        print(nani.pop_back())
+    #!print('popped value', test_dequeue.pop_back()    
+    print('terminating process')
+    """
+    # pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
+    # pop_front order : [-198,25,-24,2,-3,2,2,15,10,114]
+    """
