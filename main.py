@@ -352,7 +352,8 @@ def subpopulate(parent_node: Ingredient,
     """
     return Ingredient(ingredient_name,
                       parent_node,
-                      amount_made_per_craft=amount_made_per_craft)
+                      amount_made_per_craft=amount_made_per_craft,
+                      )
 
 
 def trail(current: Ingredient):
