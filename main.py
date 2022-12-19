@@ -52,6 +52,7 @@ class Pillar:
             print('data: '+str(self.data))
             print('after: '+str(self.after))
             print('before: '+str(self.before))
+
     head: Node = None
     size: int = 0
 
@@ -189,6 +190,10 @@ class Base:
         self.amount_made_per_craft = amount_made_per_craft
         self.amount_needed_per_craft = amount_needed_per_craft
         self.amount_resulted = 0
+
+    def clear_buffer(self):
+        """clear the amount resulted buffer"""
+        self.buffer_amount_resulted.clear()
 
 
 class Ingredient(Base):
