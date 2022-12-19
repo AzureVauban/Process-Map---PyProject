@@ -198,7 +198,9 @@ class Base:
     amount_needed_per_craft: int = 0  # ! original name : amount_needed_per_craft
     amount_resulted: int = 0  # ! original name : amount_resulted
     buffer_amount_resulted: dict = {}  # ! original name : buffer_amount_resulted
-    ingredient_name_alias : str = '' # todo make a method that make this unique for all duplicates in the tree
+    # todo make a method that make this unique for all duplicates in the tree
+    ingredient_name_alias: str = ''
+
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
@@ -313,15 +315,17 @@ class Ingredient(Base):
             - prompt amount_made_per_craft
             - prompt amount_needed_per_craft (only for eldest sibiling node)
         """
-        if not isinstance(self.parent,Ingredient) and self.parent is not None:
-            raise TypeError('parent object is not an instance of',Ingredient)
+        if not isinstance(self.parent, Ingredient) and self.parent is not None:
+            raise TypeError('parent object is not an instance of', Ingredient)
         if program_mode_enum == ProgramState.MODE_A:
-            print('How much',self.ingredient_name,'do you have on hand?')
+            print('How much', self.ingredient_name, 'do you have on hand?')
             self.prompt_amount_on_hand()
         if self.parent is not None:
-            print('How much',self.parent.ingredient,'do you make each time you craft it?')
+            print('How much', self.parent.ingredient_name,
+                  'do you make each time you craft it?')
             self.prompt_amount_made_per_craft()
-            print('How much',self.ingredient_name,'do you need to craft',self.parent.ingredient_name,'once?')
+            print('How much', self.ingredient_name,
+                  'do you need to craft', self.parent.ingredient_name, 'once?')
             self.prompt_amount_needed_per_craft()
 
 
@@ -413,7 +417,6 @@ def find_all(head_node: Ingredient, container_nodes: Pillar) -> Pillar:  # ! rem
     return container_nodes
 
 
-
 def superpopulate() -> Ingredient:
     """main process for creating ingredient tree"""
     # prompt the user for the name of the item they want to create
@@ -424,7 +427,9 @@ def superpopulate() -> Ingredient:
             break
         print('your input cannot be empty')
     # create ingredient tree
-    tree: Ingredient = populate(Ingredient(itemname))
+    tree: Ingredient = Ingredient(itemname)
+    tree.prompt_amounts_to_user = True
+    tree = populate(tree)
     return tree
 
 
