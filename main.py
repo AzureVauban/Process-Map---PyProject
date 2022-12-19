@@ -490,4 +490,6 @@ if __name__ == '__main__':
         print(pillar_of_endpoints.peak_front().ingredient_name, str(
             pillar_of_endpoints.peak_front().amount_on_hand)+'x')
         pillar_of_endpoints.remove_front()
+        
+    adadssa : int = find_ingredients_with_same_name('b',ingredient_tree,Pillar()).size
     print('terminating process')
