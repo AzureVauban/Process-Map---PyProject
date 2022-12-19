@@ -267,7 +267,8 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         """see who is at the front of the queue without dequeueing the element"""
         if not self.is_empty():
             return self.head.data
-        return None
+        # ! raise an error (peaking from head when it is null)
+        raise ValueError('cannot peak from an empty container')
 
     def push_back(self, data):  # ! makes a new endpoint node
         """add data to the back of the data structure"""
@@ -492,14 +493,17 @@ if __name__ == '__main__':
     #!!for _ in range(queue_of_ingredients.size):
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
     test_dequeue :DeQueue = DeQueue()
-    for _ in range(0,5):
-        test_dequeue.push_back(fib(_+10))
-        if _ == 3:
+    print(test_dequeue.peak())
+
+    for io in range(0,5):
+        if io == 2:
             test_dequeue.push_front(0)
+            print(test_dequeue.peak())
+        test_dequeue.push_back(fib(io+10))
             
-    for _ in range(0,5):
-        test_dequeue.push_front(-fib(_+10))
+    for io in range(0,5):
+        test_dequeue.push_front(-fib(io+10))
     print(test_dequeue.size)
-    for _ in range(test_dequeue.size):
+    for io in range(test_dequeue.size):
         print('popped value',test_dequeue.pop_back())
     print('terminating process')
