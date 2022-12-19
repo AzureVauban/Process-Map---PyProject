@@ -353,6 +353,11 @@ def subpopulate(parent_node: Ingredient,
     search_ingredient_nodes : Pillar = find_ingredients_with_same_name(ingredient_name,
                                                                        parent_node,
                                                                        Pillar())
+    if search_ingredient_nodes.size != 0:
+        # convert the pillar into a list
+        list_of_ingredient_nodes : list = []
+        for _ in range(search_ingredient_nodes.size):
+            list_of_ingredient_nodes.append(search_ingredient_nodes.remove_back())
     return Ingredient(ingredient_name, parent_node,
                       amount_made_per_craft=amount_made_per_craft)
 
