@@ -325,7 +325,13 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         """remove data from the front of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
-        if not self.is_empty() and self.size != 1:
+        #self.size -= 1
+        return_value = self.head.data
+        if self.size == 1:
+            self.head = None
+            #!self.size -= 1
+            #return return_value
+        else:
             old_endpoint: Node = self.__get_end()
             return_value = old_endpoint.data
             new_endpoint: Node = None
@@ -336,14 +342,9 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
                 old_endpoint.before = None
                 old_endpoint = None
                 del old_endpoint
-            self.size -= 1
-            return return_value
-        if not self.is_empty() and self.size == 1:
-            return_value = self.head.data
-            self.head = None
-            self.size -= 1
-            return return_value
-        return None
+            #!self.size -= 1
+        self.size -= 1
+        return return_value
 
 
 class Base:
@@ -530,9 +531,7 @@ if __name__ == '__main__':
    # print(test_dequeue.size)
     for __ in range(nani.size):
         print(nani.pop_back())
-    #!print('popped value', test_dequeue.pop_back()    
+    #!print('popped value', test_dequeue.pop_back()
     print('terminating process')
-    """
-    # pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
+    # * pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
     # pop_front order : [-198,25,-24,2,-3,2,2,15,10,114]
-    """
