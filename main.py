@@ -225,7 +225,7 @@ class Stack:
         self.size = 0
 
 
-class DeQueue: #todo make a DS that combines the functionality of a stack and a queue
+class DeQueue:  # todo make a DS that combines the functionality of a stack and a queue
     """
     double ended Queue,
     allows for 'FIFO' and 'LIFO'"""
@@ -269,8 +269,7 @@ class DeQueue: #todo make a DS that combines the functionality of a stack and a 
             return self.head.data
         return None
 
-   
-    def push_back(self,data): #! makes a new endpoint node
+    def push_back(self, data):  # ! makes a new endpoint node
         """add data to the back of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -286,14 +285,42 @@ class DeQueue: #todo make a DS that combines the functionality of a stack and a 
         self.__set_index()
         # change the size of the queue
         self.size += 1
-    def push_front(self,data): #! makes a new head node
+
+    def push_front(self, data):  # ! makes a new head node
         """add data to the front of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = Node(None, data, None)
         else:
             # prepend a new node to the front of the queue
-            old_head : Node = self.
+            old_head: Node = self.head
+            self.__check_data_typing(old_head, data)
+            new_head: Node = Node(None, data, old_head)
+            old_head.before = new_head
+            self.head = new_head
+        # set the new indicies
+        self.__set_index()
+        # change the size of the queue
+        self.size += 1
+
+    def pop_back(self) -> None:
+        """remove data from the back of the data structure"""
+        if not self.is_empty():
+            old_head_node: Node = self.head
+            return_data = old_head_node.data
+            new_head_node: Node = None
+            if old_head_node.after is not None:
+                new_head_node = old_head_node.after
+                new_head_node.before = None
+            self.head = new_head_node
+            del old_head_node
+            self.size -= 1
+            # set the new indicies
+            self.__set_index()
+            return return_data
+        return None
+
+
 class Base:
     """add docstring"""
     ingredient_name: str = ''
@@ -457,11 +484,22 @@ def superpopulate() -> Ingredient:
 
 if __name__ == '__main__':
     # create ingredient tree
-    ingredient_tree: Ingredient = superpopulate()
-    population_count_str: str = str(population_count(ingredient_tree))
-    print('current population: ', end=population_count_str+'\n')
+    #!!ingredient_tree: Ingredient = superpopulate()
+    #!!population_count_str: str = str(population_count(ingredient_tree))
+    #!!print('current population: ', end=population_count_str+'\n')
     # output data
-    queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
-    for _ in range(queue_of_ingredients.size):
-        print(queue_of_ingredients.dequeue().ingredient_name)
+    #!!queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
+    #!!for _ in range(queue_of_ingredients.size):
+    #!!    print(queue_of_ingredients.dequeue().ingredient_name)
+    test_dequeue :DeQueue = DeQueue()
+    for _ in range(0,5):
+        test_dequeue.push_back(fib(_+10))
+        if _ == 3:
+            test_dequeue.push_front(0)
+            
+    for _ in range(0,5):
+        test_dequeue.push_front(-fib(_+10))
+    print(test_dequeue.size)
+    for _ in range(test_dequeue.size):
+        print('popped value',test_dequeue.pop_back())
     print('terminating process')
