@@ -327,7 +327,7 @@ class Pillar:
         self.__set_index()
         return return_data
 
-    def pop_back(self) -> None: #! should be called pop back
+    def pop(self) -> None: #! should be called pop back
         """remove data from the front of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -532,7 +532,7 @@ if __name__ == '__main__':
     del nth_term_i
    # print(test_dequeue.size)
     for __ in range(nani.size):
-        print(nani.pop_back())
+        print(nani.pop())
     #!print('popped value', test_dequeue.pop_back()
     print('terminating process')
     # * pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
