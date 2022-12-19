@@ -412,10 +412,12 @@ def populate(parent_node: Ingredient) -> Ingredient:
     for _ in range(user_inputs.size):
         if eldest_sibling is None:
             eldest_sibling = subpopulate(
-                parent_node, user_inputs.remove_front(),
+                parent_node,
+                user_inputs.remove_front(),
                 1, True)
         else:
-            subpopulate(parent_node, user_inputs.remove_front(),
+            subpopulate(parent_node,
+                        user_inputs.remove_front(),
                         eldest_sibling.amount_made_per_craft,
                         False)
     del user_inputs
