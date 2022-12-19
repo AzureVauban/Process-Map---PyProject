@@ -235,14 +235,15 @@ class Ingredient(Base):
     children: list = []
     instances: int = 0
     generation: int = 0
-
+    prompt_amount_made_per_craft_bool: bool = False
     prompt_amounts_to_user: bool = False
 
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 1,
-                 amount_needed_per_craft: int = 1) -> None:
+                 amount_needed_per_craft: int = 1,
+                 prompt_amount_made_per_craft_bool : bool = False) -> None:
         super().__init__(ingredient_name,
                          amount_on_hand,
                          amount_made_per_craft,
@@ -257,6 +258,7 @@ class Ingredient(Base):
             self.parent.children.append(self)
             self.generation = self.parent.generation+1
             self.prompt_amounts_to_user = self.parent.prompt_amounts_to_user
+        self.prompt_amount_made_per_craft_bool = prompt_amount_made_per_craft_bool
         # prompt user amounts
         if self.parent is not None and self.prompt_amounts_to_user:
             self.__prompt_amounts()
