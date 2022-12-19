@@ -385,7 +385,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
     # prompt user inputs & output current ingredient trail
     print('what do you need to create', parent_node.ingredient_name, end=':\n')
     user_inputs: Pillar = Pillar()
-    ingredient_blacklist: list = [parent_node.ingredient_name]
+    ingredient_blacklist: list = [parent_node.ingredient_name,head(parent_node).ingredient_name]
     for sub_node in parent_node.children:
         ingredient_blacklist.append(sub_node.ingredient_name)
     # output ingredient trail
