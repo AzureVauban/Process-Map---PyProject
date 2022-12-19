@@ -195,7 +195,6 @@ class Base:
         """clear the amount resulted buffer"""
         self.buffer_amount_resulted.clear()
 
-
 class Ingredient(Base):
     """add docstring"""
     parent = None
