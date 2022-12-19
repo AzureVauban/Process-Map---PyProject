@@ -175,21 +175,21 @@ class Pillar:
 class Base:
     """add docstring"""
     ingredient_name: str = ''
-    amount_on_hand: int = 0
-    amount_made_per_craft: int = 0
-    amount_needed_per_craft: int = 0
-    amount_resulted: int = 0
-    buffer_amount_resulted: dict = {}
+    amountonhand: int = 0 #! original name : amount_on_hand
+    amountparentmadepercraft: int = 0 #! original name : amount_made_per_craft
+    amountneeded: int = 0 #! original name : amount_needed_per_craft
+    amountresulted: int = 0 #! original name : amount_resulted
+    buffer_amount_resulted: dict = {} #! original name : buffer_amount_resulted
 
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0) -> None:
         self.ingredient_name = ingredient_name
-        self.amount_on_hand = amount_on_hand
-        self.amount_made_per_craft = amount_made_per_craft
-        self.amount_needed_per_craft = amount_needed_per_craft
-        self.amount_resulted = 0
+        self.amountonhand = amount_on_hand
+        self.amountparentmadepercraft = amount_made_per_craft
+        self.amountneeded = amount_needed_per_craft
+        self.amountresulted = 0
 
     def clear_buffer(self):
         """clear the amount resulted buffer"""
