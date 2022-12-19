@@ -243,7 +243,7 @@ class Ingredient(Base):
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 1,
                  amount_needed_per_craft: int = 1,
-                 prompt_amount_made_per_craft_bool : bool = False) -> None:
+                 prompt_amount_made_per_craft_bool: bool = False) -> None:
         super().__init__(ingredient_name,
                          amount_on_hand,
                          amount_made_per_craft,
