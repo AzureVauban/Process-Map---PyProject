@@ -332,37 +332,13 @@ class Ingredient(Base):
                   'do you need to craft', self.parent.ingredient_name, 'once?')
             self.prompt_amount_needed_per_craft()
 
-
-def find_ingredients_with_same_name(ingredient_name: str,
-                                    ingredient_node: Ingredient,
-                                    pillar_of_ingredients2: Pillar = Pillar()) -> Pillar:
-    """find other ingredient nodes with the same ingredient name"""
-    if ingredient_node.ingredient_name == ingredient_name:
-        pillar_of_ingredients2.insert_back(ingredient_node)
-    for subingredient in ingredient_node.children:
-        find_ingredients_with_same_name(ingredient_name,
-                                        subingredient,
-                                        pillar_of_ingredients2)
-    return pillar_of_ingredients2
-
-
-def make_all_names_unique(sub_node: Ingredient):  # todo test method out
-    """makes all subnode ingredient alias unique"""
-    if sub_node.parent is not None:
-        nodes_with_same_name: Pillar = find_ingredients_with_same_name(sub_node.ingredient_name,
-                                                                       head(
-                                                                           sub_node),
-                                                                       Pillar())
-        if nodes_with_same_name.size > 1:
-            nodes_with_same_name.remove_front()
-            variant_num: int = 1
-            for _ in range(nodes_with_same_name.size):
-                ingredient_node: Ingredient = nodes_with_same_name.remove_back()
-                ingredient_node.ingredient_name_alias += str(variant_num)
-                variant_num += 1
-    for sub_node in sub_node.children:
-        make_all_names_unique(sub_node)
-
+def search_for_nodes(head_node: Ingredient, # todo finish
+                     ingredient_name : str,
+                     pillar_nodes : Pillar = Pillar())->list:
+    if head_node.ingredient_name == ingredient_name:
+        pillar_nodes.insert_back(ingredient_name)
+    for child_node in head_node.children:
+        search_for_nodes(child_node,ingredient_name,pillar_nodes)
 
 def subpopulate(parent_node: Ingredient,
                 ingredient_name: str,
@@ -520,12 +496,10 @@ if __name__ == '__main__':
     pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
     ingredient_tree.reversearithmetic(100)
     pillar_of_endpoints: Pillar = Pillar()
-    pillar_of_endpoints: Pillar = find_endpoints(ingredient_tree, pillar_of_endpoints)
+    pillar_of_endpoints: Pillar = find_endpoints(
+        ingredient_tree, pillar_of_endpoints)
     for _ in range(pillar_of_endpoints.size):
-        print(pillar_of_endpoints.peak_front().ingredient_name, str(pillar_of_endpoints.peak_front().amount_on_hand)+'x')
+        print(pillar_of_endpoints.peak_front().ingredient_name, str(
+            pillar_of_endpoints.peak_front().amount_on_hand)+'x')
         pillar_of_endpoints.remove_front()
-    make_all_names_unique(ingredient_tree)
-    foo:Pillar = find_all(ingredient_tree,Pillar())
-    for _ in range(foo.size):
-        print(foo.remove_back().ingredient_name)
     print('terminating process')
