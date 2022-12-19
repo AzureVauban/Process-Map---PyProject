@@ -313,6 +313,16 @@ class Ingredient(Base):
             - prompt amount_made_per_craft
             - prompt amount_needed_per_craft (only for eldest sibiling node)
         """
+        if not isinstance(self.parent,Ingredient) and self.parent is not None:
+            raise TypeError('parent object is not an instance of',Ingredient)
+        if program_mode_enum == ProgramState.MODE_A:
+            print('How much',self.ingredient_name,'do you have on hand?')
+            self.prompt_amount_on_hand()
+        if self.parent is not None:
+            print('How much',self.parent.ingredient,'do you make each time you craft it?')
+            self.prompt_amount_made_per_craft()
+            print('How much',self.ingredient_name,'do you need to craft',self.parent.ingredient_name,'once?')
+            self.prompt_amount_needed_per_craft()
 
 
 def subpopulate(parent_node: Ingredient, ingredient_name: str) -> Ingredient:
