@@ -323,7 +323,8 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
 
     def pop_back(self) -> None:
         """remove data from the front of the data structure"""
-        if se
+        if self.is_empty():
+            raise ValueError('cannot pop any values from an empty container')
         if not self.is_empty() and self.size != 1:
             old_endpoint: Node = self.__get_end()
             return_value = old_endpoint.data
