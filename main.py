@@ -48,183 +48,6 @@ def fib(nth_term: int) -> int:  # ! remove this later
     return fib(nth_term-1) + fib(nth_term-2)
 
 
-class Queue:
-    """dynamic queue class ("First-In, First-Out")"""
-    head: Node = None
-    size: int = 0
-
-    # functions
-    def __get_end(self) -> Node:
-        """get the endpoint node of the data structure"""
-        current: Node = self.head
-        while current.after is not None:
-            current = current.after
-        return current
-
-    def __set_index(self):
-        """set the index of all the nodes"""
-        if not self.is_empty():
-            current: Node = self.head
-            new_index: int = 0
-            while current.after is not None:
-                current.set_index(new_index)
-                current = current.after
-                new_index += 1
-
-    @classmethod
-    def __check_data_typing(cls, old_node: Node, new_data):
-        """make sure that the data enqueued is the same type"""
-        if not isinstance(old_node.data, type(new_data)):
-            raise TypeError('data is not an instance of', type(old_node.data))
-
-    def is_empty(self) -> bool:
-        """checks if there is any data in the queue"""
-        return self.head is None
-
-    def peak(self) -> None:
-        """see who is at the front of the queue without dequeueing the element"""
-        if not self.is_empty():
-            return self.head.data
-        return None
-
-    def enqueue(self, data):
-        """enqueue data into the queue instance"""
-        if self.is_empty():
-            self.head = Node(None, data, None)
-        else:
-            # append a new node to the end of the queue
-            old_endpoint: Node = self.__get_end()
-            self.__check_data_typing(old_endpoint, data)
-            # link Node pointers of old and new endpoint
-            new_endpoint: Node = Node(old_endpoint, data, None)
-            old_endpoint.after = new_endpoint
-        # set the new indicies
-        self.__set_index()
-        # change the size of the queue
-        self.size += 1
-
-    def dequeue(self) -> None:
-        """dequeue data from the queue instance"""
-        if not self.is_empty():
-            old_head_node: Node = self.head
-            return_data = old_head_node.data
-            new_head_node: Node = None
-            if old_head_node.after is not None:
-                new_head_node = old_head_node.after
-                new_head_node.before = None
-            self.head = new_head_node
-            del old_head_node
-            self.size -= 1
-            # set the new indicies
-            self.__set_index()
-            return return_data
-        return None
-
-    def __init__(self) -> None:
-        self.head = None
-        self.size = 0
-
-    def __help__printborder(self):
-        """helper method for public help()"""
-        border: str = ''
-        for _ in range(15+len(str(self))):
-            border += '_'
-        print(border)
-
-    def help(self, output_node_help: bool = False):
-        """print debug data for the Queue instance"""
-        queue_data_type: str = 'None'
-        if not self.is_empty():
-            queue_data_type = str(type(self.head.data))
-        print('stored data type: '+queue_data_type)
-        print('size: '+str(self.size))
-        print('stored at: '+str(self))
-        self.__help__printborder()
-        if output_node_help and not self.is_empty():
-            current: Node = self.head
-            while current.after is not None:
-                current.help()
-                current = current.after
-                self.__help__printborder()
-# end def
-
-
-class Stack:
-    """
-    dynamic stack class ("Last-In, First-Out")
-    - implement in csv -> node creation method
-    - implement in node -> csv writing method
-    """
-    head: Node = None
-    size: int
-
-    def is_empty(self) -> bool:
-        """checks if there is any data in the queue"""
-        return self.head is None
-
-    def __get_end(self) -> Node:
-        """get the endpoint node of the data structure"""
-        current: Node = self.head
-        while current.after is not None:
-            current = current.after
-        return current
-
-    def __set_index(self):
-        """set the index of all the nodes"""
-        if not self.is_empty():
-            current: Node = self.head
-            new_index: int = 0
-            while current.after is not None:
-                current.set_index(new_index)
-                current = current.after
-                new_index += 1
-
-    def push(self, data):
-        """adds a node onto the top of the stack"""
-        if self.is_empty():
-            # ? overwrite the head Node
-            self.head = Node(None, data, None)
-        else:
-            # ? get the endpoint node and append a new node after that
-            old_endpoint: Node = self.__get_end()
-            new_endpoint: Node = Node(old_endpoint, data, None)
-            old_endpoint.after = new_endpoint
-            self.__set_index()
-        self.size += 1
-
-    def peak(self) -> None:
-        """get the data stored at the top of the stack without destroying the node"""
-        if not self.is_empty():
-            return self.__get_end().data
-        return None
-
-    def pop(self) -> None:
-        """pop the node last inserted into the stack instance"""
-        if not self.is_empty() and self.size != 1:
-            old_endpoint: Node = self.__get_end()
-            return_value = old_endpoint.data
-            new_endpoint: Node = None
-            if old_endpoint.before is not None:
-                # ? destroy the link the the endpoint and the node before it (if its not NULL)
-                new_endpoint = old_endpoint.before
-                new_endpoint.after = None
-                old_endpoint.before = None
-                old_endpoint = None
-                del old_endpoint
-            self.size -= 1
-            return return_value
-        if not self.is_empty() and self.size == 1:
-            return_value = self.head.data
-            self.head = None
-            self.size -= 1
-            return return_value
-        return None
-
-    def __init__(self) -> None:
-        self.head = None
-        self.size = 0
-
-
 class Pillar:
     """
     double ended Queue,
@@ -276,7 +99,7 @@ class Pillar:
             return self.__get_end().data
         raise ValueError('the container is empty, there are no values to peak')
 
-    def push_back(self, data):
+    def append(self, data):  # ! should be called push back/append
         """add data to the back of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -293,7 +116,7 @@ class Pillar:
         # change the size of the queue
         self.size += 1
 
-    def push_front(self, data): 
+    def prepend(self, data):  # ! should be called push front/prepend
         """add data to the front of the data structure"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -310,7 +133,7 @@ class Pillar:
         # change the size of the queue
         self.size += 1
 
-    def dequeue(self) -> None: #! should be called pop front
+    def remove_front(self) -> None:  # ! should be called pop front/remove front
         """remove data from the back of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -327,7 +150,7 @@ class Pillar:
         self.__set_index()
         return return_data
 
-    def pop(self) -> None: #! should be called pop back
+    def remove_back(self) -> None:  # ! should be called pop back/remove back
         """remove data from the front of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -448,7 +271,7 @@ def populate(parent_node: Ingredient) -> Ingredient:
     """
     # prompt user inputs & output current ingredient trail
     print('what do you need to create', parent_node.ingredient_name, end=':\n')
-    user_inputs: Queue = Queue()
+    user_inputs: Pillar = Pillar()
     ingredient_blacklist: list = [parent_node.ingredient_name]
     for sub_node in parent_node.children:
         ingredient_blacklist.append(sub_node.ingredient_name)
@@ -462,11 +285,11 @@ def populate(parent_node: Ingredient) -> Ingredient:
         elif len(ingredient_name) == 0:
             break
         else:
-            user_inputs.enqueue(ingredient_name)
+            user_inputs.append(ingredient_name)
             ingredient_blacklist.append(ingredient_name)
     # create subnodes
     for _ in range(user_inputs.size):
-        subpopulate(parent_node, user_inputs.dequeue())
+        subpopulate(parent_node, user_inputs.remove_back())
     del user_inputs
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
@@ -481,19 +304,19 @@ def population_count(head_node: Ingredient) -> int:  # ! rework later
     """
     node_count: int = 0
     if head_node is not None:
-        node_queue: Queue = find_all(head_node, Queue())
-        node_count = node_queue.size
-        while not node_queue.is_empty():
-            node_queue.dequeue()
+        node_pillar: Pillar = find_all(head_node, Pillar())
+        node_count = node_pillar.size
+        while not node_pillar.is_empty():
+            node_pillar.remove_back()
     return node_count
 
 
-def find_all(head_node: Ingredient, queue_nodes: Queue) -> Queue:  # ! remove later
+def find_all(head_node: Ingredient, pillar_nodes: Pillar) -> Pillar:  # ! remove later
     """debug function - see how many ingredients are in the queue"""
-    queue_nodes.enqueue(head_node)
+    pillar_nodes.append(head_node)
     for sub_node in head_node.children:
-        find_all(sub_node, queue_nodes)
-    return queue_nodes
+        find_all(sub_node, pillar_nodes)
+    return pillar_nodes
 
 
 def superpopulate() -> Ingredient:
@@ -510,29 +333,31 @@ def superpopulate() -> Ingredient:
     return tree
 
 
-if __name__ == '__main__':
-    # create ingredient tree
-    #!!ingredient_tree: Ingredient = superpopulate()
-    #!!population_count_str: str = str(population_count(ingredient_tree))
-    #!!print('current population: ', end=population_count_str+'\n')
-    # output data
-    #!!queue_of_ingredients: Queue = find_all(ingredient_tree, Queue())
-    #!!for _ in range(queue_of_ingredients.size):
-    #!!    print(queue_of_ingredients.dequeue().ingredient_name)
+def pillar_test():  # ! remove later
     nani: Pillar = Pillar()
   #  print(test_dequeue.peak())
     nth_term_i: int = 0
     for __ in range(0, 10):
         nth_term_i += fib(__+2)
         if __ % 2 == 0:
-            nani.push_back(nth_term_i)
+            nani.append(nth_term_i)
             nth_term_i *= -3
         else:
-            nani.push_front(nth_term_i)
+            nani.prepend(nth_term_i)
     del nth_term_i
-   # print(test_dequeue.size)
     for __ in range(nani.size):
-        print(nani.pop())
+        print(nani.remove_back())
+
+
+if __name__ == '__main__':
+    # create ingredient tree
+    ingredient_tree: Ingredient = superpopulate()
+    population_count_str: str = str(population_count(ingredient_tree))
+    print('current population: ', end=population_count_str+'\n')
+    # output data
+    pillar_of_ingredients: Pillar = find_all(ingredient_tree, Pillar())
+    for _ in range(pillar_of_ingredients.size):
+        print(pillar_of_ingredients.remove_front().ingredient_name)
     #!print('popped value', test_dequeue.pop_back()
     print('terminating process')
     # * pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
