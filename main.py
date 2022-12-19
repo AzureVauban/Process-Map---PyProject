@@ -4,6 +4,8 @@ final version of the python process map
 """
 
 from enum import Enum
+from math import floor, ceil
+from sys import maxsize
 
 
 class ProgramState(Enum):
@@ -174,18 +176,18 @@ class Pillar:
 
 class Base:
     """add docstring"""
-    ingredient_name: str = ''
-    amountonhand: int = 0 #! original name : amount_on_hand
-    amountparentmadepercraft: int = 0 #! original name : amount_made_per_craft
-    amountneeded: int = 0 #! original name : amount_needed_per_craft
-    amountresulted: int = 0 #! original name : amount_resulted
-    buffer_amount_resulted: dict = {} #! original name : buffer_amount_resulted
+    ingredient: str = ''
+    amountonhand: int = 0  # ! original name : amount_on_hand
+    amountparentmadepercraft: int = 0  # ! original name : amount_made_per_craft
+    amountneeded: int = 0  # ! original name : amount_needed_per_craft
+    amountresulted: int = 0  # ! original name : amount_resulted
+    queueamountresulted: dict = {}  # ! original name : buffer_amount_resulted
 
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0) -> None:
-        self.ingredient_name = ingredient_name
+        self.ingredient = ingredient_name
         self.amountonhand = amount_on_hand
         self.amountparentmadepercraft = amount_made_per_craft
         self.amountneeded = amount_needed_per_craft
@@ -193,7 +195,8 @@ class Base:
 
     def clear_buffer(self):
         """clear the amount resulted buffer"""
-        self.buffer_amount_resulted.clear()
+        self.queueamountresulted.clear()
+
 
 class Ingredient(Base):
     """add docstring"""
@@ -228,6 +231,52 @@ class Ingredient(Base):
             self.__prompt_amounts()
         Ingredient.instances += 1
 
+    def recursivearithmetic(self) -> int:  # ! upward recursion
+        """
+        tentative docstring description
+        """
+        # check and set minimum resulted if queue is not empty
+        tentative_integer: int = maxsize  # ? sys.maxsize
+        if len(self.queueamountresulted) == 0:
+            tentative_integer = 0
+        else:
+            for myinteger in self.queueamountresulted.items():
+                if myinteger[1] < tentative_integer:
+                    tentative_integer = myinteger[1]
+        red = (self.amountparentmadepercraft / self.amountneeded)
+        blue = (red*self.amountonhand) + (red*tentative_integer)
+        blue = round(floor(blue))  # ? math.floor()
+        self.amountresulted = blue
+        # recursively call the method
+        if self.parent is not None:
+            self.parent.queueamountresulted.update(
+                {self.ingredient: self.amountresulted})
+            self.parent.recursivearithmetic()
+        return self.amountresulted
+
+    def reversearithmetic(self, desiredamount: int = 0) -> int:  # ! downward recursion
+        """
+        tentative docstring description
+        """
+        self.amountresulted = desiredamount
+        red: float = ((self.amountparentmadepercraft/self.amountneeded)
+                      ** -1)*self.amountresulted
+        green: float = round(ceil(red))  # ? math.ceil()
+        self.amountonhand = int(max(red, green))
+        traceback: bool = green > red
+        if traceback:  # traverse upward and increase the amount on hand by 1
+            temp: Ingredient = self
+            while temp.parent is not None:
+                temp = temp.parent
+                temp.amountonhand += 1
+        # continue method recursively
+        if len(self.children) > 0:
+            for child in self.children:
+                if not isinstance(child, Ingredient):
+                    raise TypeError('object is not an instance of', Ingredient)
+                child.reversearithmetic(self.amountonhand)
+        return self.amountonhand
+
     def __prompt_amounts(self):
         """
         - only in mode A: prompt amount_on_hand
@@ -254,10 +303,10 @@ def trail(current: Ingredient):
     print('TRAIL: ', end='')
     while True:
         if current.parent is not None:
-            print(current.ingredient_name, '-> ', end='')
+            print(current.ingredient, '-> ', end='')
             current = current.parent
         else:
-            print(current.ingredient_name)
+            print(current.ingredient)
             break
 
 
@@ -273,9 +322,9 @@ def populate(parent_node: Ingredient) -> Ingredient:
     creates an ingredient tree by prompting the user to type in the name of the sub-ingredients
     """
     # prompt user inputs & output current ingredient trail
-    print('what do you need to create', parent_node.ingredient_name, end=':\n')
+    print('what do you need to create', parent_node.ingredient, end=':\n')
     user_inputs: Pillar = Pillar()
-    ingredient_blacklist: list = [parent_node.ingredient_name]
+    ingredient_blacklist: list = [parent_node.ingredient]
     for sub_node in parent_node.children:
         ingredient_blacklist.append(sub_node.ingredient_name)
     # output ingredient trail
@@ -297,6 +346,9 @@ def populate(parent_node: Ingredient) -> Ingredient:
     # recursively populate the ingredient tree
     for sub_node in parent_node.children:
         populate(sub_node)
+    # if on mode A, call recursive upward math method
+    if program_mode_enum == ProgramState.MODE_A and len(parent_node.children) == 0:
+        parent_node.recursivearithmetic()
     return parent_node
 
 
