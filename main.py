@@ -526,5 +526,5 @@ if __name__ == '__main__':
         pillar_of_endpoints.remove_front()
     make_all_names_unique(ingredient_tree)
     foo:Pillar = find_all(ingredient_tree,Pillar())
-    
+    for _ in range(foo.)
     print('terminating process')
