@@ -304,7 +304,7 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         # change the size of the queue
         self.size += 1
 
-    def pop_back(self) -> None:
+    def pop_front(self) -> None:
         """remove data from the back of the data structure"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -320,6 +320,29 @@ class DeQueue:  # todo make a DS that combines the functionality of a stack and 
         # set the new indicies
         self.__set_index()
         return return_data
+
+    def pop_back(self) -> None:
+        """remove data from the front of the data structure"""
+        if se
+        if not self.is_empty() and self.size != 1:
+            old_endpoint: Node = self.__get_end()
+            return_value = old_endpoint.data
+            new_endpoint: Node = None
+            if old_endpoint.before is not None:
+                # ? destroy the link the the endpoint and the node before it (if its not NULL)
+                new_endpoint = old_endpoint.before
+                new_endpoint.after = None
+                old_endpoint.before = None
+                old_endpoint = None
+                del old_endpoint
+            self.size -= 1
+            return return_value
+        if not self.is_empty() and self.size == 1:
+            return_value = self.head.data
+            self.head = None
+            self.size -= 1
+            return return_value
+        return None
 
 
 class Base:
@@ -494,15 +517,20 @@ if __name__ == '__main__':
     #!!    print(queue_of_ingredients.dequeue().ingredient_name)
     nani: DeQueue = DeQueue()
   #  print(test_dequeue.peak())
+    nth_term: int = 0
     for __ in range(0, 10):
-        nth_term: int = fib(__+2)
+        nth_term += fib(__+2)
         if __ % 2 == 0:
             nani.push_back(nth_term)
+            nth_term *= -3
         else:
-            nani.push_front(nth_term*-1)
+            nani.push_front(nth_term)
 
    # print(test_dequeue.size)
     for __ in range(nani.size):
-        print('popped value', nani.pop_back())
-    #!print('popped value', test_dequeue.pop_back())
-    print('terminating process')
+        print(nani.pop_front())
+    #!print('popped value', test_dequeue.pop_back()    print('terminating process')
+"""
+# pop_back order :  [114,10,15,2,2,-3,2,-24,25,-198]
+# pop_front order : [-198,25,-24,2,-3,2,2,15,10,114]
+"""
