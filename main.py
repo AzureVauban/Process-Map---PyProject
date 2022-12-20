@@ -355,39 +355,10 @@ def subpopulate(parent_node: Ingredient,
     creates a new sub-node, prompt user if they want to clone it if
     ingredient name as already been typed
     """
-    search_results: list = search_for_nodes(head(parent_node),
-                                            ingredient_name,
-                                            Pillar())
-    if len(search_results) == 1:
-        if not isinstance(search_results[0], Ingredient):
-            raise TypeError('foo_object must be an instance of', Ingredient)
-        print('do you want to make a clone of',
-              search_results[0].ingredient_name, '?')
-        return Ingredient(ingredient_name,
-                          parent_node,
-                          amount_made_per_craft=amount_made_per_craft,
-                          prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
-    if len(search_results) > 1:
-        print('FINISH ME, do you want to make a clone of any of these nodes:')
-        new_node_index: int = 1
-        for foo_object in search_results:  # ! rework with start=1 later on
-            if not isinstance(foo_object, Ingredient):
-                raise TypeError(
-                    'foo_object must be an instance of', Ingredient)
-            node_data_str: str = str(foo_object.amount_on_hand) + '|'
-            node_data_str += str(foo_object.amount_made_per_craft) + '|'
-            node_data_str += str(foo_object.amount_needed_per_craft)
-            print(new_node_index, '.', node_data_str)
-            new_node_index += 1
-        return Ingredient(ingredient_name,
-                          parent_node,
-                          amount_made_per_craft=amount_made_per_craft,
-                          prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
-    else:
-        return Ingredient(ingredient_name,
-                          parent_node,
-                          amount_made_per_craft=amount_made_per_craft,
-                          prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
+    return Ingredient(ingredient_name,
+                      parent_node,
+                      amount_made_per_craft=amount_made_per_craft,
+                      prompt_amount_made_per_craft_bool=prompt_amount_made_per_craft)
 
 
 def trail(current: Ingredient):
