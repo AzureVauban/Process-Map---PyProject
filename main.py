@@ -332,7 +332,7 @@ class Ingredient(Base):
                   'do you need to craft', self.parent.ingredient_name, 'once?')
             self.prompt_amount_needed_per_craft()
 
-
+# todo - searching for nodes recursively does not work, why?
 def search_for_nodes(head_node: Ingredient,  # todo finish
                      ingredient_name: str,
                      pillar_nodes: Pillar = Pillar()) -> list:
