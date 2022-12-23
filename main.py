@@ -5,8 +5,11 @@ final version of the Process Map (Python)
 
 class Queue:
     class Node:
-        pass
-    pass
+        after = None
+        before = None
+        data = None
+    head: Node = None
+    size: int = 0
 
 
 if __name__ == '__main__':
