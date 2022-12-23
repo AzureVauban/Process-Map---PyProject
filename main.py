@@ -77,10 +77,6 @@ class Dequeue:
             self.after = after
             self.index = 0
 
-        def set_index(self, index):
-            """set the index of the node instance"""
-            self.index = index
-
     head: Node = None
     size: int = 0
 
@@ -101,7 +97,7 @@ class Dequeue:
             current: self.Node = self.head
             new_index: int = 0
             while current.after is not None:
-                current.set_index(new_index)
+                current.index = new_index
                 current = current.after
                 new_index += 1
 
@@ -204,10 +200,10 @@ if __name__ == '__main__':
     test = Dequeue()
     for _ in range(10):
         test.enqueue_front(chat_randomly_generate_string(
-            random.randint(7, 17),
-            include_special=True,
+            random.randint(10, 30),
+            include_special=False,
             include_lowercase=False,
-            include_uppercase=True))
+            include_uppercase=False))
     while not test.is_empty():
         print(test.dequeue_front())
     print('terminating process')
