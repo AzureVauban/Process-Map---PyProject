@@ -69,7 +69,7 @@ class container:
         """checks if there is any data in the container instance"""
         return self.head is None
 
-    def insert_back(self, data):  # ! should be called push back/append
+    def enqueue_back(self, data):  # ! should be called push back/append
         """add data to the back of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -86,7 +86,7 @@ class container:
         # change the size of the container instance
         self.size += 1
 
-    def remove_back(self) -> None:  # ! should be called pop back/remove back
+    def dequeue_back(self) -> None:  # ! should be called pop back/remove back
         """remove data from the front of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -107,11 +107,71 @@ class container:
         self.size -= 1
         return return_value
 
+    def insert_front(self, data):  # ! should be called push front/prepend
+        """add data to the front of the container instance"""
+        if self.is_empty():
+            # ? overwrite the head Node
+            self.head = self.Node(None, data, None)
+        else:
+            # prepend a new node to the front of the container instance
+            old_head: self.Node = self.head
+            self.__check_data_typing(old_head, data)
+            new_head: self.Node = self.Node(None, data, old_head)
+            old_head.before = new_head
+            self.head = new_head
+        # set the new indicies
+        self.__set_index()
+        # change the size of the container instance
+        self.size += 1
+
+    def remove_front(self) -> None:  # ! should be called pop front/remove front
+        """remove data from the back of the container instance"""
+        if self.is_empty():
+            raise ValueError('cannot pop any values from an empty container')
+        old_head_node: self.Node = self.head
+        return_data = old_head_node.data
+        new_head_node: self.Node = None
+        if old_head_node.after is not None:
+            new_head_node = old_head_node.after
+            new_head_node.before = None
+        self.head = new_head_node
+        del old_head_node
+        self.size -= 1
+        # set the new indicies
+        self.__set_index()
+        return return_data
+    def peak_front(self) -> None:
+        """see what is at the front of the container instance without popping the element"""
+        if not self.is_empty():
+            return self.head.data
+        raise ValueError('the container is empty, there are no values to peak')
+    def peak_back(self) -> None:
+        """see what is at the front of the container instance without popping the element"""
+        if not self.is_empty():
+            return self.__get_end().data
+        raise ValueError('the container is empty, there are no values to peak')
+
+    def insert_back(self, data):  # ! should be called push back/append
+        """add data to the back of the container instance"""
+        if self.is_empty():
+            # ? overwrite the head Node
+            self.head = self.Node(None, data, None)
+        else:
+            # append a new node to the end of the container instance
+            old_endpoint: self.Node = self.__get_end()
+            self.__check_data_typing(old_endpoint, data)
+            # link Node pointers of old and new endpoint
+            new_endpoint: self.Node = self.Node(old_endpoint, data, None)
+            old_endpoint.after = new_endpoint
+        # set the new indicies
+        self.__set_index()
+        # change the size of the container instance
+        self.size += 1
 
 if __name__ == '__main__':
     test = container()
     for _ in range(10):
-        test.insert_back(fib(_))
+        test.insert_front(fib(_))
     while not test.is_empty():
-        print(test.remove_back())
+        print(test.remove_front())
     print('terminating process')
