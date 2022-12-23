@@ -24,24 +24,26 @@ def randomly_generate_string(size: int = random.randint(5, 10)) -> str:
         return_str += random.choice(choice)
     return return_str
 
-import random
 
-def chat_randomly_generate_string(size: int = None, seed: int = None, 
-                             include_lowercase: bool = True, include_uppercase: bool = True, 
-                             include_numbers: bool = True, include_special: bool = False) -> str:
+def chat_randomly_generate_string(size: int = None,
+                                  seed: int = None,
+                                  include_lowercase: bool = True,
+                                  include_uppercase: bool = True,
+                                  include_numbers: bool = True,
+                                  include_special: bool = False) -> str:
     """Generate a random string with the specified character options and length."""
     # Set default size if not provided
     if size is None:
         size = random.randint(5, 10)
-        
+
     # Validate size argument
     if not isinstance(size, int) or size < 1:
         raise ValueError("Size must be a positive integer")
-    
+
     # Set default seed if not provided
     if seed is not None:
         random.seed(seed)
-    
+
     # Build list of valid characters
     choices = []
     if include_lowercase:
@@ -52,12 +54,13 @@ def chat_randomly_generate_string(size: int = None, seed: int = None,
         choices += '1234567890'
     if include_special:
         choices += '!@#$%^&*()_+-=[]{}|:;<>,.?/~`'
-    
+
     # Generate random string
     return_str = ''
     for _ in range(size):
         return_str += random.choice(choices)
     return return_str
+
 
 class Dequeue:
     """double ended queue"""
