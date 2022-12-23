@@ -24,9 +24,7 @@ def randomly_generate_string(size: int = random.randint(5, 10)) -> str:
     return return_str
 
 
-
-
-class Dequeue:
+class Deque:
     """double ended queue"""
     class Node:
         """Node class for pillar data structure"""
@@ -43,10 +41,11 @@ class Dequeue:
 
     head: Node = None
     size: int = 0
-
-    def __init__(self) -> None:
+    max_size : int = 0
+    def __init__(self,max_size = None) -> None:
         self.head = None
         self.size = 0
+        self.max_size = max_size
 
     def __get_end(self) -> Node:
         """get the endpoint node of the container instance"""
@@ -74,12 +73,16 @@ class Dequeue:
     def is_empty(self) -> bool:
         """checks if there is any data in the container instance"""
         return self.head is None
-
+    def is_full(self)->bool:
+        """checks if the max amount of values are present in the container"""
+        return self.size >= self.max_size
     def enqueue_front(self, data):
         """add data to the front of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = self.Node(None, data, None)
+        elif self.is_full():
+            raise ValueError ("The container is full")
         else:
             # prepend a new node to the front of the container instance
             old_head: self.Node = self.head
@@ -96,6 +99,8 @@ class Dequeue:
         """remove data from the back of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
+        if self.is_full():
+            raise ValueError ("The container is full")
         old_head_node: self.Node = self.head
         return_data = old_head_node.data
         new_head_node: self.Node = None
@@ -161,8 +166,8 @@ class Dequeue:
 
 
 if __name__ == '__main__':
-    test = Dequeue()
-    for _ in range(10):
+    test = Deque(5)
+    for _ in range(5):
         test.enqueue_front(_)
     while not test.is_empty():
         print(test.dequeue_front())
