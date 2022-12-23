@@ -4,6 +4,11 @@ final version of the Process Map (Python)
 
 
 def fib(nth_term: int) -> int:
+    """
+    outputs the nth term of the fibonacci sequence
+    n        : 01|02|03|04|05|06|07|08|09|10
+    nth term : 01|01|02|03|05|08|13|21|34|55
+    """
     if nth_term <= 1:
         return 1
     return fib(nth_term-1)+fib(nth_term-2)
