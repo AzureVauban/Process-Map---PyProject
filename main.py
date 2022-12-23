@@ -2,6 +2,8 @@
 final version of the Process Map (Python)
 """
 
+import random
+
 
 def fib(nth_term: int) -> int:
     """
@@ -13,6 +15,49 @@ def fib(nth_term: int) -> int:
         return 1
     return fib(nth_term-1)+fib(nth_term-2)
 
+
+def randomly_generate_string(size: int = random.randint(5, 10)) -> str:
+    """select random characters and return the string"""
+    choice: str = 'ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuvwxyz1234567890-'
+    return_str: str = ''
+    for _ in range(size):
+        return_str += random.choice(choice)
+    return return_str
+
+import random
+
+def chat_randomly_generate_string(size: int = None, seed: int = None, 
+                             include_lowercase: bool = True, include_uppercase: bool = True, 
+                             include_numbers: bool = True, include_special: bool = False) -> str:
+    """Generate a random string with the specified character options and length."""
+    # Set default size if not provided
+    if size is None:
+        size = random.randint(5, 10)
+        
+    # Validate size argument
+    if not isinstance(size, int) or size < 1:
+        raise ValueError("Size must be a positive integer")
+    
+    # Set default seed if not provided
+    if seed is not None:
+        random.seed(seed)
+    
+    # Build list of valid characters
+    choices = []
+    if include_lowercase:
+        choices += 'abcdefghijklmnopqrstuvwxyz'
+    if include_uppercase:
+        choices += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    if include_numbers:
+        choices += '1234567890'
+    if include_special:
+        choices += '!@#$%^&*()_+-=[]{}|:;<>,.?/~`'
+    
+    # Generate random string
+    return_str = ''
+    for _ in range(size):
+        return_str += random.choice(choices)
+    return return_str
 
 class Dequeue:
     """double ended queue"""
@@ -155,10 +200,11 @@ class Dequeue:
 if __name__ == '__main__':
     test = Dequeue()
     for _ in range(10):
-        test.enqueue_front(fib(_))
+        test.enqueue_front(chat_randomly_generate_string(
+            random.randint(7, 17),
+            include_special=True,
+            include_lowercase=False,
+            include_uppercase=True))
     while not test.is_empty():
-        if test.size % 2 == 0:
-            print(test.dequeue_back())
-        else:
-            print(test.dequeue_front())
+        print(test.dequeue_front())
     print('terminating process')
