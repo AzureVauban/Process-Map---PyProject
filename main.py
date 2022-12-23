@@ -33,13 +33,6 @@ class Dequeue:
             """set the index of the node instance"""
             self.index = index
 
-        def help(self):
-            """print debug data for the Node instance"""
-            print('index: '+str(self.index))
-            print('data: '+str(self.data))
-            print('after: '+str(self.after))
-            print('before: '+str(self.before))
-
     head: Node = None
     size: int = 0
 
