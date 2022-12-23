@@ -199,11 +199,7 @@ class Dequeue:
 if __name__ == '__main__':
     test = Dequeue()
     for _ in range(10):
-        test.enqueue_front(chat_randomly_generate_string(
-            random.randint(10, 30),
-            include_special=False,
-            include_lowercase=False,
-            include_uppercase=False))
+        test.enqueue_front(_*_)
     while not test.is_empty():
         print(test.dequeue_front())
     print('terminating process')
