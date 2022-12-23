@@ -3,10 +3,10 @@ final version of the Process Map (Python)
 """
 
 
-def fib(n: int) -> int:
-    if n <= 1:
+def fib(nth_term: int) -> int:
+    if nth_term <= 1:
         return 1
-    return fib(n-1)+fib(n-2)
+    return fib(nth_term-1)+fib(nth_term-2)
 
 
 class Dequeue:
