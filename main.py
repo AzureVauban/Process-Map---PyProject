@@ -77,7 +77,9 @@ class Deque:
 
     def is_full(self) -> bool:
         """checks if the max amount of values are present in the container"""
-        return self.size > self.max_size
+        if self.max_size is not None:
+            return self.size >= self.max_size
+        return False
 
     def enqueue_front(self, data):
         """add data to the front of the container instance"""
@@ -172,6 +174,8 @@ if __name__ == '__main__':
     test = Deque(5)
     for _ in range(5):
         test.enqueue_front((_+1)*50)
+    if test.is_full():
+        print('the deque container is full!')
     while not test.is_empty():
         print(test.dequeue_front())
     print('terminating process')
