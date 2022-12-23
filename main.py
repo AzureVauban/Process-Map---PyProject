@@ -78,7 +78,7 @@ class Deque:
     def is_full(self) -> bool:
         """checks if the max amount of values are present in the container"""
         if self.max_size is not None:
-            return self.size >= self.max_size
+            return self.size > self.max_size
         return False
 
     def enqueue_front(self, data):
