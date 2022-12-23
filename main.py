@@ -41,8 +41,9 @@ class Deque:
 
     head: Node = None
     size: int = 0
-    max_size : int = 0
-    def __init__(self,max_size = None) -> None:
+    max_size: int = 0
+
+    def __init__(self, max_size=None) -> None:
         self.head = None
         self.size = 0
         self.max_size = max_size
@@ -73,16 +74,18 @@ class Deque:
     def is_empty(self) -> bool:
         """checks if there is any data in the container instance"""
         return self.head is None
-    def is_full(self)->bool:
+
+    def is_full(self) -> bool:
         """checks if the max amount of values are present in the container"""
         return self.size > self.max_size
+
     def enqueue_front(self, data):
         """add data to the front of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
             self.head = self.Node(None, data, None)
         elif self.is_full():
-            raise ValueError ("The container is full")
+            raise ValueError("The container is full")
         else:
             # prepend a new node to the front of the container instance
             old_head: self.Node = self.head
@@ -100,7 +103,7 @@ class Deque:
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
         if self.is_full():
-            raise ValueError ("The container is full")
+            raise ValueError("The container is full")
         old_head_node: self.Node = self.head
         return_data = old_head_node.data
         new_head_node: self.Node = None
