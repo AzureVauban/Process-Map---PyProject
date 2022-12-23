@@ -1,8 +1,6 @@
 """
 final version of the Process Map (Python)
 """
-
-import math
 import random
 
 
