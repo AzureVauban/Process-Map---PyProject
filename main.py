@@ -165,7 +165,7 @@ class Dequeue:
 if __name__ == '__main__':
     test = Dequeue()
     for _ in range(10):
-        test.enqueue_front()
+        test.enqueue_front(_)
     while not test.is_empty():
         print(test.dequeue_front())
     print('terminating process')
