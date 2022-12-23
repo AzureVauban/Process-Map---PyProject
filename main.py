@@ -168,7 +168,7 @@ class Deque:
 if __name__ == '__main__':
     test = Deque(5)
     for _ in range(5):
-        test.enqueue_front((_+1)*5)
+        test.enqueue_front((_+1)*50)
     while not test.is_empty():
         print(test.dequeue_front())
     print('terminating process')
