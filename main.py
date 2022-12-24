@@ -191,10 +191,37 @@ class Ingredient(Base):
                  amount_needed_per_craft: int = 0) -> None:
         super().__init__(ingredient_name, amount_on_hand,
                          amount_made_per_craft, amount_needed_per_craft)
-        if parent is not None and not isinstance(parent,Ingredient):
-            raise TypeError('parent must be an instance',Ingredient) 
+        if parent is not None and not isinstance(parent, Ingredient):
+            raise TypeError('parent must be an instance', Ingredient)
         self.parent = parent
         self.children = []
+        if self.parent is not None:
+            self.parent.children.append(self)
+
+
+def head(ingredient_node: Ingredient) -> Ingredient:
+    """traverse upward"""
+    while ingredient_node.parent is not None:
+        ingredient_node = ingredient_node.parent
+    return ingredient_node
+
+
+def populate(parent_ingredient: Ingredient) -> Ingredient:
+    """create an ingredient tree and return the head node ingredient"""
+    print('What ingredients do you need to create',
+          parent_ingredient.ingredient_name, end=':\n')
+    user_inputs: Deque = Deque()
+    blacklist_ingredient: list = [parent_ingredient.ingredient_name,
+                                  head(parent_ingredient).ingredient_name]
+    for _ in range(parent_ingredient.children):
+        blacklist_ingredient.append(parent_ingredient.ingredient_name)
+    while True:
+        ingredient_input: str = input('')
+        if len(ingredient_input) == 0:
+            break
+        elif ingredient_input in blacklist_ingredient:
+            
+    return head(parent_ingredient)
 
 
 if __name__ == '__main__':
