@@ -259,11 +259,12 @@ def subpopulate(parent: Ingredient, ingredient_name: str) -> Ingredient:
     return Ingredient(ingredient_name, parent)
 
 
-def recursive_count_ingredient(purple: Ingredient, current_count: int = 0) -> int:
+def recursive_count_ingredient(purple: Ingredient, current_count: int) -> int:
     """add docstring"""
+    if len(purple.children):
+        for subnode in purple.children:
+            recursive_count_ingredient(subnode, current_count)
     current_count += 1
-    for subnode in purple.children:
-       current_count += recursive_count_ingredient(subnode, current_count)
     return current_count
 
 
