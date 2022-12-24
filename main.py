@@ -253,9 +253,11 @@ def populate(ingredient: Ingredient) -> Ingredient:
     return head(ingredient)
 
 
+
 def subpopulate(parent: Ingredient, ingredient_name: str) -> Ingredient:
     """add docstring"""
     # todo add search method
+    print('search results:',len(search_results),search_results)
     return Ingredient(ingredient_name, parent)
 
 
@@ -269,7 +271,7 @@ def recursive_count_ingredients(purple: Ingredient) -> int:
 
 def count_ingredients(head_ingredient: Ingredient) -> int:
     """add docstring"""
-    node_count :int = recursive_count_ingredients(head_ingredient)
+    node_count: int = recursive_count_ingredients(head_ingredient)
     return node_count
 
 
