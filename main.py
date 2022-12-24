@@ -246,11 +246,17 @@ def populate(ingredient: Ingredient) -> Ingredient:
             blacklist_ingredient.append(ingredient_input)
     # create subnodes
     while not user_inputs.is_empty():
-        Ingredient(user_inputs.dequeue_front(), ingredient)
+        subpopulate(ingredient, user_inputs.dequeue_front())
     # populate subnodes
     for subnode in ingredient.children:
         populate(subnode)
     return head(ingredient)
+
+
+def subpopulate(parent: Ingredient, ingredient_name: str) -> Ingredient:
+    """add docstring"""
+    # todo add search method
+    return Ingredient(ingredient_name, parent)
 
 
 if __name__ == '__main__':
