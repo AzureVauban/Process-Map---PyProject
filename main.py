@@ -214,13 +214,14 @@ class Ingredient(Base):
     parent = None
     children: list = []
     promptamoumtmadepercraft: bool = True
-
+    prompt_amounts:bool = False
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0,
-                 promptamoumtmadepercraft: bool = False) -> None:
+                 promptamoumtmadepercraft: bool = False,
+                 promptamounts: bool = True) -> None:
         super().__init__(ingredient_name, amount_on_hand,
                          amount_made_per_craft, amount_needed_per_craft)
         if parent is not None and not isinstance(parent, Ingredient):
@@ -230,8 +231,11 @@ class Ingredient(Base):
         self.children = []
         if self.parent is not None:
             self.parent.children.append(self)
+        if self.promptamounts:
+            self.prompt_amounts()
 
     def prompt_amounts(self):
+        """add docstring"""
         if self.parent is not None:
             print('How much', self.ingredient_name,
                   'do you have on hand to create', self.parent.ingredient_name)
