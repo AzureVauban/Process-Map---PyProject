@@ -217,10 +217,13 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
         blacklist_ingredient.append(parent_ingredient.ingredient_name)
     while True:
         ingredient_input: str = input('')
-        if len(ingredient_input) == 0:
+        if ingredient_input in blacklist_ingredient:
+            print('you already typed that in')
+        elif len(ingredient_input) == 0:
             break
-        elif ingredient_input in blacklist_ingredient:
-            print('')
+        else:
+            
+        
     return head(parent_ingredient)
 
 
