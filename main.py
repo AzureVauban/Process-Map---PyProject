@@ -160,6 +160,22 @@ class Deque:
         raise ValueError('the container is empty, there are no values to peak')
 
 
+def promptint() -> int:
+    """
+    prompts the user for an postive integer and returns it
+    Returns:
+        int: postive integer from user input
+    """
+    while True:
+        myinput = input('').strip()
+        if not myinput.isdigit():
+            print('you can only type in a positive integer')
+        elif int(myinput) < 0:
+            print('please type in a postive integer')
+        else:
+            return int(myinput)
+
+
 class Base:
     """base class"""
     ingredient_name: str
@@ -179,8 +195,18 @@ class Base:
         self.amount_needed_per_craft = amount_needed_per_craft
         self.amount_resulted = 0
         self.buffer_amount_resulted = {}
+
     def prompt_onhand(self):
-        pass
+        """`add docstring"""
+        self.amount_on_hand = promptint()
+
+    def prompt_madepercraft(self):
+        """`add docstring"""
+        self.amount_made_per_craft = promptint()
+
+    def prompt_needed(self):
+        """`add docstring"""
+        self.amount_needed_per_craft = promptint()
 
 
 class Ingredient(Base):
@@ -204,6 +230,18 @@ class Ingredient(Base):
         self.children = []
         if self.parent is not None:
             self.parent.children.append(self)
+
+    def prompt_amounts(self):
+        if self.parent is not None:
+            print('How much', self.ingredient_name,
+                  'do you have on hand to create', self.parent.ingredient_name)
+            self.prompt_onhand()
+            print('How much', self.parent.ingredient_name,
+                  'is made each time you craft it?')
+        if self.parent is not None and self.promptamoumtmadepercraft:
+            self.prompt_madepercraft()
+            print('How much', self.ingredient_name, 'is needed to craft',
+                  self.parent.ingredient_name, 'once?')
 
 
 def head(ingredient: Ingredient) -> Ingredient:
@@ -254,7 +292,10 @@ def populate(ingredient: Ingredient) -> Ingredient:
     while not inputs.is_empty():
         if eldest_ingredient is None:
             eldest_ingredient = subpopulate(
-                ingredient, inputs.dequeue_front(), 1, True)
+                ingredient,  # parent ingredient node
+                inputs.dequeue_front(),  # ingredient name
+                1,  # ? value will be overwritten when applied to object
+                True)  # should prompt made per craft or not?
         else:
             subpopulate(ingredient, inputs.dequeue_front(),
                         eldest_ingredient.amount_made_per_craft, False)
