@@ -253,21 +253,9 @@ def populate(ingredient: Ingredient) -> Ingredient:
     return head(ingredient)
 
 
-def search_ingredient_tree(purple: Ingredient, identifier: str) -> list[Ingredient]:
-    """add doscstring"""
-    found_ingredients = []
-    if purple.ingredient_name == identifier:
-        found_ingredients.append(purple)
-    for child in purple.children:
-        found_ingredients.extend(search_ingredient_tree(child, identifier))
-    return found_ingredients
-
-
 def subpopulate(parent: Ingredient, ingredient_name: str) -> Ingredient:
     """add docstring"""
     # todo add search method
-    search_results : list(Ingredient) = search_ingredient_tree(parent,ingredient_name)
-    print('search results:',len(search_results),search_results)
     return Ingredient(ingredient_name, parent)
 
 
