@@ -208,22 +208,32 @@ def head(ingredient_node: Ingredient) -> Ingredient:
 
 def populate(parent_ingredient: Ingredient) -> Ingredient:
     """create an ingredient tree and return the head node ingredient"""
+    # prompt input ingredients
     print('What ingredients do you need to create',
           parent_ingredient.ingredient_name, end=':\n')
     user_inputs: Deque = Deque()
     blacklist_ingredient: list = [parent_ingredient.ingredient_name,
                                   head(parent_ingredient).ingredient_name]
-    for _ in range(parent_ingredient.children):
+    for _ in parent_ingredient.children:
         blacklist_ingredient.append(parent_ingredient.ingredient_name)
     while True:
         ingredient_input: str = input('')
         if ingredient_input in blacklist_ingredient:
-            print('you already typed that in')
-        if len(ingredient_input) == 0:
+            print('you cannot type input')
+        elif len(ingredient_input) == 0:
             break
-        user_inputs.enqueue_front(ingredient_input)
+        else:
+            user_inputs.enqueue_front(ingredient_input)
+            blacklist_ingredient.append(ingredient_input)
+    # create subnodes
+    while not user_inputs.is_empty():
+        Ingredient(user_inputs.dequeue_front(),parent_ingredient)
+    # populate subnodes
+    for subnode in parent_ingredient.children:
+        populate(subnode)
     return head(parent_ingredient)
 
 
 if __name__ == '__main__':
+    test = populate(Ingredient('DESIRED TEST ITEM',None))
     print('terminating process')
