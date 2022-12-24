@@ -201,11 +201,11 @@ class Ingredient(Base):
             self.parent.children.append(self)
 
 
-def head(ingredient_node: Ingredient) -> Ingredient:
+def head(ingredient: Ingredient) -> Ingredient:
     """traverse upward"""
-    while ingredient_node.parent is not None:
-        ingredient_node = ingredient_node.parent
-    return ingredient_node
+    while ingredient.parent is not None:
+        ingredient = ingredient.parent
+    return ingredient
 
 
 def trail(current: Ingredient):
@@ -224,16 +224,16 @@ def trail(current: Ingredient):
             break
 
 
-def populate(parent_ingredient: Ingredient) -> Ingredient:
+def populate(ingredient: Ingredient) -> Ingredient:
     """create an ingredient tree and return the head node ingredient"""
     print('What ingredients do you need to create',
-          parent_ingredient.ingredient_name, end=':\n')
+          ingredient.ingredient_name, end=':\n')
     user_inputs: Deque = Deque()
-    blacklist_ingredient: list = [parent_ingredient.ingredient_name,
-                                  head(parent_ingredient).ingredient_name]
+    blacklist_ingredient: list = [ingredient.ingredient_name,
+                                  head(ingredient).ingredient_name]
     # output the ingredient trail
-    if parent_ingredient.parent is not None:
-        trail(parent_ingredient)
+    if ingredient.parent is not None:
+        trail(ingredient)
     # prompt input ingredients
     while True:
         ingredient_input: str = input('')
@@ -246,13 +246,13 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
             blacklist_ingredient.append(ingredient_input)
     # create subnodes
     while not user_inputs.is_empty():
-        Ingredient(user_inputs.dequeue_front(), parent_ingredient)
+        Ingredient(user_inputs.dequeue_front(), ingredient)
     # populate subnodes
-    for subnode in parent_ingredient.children:
+    for subnode in ingredient.children:
         populate(subnode)
-    return head(parent_ingredient)
+    return head(ingredient)
 
 
 if __name__ == '__main__':
-    test = populate(Ingredient('DESIRED TEST ITEM', None))
+    test = populate(Ingredient('DESIRED TEST ITEM', None, 0, 1, 1))
     print('terminating process')
