@@ -191,6 +191,8 @@ class Ingredient(Base):
                  amount_needed_per_craft: int = 0) -> None:
         super().__init__(ingredient_name, amount_on_hand,
                          amount_made_per_craft, amount_needed_per_craft)
+        if parent is not None and not isinstance(parent,Ingredient):
+            raise TypeError('parent must be an instance',Ingredient) 
         self.parent = parent
         self.children = []
 
