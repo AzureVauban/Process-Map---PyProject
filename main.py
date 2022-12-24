@@ -1,7 +1,6 @@
 """
 final version of the Process Map (Python)
 """
-import random
 
 
 def fib(nth_term: int) -> int:
@@ -13,15 +12,6 @@ def fib(nth_term: int) -> int:
     if nth_term <= 1:
         return 1
     return fib(nth_term-1)+fib(nth_term-2)
-
-
-def randomly_generate_string(size: int = random.randint(5, 10)) -> str:
-    """select random characters and return the string"""
-    choice: str = 'ABCDEFGHIJKLMNOPQRSTUWXYZabcdefghijklmnopqrstuvwxyz1234567890-'
-    return_str: str = ''
-    for _ in range(size):
-        return_str += random.choice(choice)
-    return return_str
 
 
 class Deque:
@@ -170,12 +160,40 @@ class Deque:
         raise ValueError('the container is empty, there are no values to peak')
 
 
+class Base:
+    """base class"""
+    ingredient_name: str
+    amount_on_hand: int = 0
+    amount_made_per_craft: int = 0
+    amount_needed_per_craft: int = 0
+    amount_resulted: int = 0
+    buffer_amount_resulted: dict = {}
+
+    def __init__(self, ingredient_name: str = '', amount_on_hand: int = 0,
+                 amount_made_per_craft: int = 0, amount_needed_per_craft: int = 0) -> None:
+        self.ingredient_name = ingredient_name
+        self.amount_on_hand = amount_on_hand
+        self.amount_made_per_craft = amount_made_per_craft
+        self.amount_needed_per_craft = amount_needed_per_craft
+        self.amount_resulted = 0
+        self.buffer_amount_resulted = {}
+
+
+class Ingredient(Base):
+    """ingredient class"""
+    parent = None
+    children: list = []
+
+    def __init__(self, ingredient_name: str = '',
+                 parent=None,
+                 amount_on_hand: int = 0,
+                 amount_made_per_craft: int = 0,
+                 amount_needed_per_craft: int = 0) -> None:
+        super().__init__(ingredient_name, amount_on_hand,
+                         amount_made_per_craft, amount_needed_per_craft)
+        self.parent = parent
+        self.children = []
+
+
 if __name__ == '__main__':
-    test = Deque(5)
-    for _ in range(5):
-        test.enqueue_front((_+1)*50)
-    if test.is_full():
-        print('the deque container is full!')
-    while not test.is_empty():
-        print(test.dequeue_front())
     print('terminating process')
