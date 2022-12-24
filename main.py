@@ -220,7 +220,7 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
         if len(ingredient_input) == 0:
             break
         elif ingredient_input in blacklist_ingredient:
-            
+            print('')
     return head(parent_ingredient)
 
 
