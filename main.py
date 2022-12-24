@@ -263,7 +263,7 @@ def recursive_count_ingredient(purple: Ingredient, current_count: int = 0) -> in
     """add docstring"""
     current_count += 1
     for subnode in purple.children:
-        recursive_count_ingredient(subnode, current_count)
+       current_count += recursive_count_ingredient(subnode, current_count)
     return current_count
 
 
