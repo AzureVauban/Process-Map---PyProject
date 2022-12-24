@@ -214,7 +214,6 @@ class Ingredient(Base):
     parent = None
     children: list = []
     promptamoumtmadepercraft: bool = True
-    prompt_amounts:bool = False
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
@@ -231,7 +230,7 @@ class Ingredient(Base):
         self.children = []
         if self.parent is not None:
             self.parent.children.append(self)
-        if self.promptamounts:
+        if promptamounts:
             self.prompt_amounts()
 
     def prompt_amounts(self):
