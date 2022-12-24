@@ -169,8 +169,10 @@ class Base:
     amount_resulted: int = 0
     buffer_amount_resulted: dict = {}
 
-    def __init__(self, ingredient_name: str = '', amount_on_hand: int = 0,
-                 amount_made_per_craft: int = 0, amount_needed_per_craft: int = 0) -> None:
+    def __init__(self, ingredient_name: str = '',
+                 amount_on_hand: int = 0,
+                 amount_made_per_craft: int = 0,
+                 amount_needed_per_craft: int = 0) -> None:
         self.ingredient_name = ingredient_name
         self.amount_on_hand = amount_on_hand
         self.amount_made_per_craft = amount_made_per_craft
@@ -206,16 +208,33 @@ def head(ingredient_node: Ingredient) -> Ingredient:
     return ingredient_node
 
 
+def trail(current: Ingredient):
+    """
+    print the ingredient trail leading up to the parent most Node
+    Args:
+        node (Node): starting Node
+    """
+    print('TRAIL: ', end='')
+    while True:
+        if current.parent is not None:
+            print(current.ingredient_name, '-> ', end='')
+            current = current.parent
+        else:
+            print(current.ingredient_name)
+            break
+
+
 def populate(parent_ingredient: Ingredient) -> Ingredient:
     """create an ingredient tree and return the head node ingredient"""
-    # prompt input ingredients
     print('What ingredients do you need to create',
           parent_ingredient.ingredient_name, end=':\n')
     user_inputs: Deque = Deque()
     blacklist_ingredient: list = [parent_ingredient.ingredient_name,
                                   head(parent_ingredient).ingredient_name]
-    for _ in parent_ingredient.children:
-        blacklist_ingredient.append(parent_ingredient.ingredient_name)
+    # output the ingredient trail
+    if parent_ingredient.parent is not None:
+        trail(parent_ingredient)
+    # prompt input ingredients
     while True:
         ingredient_input: str = input('')
         if ingredient_input in blacklist_ingredient:
@@ -227,7 +246,7 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
             blacklist_ingredient.append(ingredient_input)
     # create subnodes
     while not user_inputs.is_empty():
-        Ingredient(user_inputs.dequeue_front(),parent_ingredient)
+        Ingredient(user_inputs.dequeue_front(), parent_ingredient)
     # populate subnodes
     for subnode in parent_ingredient.children:
         populate(subnode)
@@ -235,5 +254,5 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
 
 
 if __name__ == '__main__':
-    test = populate(Ingredient('DESIRED TEST ITEM',None))
+    test = populate(Ingredient('DESIRED TEST ITEM', None))
     print('terminating process')
