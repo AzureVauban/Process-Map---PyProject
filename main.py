@@ -219,11 +219,9 @@ def populate(parent_ingredient: Ingredient) -> Ingredient:
         ingredient_input: str = input('')
         if ingredient_input in blacklist_ingredient:
             print('you already typed that in')
-        elif len(ingredient_input) == 0:
+        if len(ingredient_input) == 0:
             break
-        else:
-            
-        
+        user_inputs.enqueue_front(ingredient_input)
     return head(parent_ingredient)
 
 
