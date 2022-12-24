@@ -185,18 +185,19 @@ class Ingredient(Base):
     """ingredient class"""
     parent = None
     children: list = []
-    promptamoumtmadepercraft : bool = True
+    promptamoumtmadepercraft: bool = True
+
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
                  amount_needed_per_craft: int = 0,
-                 promptamoumtmadepercraft:bool = True) -> None:
+                 promptamoumtmadepercraft: bool = False) -> None:
         super().__init__(ingredient_name, amount_on_hand,
                          amount_made_per_craft, amount_needed_per_craft)
         if parent is not None and not isinstance(parent, Ingredient):
             raise TypeError('parent must be an instance', Ingredient)
-        self.promptamoumtmadepercraft =promptamoumtmadepercraft
+        self.promptamoumtmadepercraft = promptamoumtmadepercraft
         self.parent = parent
         self.children = []
         if self.parent is not None:
@@ -267,7 +268,9 @@ def subpopulate(parent: Ingredient,
                 prompt_amountmadepercraft: bool = False) -> Ingredient:
     """add docstring"""
     # todo add search method
-    return Ingredient(ingredient, parent, amount_made_per_craft=amount_made_per_craft)
+    return Ingredient(ingredient, parent,
+                      amount_made_per_craft=amount_made_per_craft,
+                      promptamoumtmadepercraft=prompt_amountmadepercraft)
 
 
 def recursive_count_ingredients(purple: Ingredient) -> int:
