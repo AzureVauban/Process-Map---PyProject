@@ -185,16 +185,18 @@ class Ingredient(Base):
     """ingredient class"""
     parent = None
     children: list = []
-
+    promptamoumtmadepercraft : bool = True
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_made_per_craft: int = 0,
-                 amount_needed_per_craft: int = 0) -> None:
+                 amount_needed_per_craft: int = 0,
+                 promptamoumtmadepercraft:bool = True) -> None:
         super().__init__(ingredient_name, amount_on_hand,
                          amount_made_per_craft, amount_needed_per_craft)
         if parent is not None and not isinstance(parent, Ingredient):
             raise TypeError('parent must be an instance', Ingredient)
+        self.promptamoumtmadepercraft =promptamoumtmadepercraft
         self.parent = parent
         self.children = []
         if self.parent is not None:
@@ -249,17 +251,20 @@ def populate(ingredient: Ingredient) -> Ingredient:
     while not inputs.is_empty():
         if eldest_ingredient is None:
             eldest_ingredient = subpopulate(
-                ingredient, inputs.dequeue_front(), 1)
+                ingredient, inputs.dequeue_front(), 1, True)
         else:
             subpopulate(ingredient, inputs.dequeue_front(),
-                        eldest_ingredient.amount_made_per_craft)
+                        eldest_ingredient.amount_made_per_craft, False)
     # populate subnodes
     for subnode in ingredient.children:
         populate(subnode)
     return head(ingredient)
 
 
-def subpopulate(parent: Ingredient, ingredient: str, amount_made_per_craft: int) -> Ingredient:
+def subpopulate(parent: Ingredient,
+                ingredient: str,
+                amount_made_per_craft: int,
+                prompt_amountmadepercraft: bool = False) -> Ingredient:
     """add docstring"""
     # todo add search method
     return Ingredient(ingredient, parent, amount_made_per_craft=amount_made_per_craft)
