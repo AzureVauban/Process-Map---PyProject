@@ -228,7 +228,7 @@ def populate(ingredient: Ingredient) -> Ingredient:
     """create an ingredient tree and return the head node ingredient"""
     print('What ingredients do you need to create',
           ingredient.ingredient_name, end=':\n')
-    user_inputs: Deque = Deque()
+    inputs: Deque = Deque()
     blacklist_ingredient: list = [ingredient.ingredient_name,
                                   head(ingredient).ingredient_name]
     # output the ingredient trail
@@ -242,21 +242,27 @@ def populate(ingredient: Ingredient) -> Ingredient:
         elif len(ingredient_input) == 0:
             break
         else:
-            user_inputs.enqueue_front(ingredient_input)
+            inputs.enqueue_front(ingredient_input)
             blacklist_ingredient.append(ingredient_input)
     # create subnodes
-    while not user_inputs.is_empty():
-        subpopulate(ingredient, user_inputs.dequeue_front())
+    eldest_ingredient: Ingredient = None
+    while not inputs.is_empty():
+        if eldest_ingredient is None:
+            eldest_ingredient = subpopulate(
+                ingredient, inputs.dequeue_front(), 1)
+        else:
+            subpopulate(ingredient, inputs.dequeue_front(),
+                        eldest_ingredient.amount_made_per_craft)
     # populate subnodes
     for subnode in ingredient.children:
         populate(subnode)
     return head(ingredient)
 
 
-def subpopulate(parent: Ingredient, ingredient_name: str) -> Ingredient:
+def subpopulate(parent: Ingredient, ingredient: str, amount_made_per_craft: int) -> Ingredient:
     """add docstring"""
     # todo add search method
-    return Ingredient(ingredient_name, parent)
+    return Ingredient(ingredient, parent, amount_made_per_craft=amount_made_per_craft)
 
 
 def recursive_count_ingredients(purple: Ingredient) -> int:
@@ -267,9 +273,9 @@ def recursive_count_ingredients(purple: Ingredient) -> int:
     return nodescounted
 
 
-def count_ingredients(head_ingredient: Ingredient) -> int:
+def count_ingredients(ingredient: Ingredient) -> int:
     """add docstring"""
-    node_count: int = recursive_count_ingredients(head_ingredient)
+    node_count: int = recursive_count_ingredients(ingredient)
     return node_count
 
 
