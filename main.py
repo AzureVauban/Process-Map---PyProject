@@ -179,6 +179,8 @@ class Base:
         self.amount_needed_per_craft = amount_needed_per_craft
         self.amount_resulted = 0
         self.buffer_amount_resulted = {}
+    def prompt_onhand(self):
+        pass
 
 
 class Ingredient(Base):
