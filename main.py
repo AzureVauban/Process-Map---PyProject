@@ -241,6 +241,7 @@ class Ingredient(Base):
             self.prompt_onhand()
             print('How much', self.parent.ingredient_name,
                   'is made each time you craft it?')
+            self.prompt_needed()
         if self.parent is not None and self.promptamoumtmadepercraft:
             self.prompt_madepercraft()
             print('How much', self.ingredient_name, 'is needed to craft',
@@ -316,7 +317,8 @@ def subpopulate(parent: Ingredient,
     # todo add search method
     return Ingredient(ingredient, parent,
                       amount_made_per_craft=amount_made_per_craft,
-                      promptamoumtmadepercraft=prompt_amountmadepercraft)
+                      promptamoumtmadepercraft=prompt_amountmadepercraft,
+                      promptamounts=True)
 
 
 def recursive_count_ingredients(purple: Ingredient) -> int:
