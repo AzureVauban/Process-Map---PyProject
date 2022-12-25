@@ -238,12 +238,12 @@ class Ingredient(Base):
         if self.parent is not None:
             print('How much', self.ingredient_name,
                   'do you have on hand to create', self.parent.ingredient_name)
-            self.prompt_onhand()
+            #! self.prompt_onhand()
             print('How much', self.parent.ingredient_name,
                   'is made each time you craft it?')
-            self.prompt_needed()
+            #! self.prompt_needed()
         if self.parent is not None and self.promptamoumtmadepercraft:
-            self.prompt_madepercraft()
+            #! self.prompt_madepercraft()
             print('How much', self.ingredient_name, 'is needed to craft',
                   self.parent.ingredient_name, 'once?')
 
