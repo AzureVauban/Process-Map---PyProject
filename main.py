@@ -312,16 +312,32 @@ def populate(ingredient: Ingredient) -> Ingredient:
     return head(ingredient)
 
 
-def search_for_objects(head : Ingredient,found_nodes : dict)->dict:
-    
-    return {-1:None}
+def search_for_objects(current: Ingredient, target_ingredient_name: str, found_nodes: dict) -> dict:
+    """add docstring"""
+    if current.ingredient_name == target_ingredient_name:
+        found_nodes.update({len(found_nodes): current})
+    for sub_ingredient in current.children:
+        found_nodes = search_for_objects(
+            sub_ingredient, target_ingredient_name, found_nodes)
+    if len(found_nodes) == 0 and len(current.children) == 0:
+        return {-1: None}
+    return found_nodes
+
+
 def subpopulate(parent: Ingredient,
-                ingredient: str,
+                ingredient_name: str,
                 amount_made_per_craft: int,
                 prompt_amountmadepercraft: bool = False) -> Ingredient:
     """add docstring"""
-    # todo add search method
-    return Ingredient(ingredient, parent,
+    search_dict : dict = {}
+    search_dict = search_for_objects(head(parent),ingredient_name,search_dict)
+    if search_dict != {-1:None}:
+        print("# OF NODES WITH THE SAME INGREDIENT NAME:",len(search_dict))
+        return Ingredient(ingredient_name, parent,
+                      amount_made_per_craft=amount_made_per_craft,
+                      promptamoumtmadepercraft=prompt_amountmadepercraft,
+                      promptamounts=True)
+    return Ingredient(ingredient_name, parent,
                       amount_made_per_craft=amount_made_per_craft,
                       promptamoumtmadepercraft=prompt_amountmadepercraft,
                       promptamounts=True)
