@@ -242,15 +242,15 @@ class Ingredient(Base):
             temp_parent_name = '\x1B[32m'+self.parent.ingredient_name+'\x1B[0m'
         # prompt amounts
         if self.parent is not None and self.promptamoumtmadepercraft:
-            print('How much', temp_name, 'is needed to craft',
-                  self.parent.ingredient_name, 'once?')
+            print('How much', temp_parent_name,
+                  'is made each time you craft it?')
             #! self.prompt_madepercraft()
         if self.parent is not None:
             print('How much', temp_name,
                   'do you have on hand to create', temp_parent_name)
             #! self.prompt_onhand()
-            print('How much', temp_parent_name,
-                  'is made each time you craft it?')
+            print('How much', temp_name, 'is needed to craft',
+                  self.parent.ingredient_name, 'once?')
             #! self.prompt_needed()
 
 
@@ -295,8 +295,9 @@ def populate(ingredient: Ingredient) -> Ingredient:
         elif len(ingredient_input) == 0:
             break
         else:
-            inputs.enqueue_front(ingredient_input)
+            inputs.enqueue_back(ingredient_input)
             blacklist_ingredient.append(ingredient_input)
+    del blacklist_ingredient
     # create subnodes
     eldest_ingredient: Ingredient = None
     while not inputs.is_empty():
