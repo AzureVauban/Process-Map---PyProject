@@ -329,14 +329,16 @@ def subpopulate(parent: Ingredient,
                 amount_made_per_craft: int,
                 prompt_amountmadepercraft: bool = False) -> Ingredient:
     """add docstring"""
-    search_dict : dict = {}
-    search_dict = search_for_objects(head(parent),ingredient_name,search_dict)
-    if search_dict != {-1:None}:
-        print("# OF NODES WITH THE SAME INGREDIENT NAME:",len(search_dict))
+    search_dict: dict = {}
+    search_dict = search_for_objects(
+        head(parent), ingredient_name, search_dict)
+    if search_dict != {-1: None}:
+        temp_ingredient_name : str = '\x1B[36m' +ingredient_name+'\x1B[0m' #! remove later
+        print("# OF NODES WITH THE SAME INGREDIENT NAME as,",temp_ingredient_name,":", len(search_dict))
         return Ingredient(ingredient_name, parent,
-                      amount_made_per_craft=amount_made_per_craft,
-                      promptamoumtmadepercraft=prompt_amountmadepercraft,
-                      promptamounts=True)
+                          amount_made_per_craft=amount_made_per_craft,
+                          promptamoumtmadepercraft=prompt_amountmadepercraft,
+                          promptamounts=True)
     return Ingredient(ingredient_name, parent,
                       amount_made_per_craft=amount_made_per_craft,
                       promptamoumtmadepercraft=prompt_amountmadepercraft,
