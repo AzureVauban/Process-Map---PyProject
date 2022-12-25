@@ -333,8 +333,15 @@ def subpopulate(parent: Ingredient,
     search_dict = search_for_objects(
         head(parent), ingredient_name, search_dict)
     if search_dict != {-1: None}:
-        temp_ingredient_name : str = '\x1B[36m' +ingredient_name+'\x1B[0m' #! remove later
-        print("# OF NODES WITH THE SAME INGREDIENT NAME as,",temp_ingredient_name,":", len(search_dict))
+        temp_ingredient_name: str = '\x1B[36m' + \
+            ingredient_name+'\x1B[0m'  # ! remove later
+        print("# OF NODES WITH THE SAME INGREDIENT NAME as,",
+              temp_ingredient_name, ":", len(search_dict))
+        for subnode in search_dict.items:
+            num_to_str: str = str(subnode[0])+'.'
+            print(num_to_str, subnode[1].amount_on_hand, '|',
+                  subnode[1].amount_made_per_craft, '|',
+                  subnode[1].amount_needed_per_craft)
         return Ingredient(ingredient_name, parent,
                           amount_made_per_craft=amount_made_per_craft,
                           promptamoumtmadepercraft=prompt_amountmadepercraft,
