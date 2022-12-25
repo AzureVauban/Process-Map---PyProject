@@ -214,6 +214,7 @@ class Ingredient(Base):
     parent = None
     children: list = []
     promptamoumtmadepercraft: bool = True
+
     def __init__(self, ingredient_name: str = '',
                  parent=None,
                  amount_on_hand: int = 0,
@@ -239,18 +240,19 @@ class Ingredient(Base):
         temp_parent_name = '\x1B[32mNone\x1B[0m'
         if self.parent is not None:
             temp_parent_name = '\x1B[32m'+self.parent.ingredient_name+'\x1B[0m'
+        # prompt amountds
         if self.parent is not None:
             print('How much', temp_name,
                   'do you have on hand to create', temp_parent_name)
             #! self.prompt_onhand()
         if self.parent is not None and self.promptamoumtmadepercraft:
+            print('How much', temp_name, 'is needed to craft',
+                  self.parent.ingredient_name, 'once?')
+            #! self.prompt_madepercraft()
+        if self.parent is not None:
             print('How much', temp_parent_name,
                   'is made each time you craft it?')
             #! self.prompt_needed()
-        if self.parent is not None:
-            #! self.prompt_madepercraft()
-            print('How much', temp_name, 'is needed to craft',
-                  self.parent.ingredient_name, 'once?')
 
 
 def head(ingredient: Ingredient) -> Ingredient:
