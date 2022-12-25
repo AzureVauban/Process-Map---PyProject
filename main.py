@@ -235,18 +235,22 @@ class Ingredient(Base):
 
     def prompt_amounts(self):
         """add docstring"""
-        temp_name : str = '\x1B[31m'+self.ingredient_name+'\x1B[0m'
+        temp_name = '\x1B[31m'+self.ingredient_name+'\x1B[0m'
+        temp_parent_name = '\x1B[32mNone\x1B[0m'
+        if self.parent is not None:
+            temp_parent_name = '\x1B[32m'+self.parent.ingredient_name+'\x1B[0m'
         if self.parent is not None:
             print('How much', temp_name,
-                  'do you have on hand to create', self.parent.ingredient_name)
+                  'do you have on hand to create', temp_parent_name)
+            #! self.prompt_onhand()
         if self.parent is not None and self.promptamoumtmadepercraft:
+            print('How much', temp_parent_name,
+                  'is made each time you craft it?')
+            #! self.prompt_needed()
+        if self.parent is not None:
             #! self.prompt_madepercraft()
             print('How much', temp_name, 'is needed to craft',
                   self.parent.ingredient_name, 'once?')
-            #! self.prompt_onhand()
-            print('How much', self.parent.ingredient_name,
-                  'is made each time you craft it?')
-            #! self.prompt_needed()
 
 
 def head(ingredient: Ingredient) -> Ingredient:
