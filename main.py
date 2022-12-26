@@ -874,7 +874,7 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     if len(parseresults) == 0:
         return Ingredient(ingredient_name, ingredient)
     # else, prompt the user to create a linkable clone of the new ingredient
-    print('+ parent ingredient (item that,',ingredient_name,'creates somewhere else in your ingredient tree\n',
+    print('+ parent ingredient (item that,',ingredient_name,'creates somewhere else in your ingredient tree)\n',
           '++ amount of', ingredient_name,
           'on hand (needed to make 1', head(ingredient).ingredient_name, end=')\n')
     print('+++ amount of the parent ingredient made per craft')
