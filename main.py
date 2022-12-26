@@ -534,21 +534,28 @@ def makealiasunique(ingredient: Ingredient):
     # make all nodes in the tree have unique ingredient aliases
     # get a list of all the nodes in the ingredient tree with the same ingredient alias
     # as the passed ingredient instance
-    nodesaliases: list = allaliases(
-        ingredient, ingredient.alias_ingredient, [])
+    nodesaliases: Deque = allaliases(
+        ingredient, ingredient.alias_ingredient, Deque())
     # if the list is greater than 1, then parse through the list to make each alias unique
     if len(nodesaliases) > 1:
         # make uniue by appending the index to the alias
-        for redindex, reditem in enumerate(nodesaliases):
-            for blueindex, blueitem in enumerate(nodesaliases):
-                if redindex != blueindex and reditem.alias_ingredient == blueitem.alias_ingredient:
-                    blueitem.alias_ingredient += str(blueindex)
+    #!    for redindex, reditem in enumerate(nodesaliases):
+    #!        for blueindex, blueitem in enumerate(nodesaliases):
+    #!            if redindex != blueindex and reditem.alias_ingredient == blueitem.alias_ingredient:
+    #!                blueitem.alias_ingredient += str(blueindex)
+        nodesaliases.dequeue_front()
+        node_ingredient_duplicate_num : int = 2
+        while not nodesaliases.is_empty():
+            if not isinstance(nodesaliases.peak_back(),Ingredient):
+                raise TypeError('peaked value from the deque is not an instance of',Ingredient)
+            nodesaliases.dequeue_front().alias_ingredient + str(node_ingredient_duplicate_num)
+            node_ingredient_duplicate_num +=1
     # recrusively call the function on each child ingredient
     for subnode in ingredient.children.items():
         makealiasunique(subnode[1])
 
 
-def allaliases(ingredient: Ingredient, alias: str, aliases: list) -> list:
+def allaliases(ingredient: Ingredient, alias: str, aliases: Deque) -> Deque:
     """
     returns a list of all the nodes with the same alias
     Args:
@@ -559,7 +566,7 @@ def allaliases(ingredient: Ingredient, alias: str, aliases: list) -> list:
         list: a list of Nodes containining the same ingredient alias
     """
     if ingredient.alias_ingredient == alias:
-        aliases.append(ingredient)
+        aliases.enqueue_back(ingredient)
     # recrusively search for nodes that have the same ingreident alias as the passed alias
     for subnode in ingredient.children.items():
         allaliases(subnode[1], alias, aliases)
