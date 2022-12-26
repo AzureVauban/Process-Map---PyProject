@@ -429,7 +429,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         Returns:
             list: a list of dicts containing the data for each ingredient to be written onto a csv file
         """
-        rows.enqueue_back(self.pandasrow())
+        enqueued_data = self.pandasrow()
+        rows.enqueue_back(enqueued_data)
         for child in self.children.items():
             child[1].pandastree_row(rows)
         return rows
