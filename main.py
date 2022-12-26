@@ -220,9 +220,11 @@ class Base:  # pylint: disable=R0903
             ingredient_name(str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
             parent item above it. Defaults to 0.
-            amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
+            amount_parent_made_per_craft (int, optional): how much of the parent
+            ingredient is made with
             this ingredient. Defaults to 1.
-            amount_needed (int, optional): amount of ingredient needed to craft the parent ingredient
+            amount_needed (int, optional): amount of ingredient needed to craft the
+            parent ingredient
             once. Defaults to 1.
         """
         self.amount_on_hand = amount_on_hand
@@ -264,15 +266,15 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             ingredient (str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
             parent ingredient above it. Defaults to 0.
-            amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
-            this ingredient. Defaults to 1.
-            amount_needed (int, optional): amount of ingredient needed to craft the parent ingredient
-            once. Defaults to 1.
+            amount_parent_made_per_craft (int, optional): how much of the parent
+            ingredient is made with this ingredient. Defaults to 1.
+            amount_needed (int, optional): amount of ingredient needed to craft the parent
+            ingredient once. Defaults to 1.
             promptamountparentmade (bool, optional): determines if the program should prompt user to
             type in a number for the amount of the parent ingredient made per craft.
             Defaults to False.
-            isfromcsvfile (bool, optional): a boolean to track if the created Ingredient instance is from
-            the CSV file. Defaults to False.
+            isfromcsvfile (bool, optional): a boolean to track if the created Ingredient instance is
+            from the CSV file. Defaults to False.
             treekey (str, optional): a string of about 10 to 20 alphanumeric characters to help make
             each ingredient tree unique when written to a CSV file. Defaults to ''.
         """
@@ -427,7 +429,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         Args:
             rows (list): a list of pandas rows (dicts of data)
         Returns:
-            list: a list of dicts containing the data for each ingredient to be written onto a csv file
+            list: a list of dicts containing the data for each ingredient to be written
+            onto a csv file
         """
         enqueued_data = self.pandasrow()
         rows.enqueue_back(enqueued_data)
@@ -717,8 +720,8 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     """
     figures out where to create and link a new ingredient object from the csv file
     Args:
-        parent_ingredient (Ingredient): potential parent ingredient object to link new ingredient object to
-        pandasrow (list): data from csv file, creates ingredient object from it
+        parent_ingredient (Ingredient): potential parent ingredient object to link new 
+        ingredient object to pandasrow (list): data from csv file, creates ingredient object from it
     Returns:
         Ingredient: parent most ingredient object of the tree
     """
@@ -773,7 +776,8 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
     location
     Args:
         ingredient (str): name of item to check if it is in the subnodes
-        subnodes (dict): a dictionary of subnodes of the parent ingredient object (emplace parent location)
+        subnodes (dict): a dictionary of subnodes of the parent ingredient
+        object (emplace parent location)
     Raises:
         TypeError: dictionary does not contain int, ingredient object pairs
         TypeError: the parent_ingredient object of the subnodes are not the same
@@ -790,7 +794,8 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
         if not isinstance(subnode[1], Ingredient) and not isinstance(subnode[0], int):
             raise TypeError('subnodes is not a dictionary',
                             Ingredient, 'subnodes')
-        # check if any ingredient object instance in the convert list does not have a the same parent_ingredient
+        # check if any ingredient object instance in the convert list does
+        # not have a the same parent_ingredient
         # raise an error if the parent_ingredient object is not the same in all nodes
         subnodeslist.append(subnode[1])
         for redindex, rednode in enumerate(subnodeslist):
