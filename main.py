@@ -203,14 +203,14 @@ class Base:  # pylint: disable=R0903
     ingredient_name: str = ''
     amount_on_hand: int = 0
     amount_needed: int = 0
-    amountparentmadepercraft: int = 0
-    amountresulted: int = 0
+    amount_parent_made_per_craft: int = 0
+    amount_resulted: int = 0
     queueamountresulted: dict = {}
     alias_ingredient: str = ''
 
     def __init__(self, ingredient_name: str = '',
                  amount_on_hand: int = 0,
-                 amountparentmadepercraft: int = 1,
+                 amount_parent_made_per_craft: int = 1,
                  amount_needed: int = 1) -> None:
         """
         a superclass of the Node class used to contain basic information about an ingredient
@@ -218,17 +218,17 @@ class Base:  # pylint: disable=R0903
             ingredient (str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
             parent item above it. Defaults to 0.
-            amountparentmadepercraft (int, optional): how much of the parent ingredient is made with
+            amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
             this ingredient. Defaults to 1.
             amount_needed (int, optional): amount of ingredient needed to craft the parent igredient
             once. Defaults to 1.
         """
         self.amount_on_hand = amount_on_hand
-        self.amountparentmadepercraft = amountparentmadepercraft
+        self.amount_parent_made_per_craft = amount_parent_made_per_craft
         self.amount_needed = amount_needed
         self.queueamountresulted = {}
         self.ingredient_name = ingredient_name
-        self.amountresulted = 0
+        self.amount_resulted = 0
         self.alias_ingredient = ingredient_name.replace(' ', '_')
 
 
@@ -249,7 +249,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     def __init__(self, ingredient: str = '',  # pylint: disable=R0913
                  parent=None,
                  amount_on_hand: int = 0,
-                 amountparentmadepercraft: int = 1,
+                 amount_parent_made_per_craft: int = 1,
                  amount_needed: int = 1,
                  promptamountparentmade: bool = False,
                  promptamountsOn: bool = True,
@@ -262,7 +262,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             ingredient (str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
             parent item above it. Defaults to 0.
-            amountparentmadepercraft (int, optional): how much of the parent ingredient is made with
+            amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
             this ingredient. Defaults to 1.
             amount_needed (int, optional): amount of ingredient needed to craft the parent igredient
             once. Defaults to 1.
@@ -276,7 +276,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         """
         super().__init__(ingredient,
                          amount_on_hand,
-                         amountparentmadepercraft,
+                         amount_parent_made_per_craft,
                          amount_needed)
         self.treekey = treekey
         self.isfromcsvfile = isfromcsvfile
@@ -315,8 +315,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             while promptamountparentmade:  # ? should this be prompted depending on if it was cloned
                 print('How much', self.parent.ingredient,
                       'do you create each time you craft it: ')
-                self.amountparentmadepercraft = promptint()
-                if self.amountparentmadepercraft < 1:
+                self.amount_parent_made_per_craft = promptint()
+                if self.amount_parent_made_per_craft < 1:
                     print('That number is not valid')
                 else:
                     promptamountparentmade = False
@@ -354,24 +354,24 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             for myinteger in self.queueamountresulted.items():
                 if myinteger[1] < tentativeinteger:
                     tentativeinteger = myinteger[1]
-        red = (self.amountparentmadepercraft / self.amount_needed)
+        red = (self.amount_parent_made_per_craft / self.amount_needed)
         blue = (red*self.amount_on_hand) + (red*tentativeinteger)
         blue = round(math.floor(blue))
-        self.amountresulted = blue
+        self.amount_resulted = blue
         # recursively call the method
         if self.parent is not None:
             self.parent.queueamountresulted.update(
-                {self.ingredient_name: self.amountresulted})
+                {self.ingredient_name: self.amount_resulted})
             self.parent.recursivearithmetic()
-        return self.amountresulted
+        return self.amount_resulted
 
     def reversearithmetic(self, desiredamount: int = 0) -> int:
         """
         tentative docstring description
         """
-        self.amountresulted = desiredamount
-        red: float = ((self.amountparentmadepercraft/self.amount_needed)
-                      ** -1)*self.amountresulted
+        self.amount_resulted = desiredamount
+        red: float = ((self.amount_parent_made_per_craft/self.amount_needed)
+                      ** -1)*self.amount_resulted
         green: float = round(math.ceil(red))
         self.amount_on_hand = int(max(red, green))
         traceback: bool = green > red
@@ -413,7 +413,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             pandas_row.update({'Parent_of_Ingredient': 'None'})
         pandas_row.update({'Amount_on_Hand': str(self.amount_on_hand)})
         pandas_row.update(
-            {'Amount_Made_Per_Craft': str(self.amountparentmadepercraft)})
+            {'Amount_Made_Per_Craft': str(self.amount_parent_made_per_craft)})
         pandas_row.update(
             {'Amount_Needed_Per_Craft': str(self.amount_needed)})
         pandas_row.update({'Generation': str(self.generation)})
@@ -687,7 +687,7 @@ def createtree(node: Ingredient, pandasrow: list) -> bool:
         Ingredient(pandasrow[1],
                    parent=node,
                    amount_needed=pandasrow[6],
-                   amountparentmadepercraft=pandasrow[5],
+                   amount_parent_made_per_craft=pandasrow[5],
                    amount_on_hand=pandasrow[4],
                    treekey=pandasrow[0],
                    # isfromcsvfile=True,
@@ -815,7 +815,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
                                               parent=node.parent.parent,
                                               amount_on_hand=node.amount_on_hand,
                                               amount_needed=node.amount_needed,
-                                              amountparentmadepercraft=node.amountparentmadepercraft,
+                                              amount_parent_made_per_craft=node.amount_parent_made_per_craft,
                                               isfromcsvfile=node.isfromcsvfile,
                                               promptamountsOn=False)
             return bluenode
@@ -826,7 +826,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
                                      parent=node.parent,
                                      amount_on_hand=node.amount_on_hand,
                                      amount_needed=node.amount_needed,
-                                     amountparentmadepercraft=node.amountparentmadepercraft,
+                                     amount_parent_made_per_craft=node.amount_parent_made_per_craft,
                                      isfromcsvfile=node.isfromcsvfile,
                                      promptamountsOn=False)
     # create a copy of all the children of the parameter node
@@ -835,7 +835,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
                 parent=subnode,
                 amount_on_hand=subnode[1].amount_on_hand,
                 amount_needed=subnode[1].amount_needed,
-                amountparentmadepercraft=subnode[1].amountparentmadepercraft,  # noqa: E501 #pylint: disable=line-too-long
+                amount_parent_made_per_craft=subnode[1].amount_parent_made_per_craft,  # noqa: E501 #pylint: disable=line-too-long
                 promptamountparentmade=False,
                 isfromcsvfile=subnode[1].isfromcsvfile,
                 promptamountsOn=False)
@@ -875,7 +875,7 @@ def subpopulate(node: Ingredient, ingredient: str) -> Ingredient:
         print(index+1, end=str('. ' + subnode.parent.ingredient
                                + ' | + ' + str(subnode.amount_on_hand)
                                + ' | ++ ' + str(subnode.amount_needed)
-                               + ' | +++ ' + str(subnode.amountparentmadepercraft)+'\n'))
+                               + ' | +++ ' + str(subnode.amount_parent_made_per_craft)+'\n'))
     # todo make sure program doesn't crash when user's input is blank
     print('Choose which verison of', ingredient, 'to clone:')
     userchoice: int = promptint() - 1
@@ -1061,16 +1061,16 @@ if __name__ == '__main__':
             print('\n')
         # ? if MODE A and population > 1
         elif ingredienttree.population >= 2 and MODE == ProgramState.MODE_A:
-            print('You can make', ingredienttree.amountresulted, 'of',
+            print('You can make', ingredienttree.amount_resulted, 'of',
                   ingredienttree.ingredient_name, 'with the materials you have')
             # ? output the endpoint ingredient names and amounts resulted
             for item in ingredienttree.findendpoints({}).items():
                 print('You would use',
-                      item[1].amountresulted, 'of', item[1].ingredient)
+                      item[1].amount_resulted, 'of', item[1].ingredient)
         # ? population == 1
         else:
-            print('You would need', ingredienttree.amountresulted, 'to create',
-                  ingredienttree.amountresulted, 'of', ingredienttree.ingredient_name)
+            print('You would need', ingredienttree.amount_resulted, 'to create',
+                  ingredienttree.amount_resulted, 'of', ingredienttree.ingredient_name)
         # prompt the user if they want to output the ingredient tree onto A csv file
         print('Do you want to save your tree to create',
               ingredienttree.ingredient_name, 'to a csv file? (Y/N)')
