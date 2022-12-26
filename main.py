@@ -313,7 +313,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         if self.parent_ingredient is not None:
             # $ only if older sibiling has not been prompted, prompt amountmadepercraft
             while promptamountparentmade:  # ? should this be prompted depending on if it was cloned
-                print('How much', self.parent_ingredient.ingredient,
+                print('How much', self.parent_ingredient.ingredient_name,
                       'do you create each time you craft it: ')
                 self.amount_parent_made_per_craft = promptint()
                 if self.amount_parent_made_per_craft < 1:
@@ -324,7 +324,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             # $ prompt amount_needed
             while True:
                 print('How much', self.ingredient_name, 'do you need to craft',
-                      self.parent_ingredient.ingredient, '1 time: ')
+                      self.parent_ingredient.ingredient_name, '1 time: ')
                 self.amount_needed = promptint()
                 if self.amount_needed < 1:
                     print('That number is not valid')
@@ -408,7 +408,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         pandas_row.update({'Ingredient_Alias': self.alias_ingredient})
         if self.parent_ingredient is not None:
             pandas_row.update(
-                {'Parent_of_Ingredient': self.parent_ingredient.ingredient})
+                {'Parent_of_Ingredient': self.parent_ingredient.ingredient_name})
         else:
             pandas_row.update({'Parent_of_Ingredient': 'None'})
         pandas_row.update({'Amount_on_Hand': str(self.amount_on_hand)})
@@ -472,13 +472,13 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         # and a list of tuples of the parent_ingredient object of said endpoint instance and the
         # amount on hand as values
         for node in temp.findendpoints({}).items():
-            if node[1].ingredient not in compressedendpoints:
+            if node[1].ingredient_name not in compressedendpoints:
                 compressedendpoints.update(
-                    {node[1].ingredient: [(node[1].parent_ingredient.ingredient,
+                    {node[1].ingredient_name: [(node[1].parent_ingredient.ingredient_name,
                                            node[1].amount_on_hand)]})
             else:
-                compressedendpoints[node[1].ingredient].append(
-                    (node[1].parent_ingredient.ingredient,
+                compressedendpoints[node[1].ingredient_name].append(
+                    (node[1].parent_ingredient.ingredient_name,
                      node[1].amount_on_hand))
         output_dictionary: dict = {}
         for item_a in compressedendpoints.items():
@@ -629,7 +629,7 @@ def outputingredients(ingredient: Ingredient):
     """
     subingredients: list = []
     for subnode in ingredient.children.items():
-        subingredients.append(subnode[1].ingredient)
+        subingredients.append(subnode[1].ingredient_name)
     print('+ These ingredients are already in the tree:\n')
     # output the ingredients
     for index, ingredient in enumerate(subingredients):
@@ -788,7 +788,7 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
     subingredientnames: list = []
     for subnode in subnodeslist:
         for childnode in subnode.children.items():
-            subingredientnames.append(childnode[1].ingredient)
+            subingredientnames.append(childnode[1].ingredient_name)
     # check if the ingredient is in the list of subingredient names
     if ingredient in subingredientnames:
         return False
@@ -832,7 +832,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
                                      promptamountsOn=False)
     # create a copy of all the children of the parameter ingredient object
     for subnode in ingredient.children.items():
-        Ingredient(ingredient_name=subnode[1].ingredient,
+        Ingredient(ingredient_name=subnode[1].ingredient_name,
                 parent_ingredient=subnode,
                 amount_on_hand=subnode[1].amount_on_hand,
                 amount_needed=subnode[1].amount_needed,
@@ -873,7 +873,7 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
 
         # output the choices of subnodes:
         # parent ingredient, amount_needed, amountmadepereachcraft
-        print(index+1, end=str('. ' + subnode.parent_ingredient.ingredient
+        print(index+1, end=str('. ' + subnode.parent_ingredient.ingredient_name
                                + ' | + ' + str(subnode.amount_on_hand)
                                + ' | ++ ' + str(subnode.amount_needed)
                                + ' | +++ ' + str(subnode.amount_parent_made_per_craft)+'\n'))
@@ -910,8 +910,8 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     ingredient_blacklist: list = []
     # append subnode ingredients to the list if there are any
     for subnode in ingredient.children.items():
-        user_inputs.enqueue_back((subnode[1].ingredient, True))
-        ingredient_blacklist.append((subnode[1].ingredient, True))
+        user_inputs.enqueue_back((subnode[1].ingredient_name, True))
+        ingredient_blacklist.append((subnode[1].ingredient_name, True))
     # prompt the user for ingredients
     print('What ingredients do you have need to create',
           ingredient.ingredient_name, end=':\n')
@@ -993,7 +993,7 @@ def superpopulate() -> Ingredient:
     # output the choices
     print('Do you want to choose from one of the following trees as a preset?')
     for index, ingredient in enumerate(userchoices, start=1):
-        print(index, end=str('. ' + ingredient.ingredient)+'\n')
+        print(index, end=str('. ' + ingredient.ingredient_name)+'\n')
     # prompt the user to make select a head ingredient to modify
     print('Please choose a head ingredient node to modify, select a number out of range to create a new tree')
     userchoice: int = promptint()-1
@@ -1067,7 +1067,7 @@ if __name__ == '__main__':
             # ? output the endpoint ingredient names and amounts resulted
             for item in ingredienttree.findendpoints({}).items():
                 print('You would use',
-                      item[1].amount_resulted, 'of', item[1].ingredient)
+                      item[1].amount_resulted, 'of', item[1].ingredient_name)
         # ? population == 1
         else:
             print('You would need', ingredienttree.amount_resulted, 'to create',
