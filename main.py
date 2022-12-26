@@ -516,7 +516,7 @@ def nodecount(ingredient: Ingredient) -> int:
     Returns:
         int: the number of nodes in the tree (based on the size of list of nodes)
     """
-    size_of_deque : int = head(ingredient).pandastree_row(Deque).size
+    size_of_deque: int = head(ingredient).pandastree_row(Deque()).size
     #!len(head(ingredient).pandastree_row(Deque()))
     return size_of_deque
 
@@ -722,18 +722,22 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     # the ingredient object must match the following requirements to link:
     # parent ingredient must be the same as the parent ingredient
     # treekey must be the same & generation > 0
-    sublist: list = []
+    #! sublist: list = []
+    sublist : Deque = Deque()
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
         # convert the values of the dictionary to a list
         green: list = list(purple[1].values())
         # if the tree key of the row matches the head ingredient object's tree key
         if green[0] == parent_ingredient.treekey and green[3] != 'None':
             # the sublist contains ingredient object only from the tree
-            sublist.append(green)
+            #! sublist.append(green)
+            sublist.enqueue_back(green)
     # figure out where to emplace the ingredient object
     # $ correctly finds all nodes with the same treekey from the csv file
-    for row in sublist:
-        createtree(parent_ingredient, row)
+    #! for row in sublist:
+        #! createtree(parent_ingredient, row)
+    while not sublist.is_empty():
+        createtree(parent_ingredient,sublist)
         # print('row', index, 'of', len(sublist), 'rows')
     return head(parent_ingredient)
 
