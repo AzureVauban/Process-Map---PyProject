@@ -993,17 +993,19 @@ def superpopulate() -> Ingredient:
     # check to see if there is a csv file in the current directory
     if not os.path.exists(FILENAME):
         # if the file exists, parse it for head nodes
-        nodetree: Ingredient = head(populate(Ingredient(promptheadname())))
-        nodetree.modifytreekey(nodetree.gen_treekey())
-        return nodetree
+        ingredient_tree: Ingredient = head(
+            populate(Ingredient(promptheadname())))
+        ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
+        return ingredient_tree
     # parse the csv file for head nodes
     foundheadnodes: dict = parsecsv()
     # if there are no head nodes {-1:None}
     if foundheadnodes == {-1: None}:
         # return new ingredient tree
-        nodetree: Ingredient = head(populate(Ingredient(promptheadname())))
-        nodetree.modifytreekey(nodetree.gen_treekey())
-        return nodetree
+        ingredient_tree: Ingredient = head(
+            populate(Ingredient(promptheadname())))
+        ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
+        return ingredient_tree
     userchoices: list = []
     # convert the dict into a list of ingredient instances
     for ingredient in foundheadnodes.items():
@@ -1027,15 +1029,16 @@ def superpopulate() -> Ingredient:
     userchoice: int = promptint()-1
     # if the user chosesn an index out or range, return a new tree
     if userchoice < 0 or userchoice > len(userchoices)-1:
-        nodetree: Ingredient = head(populate(Ingredient(promptheadname())))
-        nodetree.modifytreekey(nodetree.gen_treekey())
-        return nodetree
+        ingredient_tree: Ingredient = head(
+            populate(Ingredient(promptheadname())))
+        ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
+        return ingredient_tree
     # return the head ingredient node of the chosen tree
     # create ingredient tree out of the csv file
-    nodetree: Ingredient = head(
+    ingredient_tree: Ingredient = head(
         populate(createtreefromcsv(userchoices[userchoice])))
-    nodetree.modifytreekey(nodetree.gen_treekey())
-    return nodetree
+    ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
+    return ingredient_tree
 
 
 if __name__ == '__main__':
