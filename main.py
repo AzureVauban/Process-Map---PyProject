@@ -421,7 +421,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         pandas_row.update({'Generation': str(self.generation)})
         return pandas_row
 
-    def pandastree_row(self, rows: list) -> list:
+    def pandastree_row(self, rows: Deque) -> Deque:
         """
         return a list of all the pandas rows in the tree
         Args:
@@ -429,7 +429,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         Returns:
             list: a list of dicts containing the data for each ingredient to be written onto a csv file
         """
-        rows.append(self.pandasrow())
+        rows.enqueue_back(self.pandasrow())
         for child in self.children.items():
             child[1].pandastree_row(rows)
         return rows
@@ -515,7 +515,7 @@ def nodecount(ingredient: Ingredient) -> int:
     Returns:
         int: the number of nodes in the tree (based on the size of list of nodes)
     """
-    return len(head(ingredient).pandastree_row([]))
+    return len(head(ingredient).pandastree_row(Deque()))
 
 
 def makealiasunique(ingredient: Ingredient):
