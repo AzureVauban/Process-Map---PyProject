@@ -583,10 +583,13 @@ def writetreetocsv(ingredient: Ingredient):
     else:
         # then write to the file but calling the method again recursively
         # ? make sure to check this, used to be an empty list prior to change
-        for row in ingredient.pandastree_row(Deque()): 
-            pandas.DataFrame(row, index=[0]).to_csv(
-                FILENAME, mode='a', header=False, index=False)
-
+        #! for row in ingredient.pandastree_row(Deque()): 
+        #!    pandas.DataFrame(row, index=[0]).to_csv(
+        #!        FILENAME, mode='a', header=False, index=False)
+        csvrows_deque : Deque = ingredient.pandastree_row(Deque())
+        while not csvrows_deque.is_empty():
+            pandas.DataFrame(csvrows_deque.dequeue_front(), index=[0]).to_csv(FILENAME, mode='a', header=False, index=False)
+            
 
 def promptheadname() -> str:
     """
