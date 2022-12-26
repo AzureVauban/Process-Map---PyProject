@@ -198,7 +198,7 @@ def promptint() -> int:
 
 class Base:  # pylint: disable=R0903
     """
-    a superclass of the Node class used to contain basic information about an ingredient
+    a superclass of the Ingredient class used to contain basic information about an ingredient
     """
     ingredient_name: str = ''
     amount_on_hand: int = 0
@@ -213,7 +213,7 @@ class Base:  # pylint: disable=R0903
                  amount_parent_made_per_craft: int = 1,
                  amount_needed: int = 1) -> None:
         """
-        a superclass of the Node class used to contain basic information about an ingredient
+        a superclass of the Ingredient class used to contain basic information about an ingredient
         Args:
             ingredient_name(str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
@@ -234,7 +234,7 @@ class Base:  # pylint: disable=R0903
 
 class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     """
-    primary class of the Node, used to stored information about an ingredient as well as
+    primary class of the Ingredient, used to stored information about an ingredient as well as
     information to identify the ingredient and its parent
     """
     parent = None
@@ -256,7 +256,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
                  isfromcsvfile: bool = False,
                  treekey: str = '') -> None:
         """
-        primary class of the Node, used to stored information about an ingredient as well as
+        primary class of the Ingredient, used to stored information about an ingredient as well as
         information to identify the ingredient and its parent
         Args:
             ingredient (str, optional): name of the item stored. Defaults to ''.
@@ -269,7 +269,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             promptamountparentmade (bool, optional): determines if the program should prompt user to
             type in a number for the amount of the parent ingredient made per craft.
             Defaults to False.
-            isfromcsvfile (bool, optional): a boolean to track if the created Node instance is from
+            isfromcsvfile (bool, optional): a boolean to track if the created Ingredient instance is from
             the CSV file. Defaults to False.
             treekey (str, optional): a string of about 10 to 20 alphanumeric characters to help make
             each ingredient tree unique when written to a CSV file. Defaults to ''.
@@ -398,9 +398,9 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
 
     def pandasrow(self) -> dict:
         """
-        create a row of data of the Node for writing to the csv file
+        create a row of data of the Ingredient for writing to the csv file
         Returns:
-            dict: a dict of information about the Node
+            dict: a dict of information about the Ingredient
         """
         pandas_row: dict = {}
         pandas_row.update({'Tree_Key': self.treekey})
@@ -434,7 +434,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
 
     def updatepopulation(self, population: int = 0):
         """
-        sets and updates the population attribute of the Node accordingly
+        sets and updates the population attribute of the Ingredient accordingly
         """
         self.population = population
         for subnode in self.children.items():
@@ -542,8 +542,8 @@ def allaliases(ingredient: Ingredient, alias: str, aliases: list) -> list:
     """
     returns a list of all the nodes with the same alias
     Args:
-        ingredient (Node): ingredient to check if it has the same ingredient alias value
-        alias (str): nickname of Node instance
+        ingredient (Ingredient): ingredient to check if it has the same ingredient alias value
+        alias (str): nickname of Ingredient instance
         aliases (list): list of nodes with the same alias to search for
     Returns:
         list: a list of Nodes containining the same ingredient alias
@@ -560,7 +560,7 @@ def writetreetocsv(headnode: Ingredient):
     """
     writes an ingredient tree onto a csv file
     Args:
-        headnode (Node): the head ingredient of the ingredient tree
+        headnode (Ingredient): the head ingredient of the ingredient tree
     """
     # check if the csv file exists
     # if the file is not in the directory, create it
@@ -593,11 +593,11 @@ def promptheadname() -> str:
 
 def head(ingredient: Ingredient) -> Ingredient:
     """
-    traverse to the parent most Node
+    traverse to the parent most Ingredient
     Args:
-        ingredient (Node): starting Node
+        ingredient (Ingredient): starting Ingredient
     Returns:
-        Node: parent most Node of the starting Node
+        Ingredient: parent most Ingredient of the starting Ingredient
     """
     while ingredient.parent is not None:
         ingredient = ingredient.parent
@@ -606,9 +606,9 @@ def head(ingredient: Ingredient) -> Ingredient:
 
 def trail(ingredient: Ingredient):
     """
-    print the ingredient trail leading up to the parent most Node
+    print the ingredient trail leading up to the parent most Ingredient
     Args:
-        ingredient (Node): starting Node
+        ingredient (Ingredient): starting Ingredient
     """
     print('TRAIL: ', end='')
     while True:
@@ -622,9 +622,9 @@ def trail(ingredient: Ingredient):
 
 def outputingredients(ingredient: Ingredient):
     """
-    populate submethod, print the subingredients of the parameter Node
+    populate submethod, print the subingredients of the parameter Ingredient
     Args:
-        ingredient (Node): parent ingredient, the ingredient to print the subingredients of
+        ingredient (Ingredient): parent ingredient, the ingredient to print the subingredients of
     """
     subingredients: list = []
     for subnode in ingredient.children.items():
@@ -666,9 +666,9 @@ def parsecsv() -> dict:
 
 def createtree(ingredient: Ingredient, pandasrow: list) -> bool:
     """
-    figure out where to emplace the Node in the tree
+    figure out where to emplace the Ingredient in the tree
     Args:
-        ingredient (Node): parent of Node to be emplaced
+        ingredient (Ingredient): parent of Ingredient to be emplaced
         pandasrow (list): row of data from the CSV file
     Raises:
         TypeError: the row of data contains an invalid amount of values
@@ -706,10 +706,10 @@ def createtreefromcsv(parent: Ingredient) -> Ingredient:
     """
     figures out where to create and link a new ingredient object from the csv file
     Args:
-        parent (Node): potential parent ingredient object to link new ingredient object to
+        parent (Ingredient): potential parent ingredient object to link new ingredient object to
         pandasrow (list): data from csv file, creates ingredient object from it
     Returns:
-        Node: parent most ingredient object of the tree
+        Ingredient: parent most ingredient object of the tree
     """
     # check if the row has the correct amount of elements
     # the ingredient object must match the following requirements to link:
@@ -736,7 +736,7 @@ def search(ingredient: Ingredient, ingredient_name: str, results: list) -> list:
     recursively search through the tree to find nodes with the same
     ingredient
     Args:
-        ingredient (Node): parent ingredient object, parse through its children recursively to
+        ingredient (Ingredient): parent ingredient object, parse through its children recursively to
         update the search results
         ingredient (str): the name of the item you are searching for
         results (list): nodes that have the same ingredient as the parameter
@@ -771,7 +771,7 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
     # convert subnodes dict to a list of nodes
     subnodeslist: list = []
     for subnode in subnodes.items():
-        # dict must be have a key integer and a Node instance as the value
+        # dict must be have a key integer and a Ingredient instance as the value
         if not isinstance(subnode[1], Ingredient) and not isinstance(subnode[0], int):
             raise TypeError('subnodes is not a dictionary',
                             Ingredient, 'subnodes')
@@ -798,7 +798,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
     """
     creates a returnable clone of the ingredient passed into the method
     Args:
-        ingredient (Node): current ingredient instance to copy and clone
+        ingredient (Ingredient): current ingredient instance to copy and clone
         clonechildren (bool, optional): should the have its subnodes cloned aswell.
         Defaults to True.
     Returns:
@@ -846,13 +846,13 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     """
     create a subnode and link it to the parent ingredient
     Args:
-        ingredient (Node): parent Node to link back to
+        ingredient (Ingredient): parent Ingredient to link back to
     Returns:
-        Node: new subnode to link back to the parent Node
+        Ingredient: new subnode to link back to the parent Ingredient
     """
     # create a list of subnodes that have the same ingredient as the parameter
     parseresults: list = search(head(ingredient), ingredient_name, [])
-    # if the list is empty return a defaultly created new ingredient Node
+    # if the list is empty return a defaultly created new ingredient Ingredient
     for subnode in parseresults:
         if not isinstance(subnode, Ingredient):
             raise TypeError(
@@ -895,13 +895,13 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     """
     create a tree of Nodes
     Args:
-        ingredient (Node): parent the subnodes will be linked to
+        ingredient (Ingredient): parent the subnodes will be linked to
     Returns:
-        Node: the head of the ingredient tree
+        Ingredient: the head of the ingredient tree
     """
-    # update population attribute of Node
+    # update population attribute of Ingredient
     ingredient.updatepopulation(nodecount(ingredient))
-    # output the ingredient trail if there is a parent Node
+    # output the ingredient trail if there is a parent Ingredient
     if ingredient.parent is not None:
         trail(ingredient)
     # prompt the user to ingredient tree
@@ -920,7 +920,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     while True:
         # prompt the user for an ingredient
         myinput: str = input('').strip()
-        # check to see if the user input is the same as the parent or head Node
+        # check to see if the user input is the same as the parent or head Ingredient
         if myinput in [head(ingredient).ingredient_name, ingredient.ingredient_name]:
             print('Invalid input, we are trying to make that item!')
         # if the length of the user input is 0, break the loop
@@ -942,7 +942,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
             # searchresults: list = search(head(ingredient), ingredient[0], [])
             subpopulate(ingredient, user_inputs.dequeue_front()[0])
 
-    # update population attribute of Node
+    # update population attribute of Ingredient
     ingredient.updatepopulation(nodecount(ingredient))
     # recrusively continue to populate the tree
     for subnode in ingredient.children.items():
@@ -959,7 +959,7 @@ def superpopulate() -> Ingredient:
     """
     creates an ingredient tree and returns its head ingredient
     Returns:
-        Node: head ingredient of the populated ingredient tree
+        Ingredient: head ingredient of the populated ingredient tree
     """
     # check to see if there is a csv file in the current directory
     if not os.path.exists(FILENAME):
