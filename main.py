@@ -38,7 +38,7 @@ FIELDNAMES: list = [
 
 class Deque:
     """double ended queue"""
-    class Node:
+    class Node:  # pylint:disable=R0903
         """Node class for pillar data structure"""
         index: int
         data = None
@@ -93,7 +93,7 @@ class Deque:
             return self.size > self.max_size
         return False
 
-    def enqueue_front(self, data):
+    def enqueue_front(self, data):  # ? unused method
         """add data to the front of the container instance"""
         if self.is_empty():
             # ? overwrite the head Node
@@ -154,7 +154,7 @@ class Deque:
         # change the size of the container instance
         self.size += 1
 
-    def dequeue_back(self) -> None:
+    def dequeue_back(self) -> None:  # ? unused method
         """remove data from the front of the container instance"""
         if self.is_empty():
             raise ValueError('cannot pop any values from an empty container')
@@ -175,7 +175,7 @@ class Deque:
         self.size -= 1
         return return_value
 
-    def peak_back(self) -> None:
+    def peak_back(self) -> None:  # ? unused method
         """see what is at the front of the container instance without popping the element"""
         if not self.is_empty():
             return self.__get_end().data
@@ -583,13 +583,14 @@ def writetreetocsv(ingredient: Ingredient):
     else:
         # then write to the file but calling the method again recursively
         # ? make sure to check this, used to be an empty list prior to change
-        #! for row in ingredient.pandastree_row(Deque()): 
+        #! for row in ingredient.pandastree_row(Deque()):
         #!    pandas.DataFrame(row, index=[0]).to_csv(
         #!        FILENAME, mode='a', header=False, index=False)
-        csvrows_deque : Deque = ingredient.pandastree_row(Deque())
+        csvrows_deque: Deque = ingredient.pandastree_row(Deque())
         while not csvrows_deque.is_empty():
-            pandas.DataFrame(csvrows_deque.dequeue_front(), index=[0]).to_csv(FILENAME, mode='a', header=False, index=False)
-            
+            pandas.DataFrame(csvrows_deque.dequeue_front(), index=[0]).to_csv(
+                FILENAME, mode='a', header=False, index=False)
+
 
 def promptheadname() -> str:
     """
@@ -690,7 +691,7 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
         bool: was the ingredient actually emplaced
     """
     deque_peak_value: list = pandasrow.peak_front()
-    if len(pandasrow.peak_front()) != len(FIELDNAMES):  # todo check if this is right
+    if len(pandasrow.peak_front()) != len(FIELDNAMES):
         raise TypeError('The row of data is not the correct length')
     # remove any underscores from the ingredient
     deque_peak_value[1] = deque_peak_value[1].replace('_', ' ')
@@ -723,7 +724,7 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     """
     figures out where to create and link a new ingredient object from the csv file
     Args:
-        parent_ingredient (Ingredient): potential parent ingredient object to link new 
+        parent_ingredient (Ingredient): potential parent ingredient object to link new
         ingredient object to pandasrow (list): data from csv file, creates ingredient object from it
     Returns:
         Ingredient: parent most ingredient object of the tree
