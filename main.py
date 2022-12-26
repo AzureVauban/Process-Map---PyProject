@@ -671,7 +671,7 @@ def parsecsv() -> dict:
     return headnodes
 
 
-def createtree(ingredient: Ingredient, pandasrow: list) -> bool:
+def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
     """
     figure out where to emplace the Ingredient in the tree
     Args:
@@ -682,26 +682,28 @@ def createtree(ingredient: Ingredient, pandasrow: list) -> bool:
     Returns:
         bool: was the ingredient actually emplaced
     """
-    if len(pandasrow) != len(FIELDNAMES):
+    deque_peak_value : list = pandasrow.peak_front()
+    if len(pandasrow.peak_front()) != len(FIELDNAMES): # todo check if this is right
         raise TypeError('The row of data is not the correct length')
     # remove any underscores from the ingredient
-    pandasrow[1] = pandasrow[1].replace('_', ' ')
+    deque_peak_value[1] = deque_peak_value[1].replace('_', ' ')
     # remove any underscores from the parent of the ingredient
-    pandasrow[3] = pandasrow[3].replace('_', ' ')
-    foundemplacelocation: bool = ingredient.treekey == pandasrow[0] and pandasrow[
-        3] != 'None' and pandasrow[3] == ingredient.ingredient_name and pandasrow[7] > 0 and ingredient is not None and pandasrow[7] == ingredient.generation + 1  # noqa: E501 #pylint: disable=line-too-long
+    deque_peak_value[3] = deque_peak_value[3].replace('_', ' ')
+    foundemplacelocation: bool = ingredient.treekey == deque_peak_value[0] and deque_peak_value[
+        3] != 'None' and deque_peak_value[3] == ingredient.ingredient_name and deque_peak_value[7] > 0 and ingredient is not None and deque_peak_value[7] == ingredient.generation + 1  # noqa: E501 #pylint: disable=line-too-long
     if foundemplacelocation:
-        Ingredient(pandasrow[1],
+        data_row_dequeued : list = pandasrow.dequeue_front()
+        Ingredient(data_row_dequeued[1],
                    parent_ingredient=ingredient,
-                   amount_needed=pandasrow[6],
-                   amount_parent_made_per_craft=pandasrow[5],
-                   amount_on_hand=pandasrow[4],
-                   treekey=pandasrow[0],
+                   amount_needed=data_row_dequeued[6],
+                   amount_parent_made_per_craft=data_row_dequeued[5],
+                   amount_on_hand=data_row_dequeued[4],
+                   treekey=data_row_dequeued[0],
                    # isfromcsvfile=True,
                    promptamountsOn=False)
         red: str = '\x1B[31m' + ingredient.ingredient_name + \
-            '\x1B[0m'  # parent ingredient name
-        blue: str = '\x1B[36m' + pandasrow[1] + '\x1B[0m'  # ingredient name
+            '\x1B[0m'  # parent ingredient namedeque_peak_value
+        blue: str = '\x1B[36m' + data_row_dequeued[1] + '\x1B[0m'  # ingredient name
         print('emplaced ingredient', red + ' | ' + blue)
         return True
     for subnode in ingredient.children.items():
@@ -723,7 +725,7 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     # parent ingredient must be the same as the parent ingredient
     # treekey must be the same & generation > 0
     #! sublist: list = []
-    sublist : Deque = Deque()
+    sublist: Deque = Deque()
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
         # convert the values of the dictionary to a list
         green: list = list(purple[1].values())
@@ -737,7 +739,7 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     #! for row in sublist:
         #! createtree(parent_ingredient, row)
     while not sublist.is_empty():
-        createtree(parent_ingredient,sublist)
+        createtree(parent_ingredient, sublist)
         # print('row', index, 'of', len(sublist), 'rows')
     return head(parent_ingredient)
 
