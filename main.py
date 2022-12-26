@@ -682,8 +682,8 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
     Returns:
         bool: was the ingredient actually emplaced
     """
-    deque_peak_value : list = pandasrow.peak_front()
-    if len(pandasrow.peak_front()) != len(FIELDNAMES): # todo check if this is right
+    deque_peak_value: list = pandasrow.peak_front()
+    if len(pandasrow.peak_front()) != len(FIELDNAMES):  # todo check if this is right
         raise TypeError('The row of data is not the correct length')
     # remove any underscores from the ingredient
     deque_peak_value[1] = deque_peak_value[1].replace('_', ' ')
@@ -692,7 +692,7 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
     foundemplacelocation: bool = ingredient.treekey == deque_peak_value[0] and deque_peak_value[
         3] != 'None' and deque_peak_value[3] == ingredient.ingredient_name and deque_peak_value[7] > 0 and ingredient is not None and deque_peak_value[7] == ingredient.generation + 1  # noqa: E501 #pylint: disable=line-too-long
     if foundemplacelocation:
-        data_row_dequeued : list = pandasrow.dequeue_front()
+        data_row_dequeued: list = pandasrow.dequeue_front()
         Ingredient(data_row_dequeued[1],
                    parent_ingredient=ingredient,
                    amount_needed=data_row_dequeued[6],
@@ -703,7 +703,8 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
                    promptamountsOn=False)
         red: str = '\x1B[31m' + ingredient.ingredient_name + \
             '\x1B[0m'  # parent ingredient namedeque_peak_value
-        blue: str = '\x1B[36m' + data_row_dequeued[1] + '\x1B[0m'  # ingredient name
+        blue: str = '\x1B[36m' + data_row_dequeued[1] + \
+            '\x1B[0m'  # ingredient name
         print('emplaced ingredient', red + ' | ' + blue)
         return True
     for subnode in ingredient.children.items():
@@ -873,10 +874,11 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     if len(parseresults) == 0:
         return Ingredient(ingredient_name, ingredient)
     # else, prompt the user to create a linkable clone of the new ingredient
-    print('+ amount of', ingredient_name,
-          'on Hand (needed to make 1', head(ingredient).ingredient_name, end=')\n')
-    print('++ amount of the parent ingredient made per craft')
-    print('+++ amount Needed to craft parent ingredient item once\n')
+    print('+ parent ingredient (item that,',ingredient_name,'creates somewhere else in your ingredient tree\n',
+          '++ amount of', ingredient_name,
+          'on hand (needed to make 1', head(ingredient).ingredient_name, end=')\n')
+    print('+++ amount of the parent ingredient made per craft')
+    print('++++ amount Needed to craft parent ingredient item once\n')
     if MODE == ProgramState.MODE_B:
         head(ingredient).reversearithmetic(1)
     for index, subnode in enumerate(parseresults):
@@ -885,10 +887,10 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
 
         # output the choices of subnodes:
         # parent ingredient, amount_needed, amountmadepereachcraft
-        print(index+1, end=str('. ' + subnode.parent_ingredient.ingredient_name
-                               + ' | + ' + str(subnode.amount_on_hand)
-                               + ' | ++ ' + str(subnode.amount_needed)
-                               + ' | +++ ' + str(subnode.amount_parent_made_per_craft)+'\n'))
+        print(index+1, end=str('. + ' + subnode.parent_ingredient.ingredient_name
+                               + ' | ++ ' + str(subnode.amount_on_hand)
+                               + ' | +++ ' + str(subnode.amount_needed)
+                               + ' | ++++ ' + str(subnode.amount_parent_made_per_craft)+'\n'))
     # todo make sure program doesn't crash when user's input is blank
     print('Choose which verison of', ingredient_name, 'to clone:')
     userchoice: int = promptint() - 1
