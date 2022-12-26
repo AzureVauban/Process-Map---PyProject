@@ -12,6 +12,8 @@ from enum import Enum
 
 import pandas
 
+# todo, update the csv functions to use a deque when needed
+
 
 class ProgramState(Enum):
     """
@@ -475,7 +477,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             if ingredient_node[1].ingredient_name not in compressedendpoints:
                 compressedendpoints.update(
                     {ingredient_node[1].ingredient_name: [(ingredient_node[1].parent_ingredient.ingredient_name,
-                                           ingredient_node[1].amount_on_hand)]})
+                                                           ingredient_node[1].amount_on_hand)]})
             else:
                 compressedendpoints[ingredient_node[1].ingredient_name].append(
                     (ingredient_node[1].parent_ingredient.ingredient_name,
@@ -888,7 +890,8 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     # check if the ingredient is in any of the subnodes of its sibilings
     clonenode: Ingredient = clone(
         parseresults[userchoice],  # ingredient that will be cloned
-        shouldclonechildren(ingredient_name, ingredient.children))  # bool to determine to clone subnodes
+        shouldclonechildren(ingredient_name,
+                            ingredient.children))  # bool to determine to clone subnodes
     return clonenode
 
 
