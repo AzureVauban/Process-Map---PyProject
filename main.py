@@ -667,6 +667,7 @@ def parsecsv() -> dict:
     Returns:
         dict: dictionary of head ingredient instances from the csv file, key is the treekey
         and the value is the head ingredient instance
+        will return a dict of {-1:None} if unable to find any
     """
     headnodes: dict = {}
     # if there are no head nodes,
@@ -701,7 +702,7 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
         bool: was the ingredient actually emplaced
     """
     deque_peak_value: list = pandasrow.peak_front()
-    if len(pandasrow.peak_front()) != len(FIELDNAMES):
+    if len(deque_peak_value) != len(FIELDNAMES):
         raise TypeError('The row of data is not the correct length')
     # remove any underscores from the ingredient
     deque_peak_value[1] = deque_peak_value[1].replace('_', ' ')
@@ -1051,25 +1052,20 @@ def superpopulate() -> Ingredient:
     ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
     return ingredient_tree
 
+
 def prompt_print():
     """print the operations the user has the ability to perform with the script
     """
     print('Which mode do you want to use:')
     print('Mode A - You are trying to figure out how much of your desired'
-            ' item you can make with the current supply of materials'
-            ' (Type in A)')
+          ' item you can make with the current supply of materials'
+          ' (Type in A)')
     print('Mode B - You are trying to figure out how much base materials'
-            ' you need to create a certain amount of your desired item, ('
-            'Type in B)')
-    print('Mode D - Remove an ingredient tree from the ingredient_trees.csv')
+          ' you need to create a certain amount of your desired item, ('
+          'Type in B)')
     print("Type in 'H' if you need a reminder of the prompt\n")
-        
-def remove_from_csv()->None:
-    if not os.path.exists(FILENAME):
-        print('the ingredient tree csv file is not present in the same directory of this script')
-        return None
-    
-    return None
+
+
 if __name__ == '__main__':
     MODE: ProgramState = ProgramState.MODE_A
     # prompt program mode
@@ -1080,7 +1076,7 @@ if __name__ == '__main__':
         # prompt user which mode they want to run the program in
         while True:
             userinput = input('').strip().upper()
-            if userinput not in ('A', 'B', 'D','H'):
+            if userinput not in ('A', 'B', 'H'):
                 print("That input is not valid, please type in 'A' or 'B'")
             elif len(userinput) > 1:
                 print('Your input is too long, please only type in one'
@@ -1091,8 +1087,6 @@ if __name__ == '__main__':
             elif userinput == 'H':
                 # print prompt again
                 prompt_print()
-            elif userinput == 'D':
-                # run removal function for the csv
             else:
                 MODE = ProgramState.MODE_A
                 break
