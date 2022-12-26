@@ -471,15 +471,15 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         # set the new dictionary to have unique ingredients as keys
         # and a list of tuples of the parent_ingredient object of said endpoint instance and the
         # amount on hand as values
-        for node in temp.findendpoints({}).items():
-            if node[1].ingredient_name not in compressedendpoints:
+        for ingredient_node in temp.findendpoints({}).items():
+            if ingredient_node[1].ingredient_name not in compressedendpoints:
                 compressedendpoints.update(
-                    {node[1].ingredient_name: [(node[1].parent_ingredient.ingredient_name,
-                                           node[1].amount_on_hand)]})
+                    {ingredient_node[1].ingredient_name: [(ingredient_node[1].parent_ingredient.ingredient_name,
+                                           ingredient_node[1].amount_on_hand)]})
             else:
-                compressedendpoints[node[1].ingredient_name].append(
-                    (node[1].parent_ingredient.ingredient_name,
-                     node[1].amount_on_hand))
+                compressedendpoints[ingredient_node[1].ingredient_name].append(
+                    (ingredient_node[1].parent_ingredient.ingredient_name,
+                     ingredient_node[1].amount_on_hand))
         output_dictionary: dict = {}
         for item_a in compressedendpoints.items():
             orangeinteger: int = 0  # sum of the amount on hand all tuple items
