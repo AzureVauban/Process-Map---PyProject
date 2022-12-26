@@ -51,3 +51,7 @@ NULL->[1] |-->[2]--->[5] ----> [10] -> [NULL]
 - write ingredient tree onto a .csv file
 - retrieve ingredient trees from a .csv file
 - able to clone ingredient objects and link them back to the ingredient tree
+
+===== Update =====
+- remove an ingredient tree written onto the file
+- option D (Delete an ingredient tree from the file)

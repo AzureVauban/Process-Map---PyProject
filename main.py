@@ -539,18 +539,20 @@ def makealiasunique(ingredient: Ingredient):
     # if the list is greater than 1, then parse through the list to make each alias unique
     if nodesaliases.size > 1:
         # make uniue by appending the index to the alias
-    #!    for redindex, reditem in enumerate(nodesaliases):
-    #!        for blueindex, blueitem in enumerate(nodesaliases):
-    #!            if redindex != blueindex and reditem.alias_ingredient == blueitem.alias_ingredient:
-    #!                blueitem.alias_ingredient += str(blueindex)
+        #!    for redindex, reditem in enumerate(nodesaliases):
+        #!        for blueindex, blueitem in enumerate(nodesaliases):
+        #!            if redindex != blueindex and reditem.alias_ingredient == blueitem.alias_ingredient:
+        #!                blueitem.alias_ingredient += str(blueindex)
         nodesaliases.dequeue_front()
-        node_ingredient_duplicate_num : int = 2
+        node_ingredient_duplicate_num: int = 2
         while not nodesaliases.is_empty():
-            if not isinstance(nodesaliases.peak_front(),Ingredient):
-                raise TypeError('peaked value from the deque is not an instance of',Ingredient)
-            ingredient_object : Ingredient = nodesaliases.dequeue_front()
-            ingredient_object.alias_ingredient += str(node_ingredient_duplicate_num)
-            node_ingredient_duplicate_num +=1
+            if not isinstance(nodesaliases.peak_front(), Ingredient):
+                raise TypeError(
+                    'peaked value from the deque is not an instance of', Ingredient)
+            ingredient_object: Ingredient = nodesaliases.dequeue_front()
+            ingredient_object.alias_ingredient += str(
+                node_ingredient_duplicate_num)
+            node_ingredient_duplicate_num += 1
     # recrusively call the function on each child ingredient
     for subnode in ingredient.children.items():
         makealiasunique(subnode[1])
@@ -982,6 +984,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     # update population attribute of Ingredient
     ingredient.updatepopulation(nodecount(ingredient))
     # recrusively continue to populate the tree
+    # ! sometimes runtime error occurs, cloning a child of the same parent?
     for subnode in ingredient.children.items():
         populate(subnode[1])
     # if the program Mode is A and the length of the children Nodes are 0
@@ -1048,25 +1051,36 @@ def superpopulate() -> Ingredient:
     ingredient_tree.modifytreekey(ingredient_tree.gen_treekey())
     return ingredient_tree
 
-
+def prompt_print():
+    """print the operations the user has the ability to perform with the script
+    """
+    print('Which mode do you want to use:')
+    print('Mode A - You are trying to figure out how much of your desired'
+            ' item you can make with the current supply of materials'
+            ' (Type in A)')
+    print('Mode B - You are trying to figure out how much base materials'
+            ' you need to create a certain amount of your desired item, ('
+            'Type in B)')
+    print('Mode D - Remove an ingredient tree from the ingredient_trees.csv')
+    print("Type in 'H' if you need a reminder of the prompt\n")
+        
+def remove_from_csv()->None:
+    if not os.path.exists(FILENAME):
+        print('the ingredient tree csv file is not present in the same directory of this script')
+        return None
+    
+    return None
 if __name__ == '__main__':
     MODE: ProgramState = ProgramState.MODE_A
     # prompt program mode
     print('Welcome to Process Map (Python) v2.0!\n')
     # program runtime loop
     while True:
-        print('Which mode do you want to use:')
-        print('Mode A - You are trying to figure out how much of your desired'
-              ' item you can make with the current supply of materials'
-              ' (Type in A)')
-        print('Mode B - You are trying to figure out how much base materials'
-              ' you need to create a certain amount of your desired item, ('
-              'Type in B)')
-        print("Type in 'H' if you need a reminder of the prompt\n")
+        prompt_print()
         # prompt user which mode they want to run the program in
         while True:
             userinput = input('').strip().upper()
-            if userinput not in ('A', 'B', 'H'):
+            if userinput not in ('A', 'B', 'D','H'):
                 print("That input is not valid, please type in 'A' or 'B'")
             elif len(userinput) > 1:
                 print('Your input is too long, please only type in one'
@@ -1076,14 +1090,9 @@ if __name__ == '__main__':
                 break
             elif userinput == 'H':
                 # print prompt again
-                print('Which mode do you want to use:')
-                print('Mode A - You are trying to figure out how much of your'
-                      ' desired item you can make with the current supply of'
-                      ' materials (Type in A)')
-                print('Mode B - You are trying to figure out how much base'
-                      ' materials you need to create a certain amount of your'
-                      ' desired item, (Type in B)')
-                print("Type in 'H' if you need a reminder of the prompt\n")
+                prompt_print()
+            elif userinput == 'D':
+                # run removal function for the csv
             else:
                 MODE = ProgramState.MODE_A
                 break
