@@ -537,7 +537,7 @@ def makealiasunique(ingredient: Ingredient):
     nodesaliases: Deque = allaliases(
         ingredient, ingredient.alias_ingredient, Deque())
     # if the list is greater than 1, then parse through the list to make each alias unique
-    if len(nodesaliases) > 1:
+    if nodesaliases.size > 1:
         # make uniue by appending the index to the alias
     #!    for redindex, reditem in enumerate(nodesaliases):
     #!        for blueindex, blueitem in enumerate(nodesaliases):
@@ -546,9 +546,10 @@ def makealiasunique(ingredient: Ingredient):
         nodesaliases.dequeue_front()
         node_ingredient_duplicate_num : int = 2
         while not nodesaliases.is_empty():
-            if not isinstance(nodesaliases.peak_back(),Ingredient):
+            if not isinstance(nodesaliases.peak_front(),Ingredient):
                 raise TypeError('peaked value from the deque is not an instance of',Ingredient)
-            nodesaliases.dequeue_front().alias_ingredient + str(node_ingredient_duplicate_num)
+            ingredient_object : Ingredient = nodesaliases.dequeue_front()
+            ingredient_object.alias_ingredient += str(node_ingredient_duplicate_num)
             node_ingredient_duplicate_num +=1
     # recrusively call the function on each child ingredient
     for subnode in ingredient.children.items():
