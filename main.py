@@ -237,7 +237,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     primary class of the Ingredient, used to stored information about an ingredient as well as
     information to identify the ingredient and its parent
     """
-    parent = None
+    parent_ingredient = None
     children: dict = {}
     generation: int = 0
     instances: int = 0
@@ -282,11 +282,11 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         self.isfromcsvfile = isfromcsvfile
         self.instancekey = Ingredient.instances
         self.children = {}
-        self.parent = parent
-        if self.parent is not None:
-            self.generation = self.parent.generation + 1
-            self.parent.children.update({self.instancekey: self})
-            self.treekey = self.parent.treekey
+        self.parent_ingredient = parent
+        if self.parent_ingredient is not None:
+            self.generation = self.parent_ingredient.generation + 1
+            self.parent_ingredient.children.update({self.instancekey: self})
+            self.treekey = self.parent_ingredient.treekey
         else:
             self.generation = 0
             if isfromcsvfile:
@@ -310,10 +310,10 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
                 print('That number is not valid')
             else:
                 break
-        if self.parent is not None:
+        if self.parent_ingredient is not None:
             # $ only if older sibiling has not been prompted, prompt amountmadepercraft
             while promptamountparentmade:  # ? should this be prompted depending on if it was cloned
-                print('How much', self.parent.ingredient,
+                print('How much', self.parent_ingredient.ingredient,
                       'do you create each time you craft it: ')
                 self.amount_parent_made_per_craft = promptint()
                 if self.amount_parent_made_per_craft < 1:
@@ -324,7 +324,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             # $ prompt amount_needed
             while True:
                 print('How much', self.ingredient_name, 'do you need to craft',
-                      self.parent.ingredient, '1 time: ')
+                      self.parent_ingredient.ingredient, '1 time: ')
                 self.amount_needed = promptint()
                 if self.amount_needed < 1:
                     print('That number is not valid')
@@ -359,10 +359,10 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         blue = round(math.floor(blue))
         self.amount_resulted = blue
         # recursively call the method
-        if self.parent is not None:
-            self.parent.queue_amount_resulted.update(
+        if self.parent_ingredient is not None:
+            self.parent_ingredient.queue_amount_resulted.update(
                 {self.ingredient_name: self.amount_resulted})
-            self.parent.recursivearithmetic()
+            self.parent_ingredient.recursivearithmetic()
         return self.amount_resulted
 
     def reversearithmetic(self, desiredamount: int = 0) -> int:
@@ -377,8 +377,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         traceback: bool = green > red
         if traceback:  # traverse upward and increase the amount on hand by 1
             temp: Ingredient = self
-            while temp.parent is not None:
-                temp = temp.parent
+            while temp.parent_ingredient is not None:
+                temp = temp.parent_ingredient
                 temp.amount_on_hand += 1
         # continue method recursively
         if len(self.children) > 0:
@@ -406,9 +406,9 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         pandas_row.update({'Tree_Key': self.treekey})
         pandas_row.update({'Ingredient': self.ingredient_name})
         pandas_row.update({'Ingredient_Alias': self.alias_ingredient})
-        if self.parent is not None:
+        if self.parent_ingredient is not None:
             pandas_row.update(
-                {'Parent_of_Ingredient': self.parent.ingredient})
+                {'Parent_of_Ingredient': self.parent_ingredient.ingredient})
         else:
             pandas_row.update({'Parent_of_Ingredient': 'None'})
         pandas_row.update({'Amount_on_Hand': str(self.amount_on_hand)})
@@ -465,8 +465,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         temp = self
         if not isinstance(temp, Ingredient):
             raise TypeError('temp is not an instance of', Ingredient)
-        while temp.parent is not None:
-            temp = temp.parent
+        while temp.parent_ingredient is not None:
+            temp = temp.parent_ingredient
         compressedendpoints: dict = {}
         # set the new dictionary to have unique ingredients as keys
         # and a list of tuples of the parent of said endpoint instance and the
@@ -599,8 +599,8 @@ def head(ingredient: Ingredient) -> Ingredient:
     Returns:
         Ingredient: parent most Ingredient of the starting Ingredient
     """
-    while ingredient.parent is not None:
-        ingredient = ingredient.parent
+    while ingredient.parent_ingredient is not None:
+        ingredient = ingredient.parent_ingredient
     return ingredient
 
 
@@ -612,9 +612,9 @@ def trail(ingredient: Ingredient):
     """
     print('TRAIL: ', end='')
     while True:
-        if ingredient.parent is not None:
+        if ingredient.parent_ingredient is not None:
             print(ingredient.ingredient_name, '-> ', end='')
-            ingredient = ingredient.parent
+            ingredient = ingredient.parent_ingredient
         else:
             print(ingredient.ingredient_name)
             break
@@ -744,7 +744,7 @@ def search(ingredient: Ingredient, ingredient_name: str, results: list) -> list:
         list: a list of nodes that have the same ingredient as the parameter
     """
     # if ingredient object is a subnode and the ingredient matches, update the list
-    if ingredient.parent is not None and ingredient.ingredient_name == ingredient_name:
+    if ingredient.parent_ingredient is not None and ingredient.ingredient_name == ingredient_name:
         results.append(ingredient)
     # recrusively keep searching for nodes
     for subnode in ingredient.children.items():
@@ -810,9 +810,9 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
 
     # create a copy of the parameter ingredient
     if not clonechildren:
-        if ingredient.parent is not None and ingredient.parent.parent is not None and isinstance(ingredient.parent.parent, Ingredient):  # pylint:disable = line-too-long
+        if ingredient.parent_ingredient is not None and ingredient.parent_ingredient.parent is not None and isinstance(ingredient.parent_ingredient.parent, Ingredient):  # pylint:disable = line-too-long
             bluenode: Ingredient = Ingredient(ingredient_name=ingredient.ingredient_name,
-                                              parent=ingredient.parent.parent,
+                                              parent=ingredient.parent_ingredient.parent,
                                               amount_on_hand=ingredient.amount_on_hand,
                                               amount_needed=ingredient.amount_needed,
                                               amount_parent_made_per_craft=ingredient.amount_parent_made_per_craft,
@@ -823,7 +823,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
         # $ go back and examine this return branch more
         return clone(ingredient, True)
     rednode: Ingredient = Ingredient(ingredient_name=ingredient.ingredient_name,
-                                     parent=ingredient.parent,
+                                     parent=ingredient.parent_ingredient,
                                      amount_on_hand=ingredient.amount_on_hand,
                                      amount_needed=ingredient.amount_needed,
                                      amount_parent_made_per_craft=ingredient.amount_parent_made_per_craft,
@@ -902,7 +902,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     # update population attribute of Ingredient
     ingredient.updatepopulation(nodecount(ingredient))
     # output the ingredient trail if there is a parent Ingredient
-    if ingredient.parent is not None:
+    if ingredient.parent_ingredient is not None:
         trail(ingredient)
     # prompt the user to ingredient tree
     user_inputs: Deque = Deque()  # list of tuples (string, bool)
