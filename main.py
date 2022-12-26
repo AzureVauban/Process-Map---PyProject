@@ -525,7 +525,8 @@ def makealiasunique(ingredient: Ingredient):
     # make all nodes in the tree have unique ingredient aliases
     # get a list of all the nodes in the ingredient tree with the same ingredient alias
     # as the passed ingredient instance
-    nodesaliases: list = allaliases(ingredient, ingredient.alias_ingredient, [])
+    nodesaliases: list = allaliases(
+        ingredient, ingredient.alias_ingredient, [])
     # if the list is greater than 1, then parse through the list to make each alias unique
     if len(nodesaliases) > 1:
         # make uniue by appending the index to the alias
