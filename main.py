@@ -845,7 +845,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
     # create a copy of all the children of the parameter ingredient object
     for subnode in ingredient.children.items():
         Ingredient(ingredient_name=subnode[1].ingredient_name,
-                parent_ingredient=subnode,
+                parent_ingredient=subnode[1],
                 amount_on_hand=subnode[1].amount_on_hand,
                 amount_needed=subnode[1].amount_needed,
                 amount_parent_made_per_craft=subnode[1].amount_parent_made_per_craft,  # noqa: E501 #pylint: disable=line-too-long
