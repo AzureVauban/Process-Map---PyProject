@@ -937,10 +937,11 @@ def populate(node: Ingredient) -> Ingredient:  # pylint: disable=R0912
     # create subnodes for each ingredient using the subpopulate method
     while not user_inputs.is_empty():
         # if ingredient[1] is False, the ingredient is not already in the tree (from csv)
-        deque_peak : tuple = user_inputs.peak_front()
-        if not deque_peak[1]:
+        deque_peak_front : tuple = user_inputs.peak_front()
+        if not deque_peak_front[1]:
             # searchresults: list = search(head(node), ingredient[0], [])
-            subpopulate(node, deque_peak[0])
+            subpopulate(node, user_inputs.dequeue_front())
+            
     # update population attribute of Node
     node.updatepopulation(nodecount(node))
     # recrusively continue to populate the tree
