@@ -905,10 +905,12 @@ def populate(node: Ingredient) -> Ingredient:  # pylint: disable=R0912
     if node.parent is not None:
         trail(node)
     # prompt the user to ingredient tree
-    userinputs: list = []  # list of tuples (string, bool)
+    user_inputs: Deque = Deque()  # list of tuples (string, bool)
+    ingredient_blacklist: list = []
     # append subnode ingredients to the list if there are any
     for subnode in node.children.items():
-        userinputs.append((subnode[1].ingredient, True))
+        user_inputs.enqueue_back((subnode[1].ingredient, True))
+        ingredient_blacklist.append((subnode[1].ingredient, True))
     # prompt the user for ingredients
     print('What ingredients do you have need to create',
           node.ingredient, end=':\n')
@@ -916,17 +918,13 @@ def populate(node: Ingredient) -> Ingredient:  # pylint: disable=R0912
     if len(node.children) > 0:
         outputingredients(node)
     while True:
-        # create ingredients blacklist
-        ingredientblacklist: list = []
-        for ingredient in userinputs:
-            ingredientblacklist.append(ingredient[0])
         # prompt the user for an ingredient
         myinput: str = input('').strip()
         # check to see if the user input is the same as the parent or head Node
         if myinput in [head(node).ingredient, node.ingredient]:
             print('Invalid input, we are trying to make that item!')
         # if the length of the user input is 0, break the loop
-        elif myinput in ingredientblacklist:
+        elif myinput in ingredient_blacklist:
             print('Invalid input, duplicate inputs!')
         # if the input is empty, break out of the loop
         elif len(myinput) == 0:
@@ -934,13 +932,15 @@ def populate(node: Ingredient) -> Ingredient:  # pylint: disable=R0912
         # append to the user inputs list if all the checks pass
         else:
             # if the condition is met, append the input to the list
-            userinputs.append((myinput, False))
+            user_inputs.enqueue_back((myinput, False))
+            ingredient_blacklist.append(myinput)
     # create subnodes for each ingredient using the subpopulate method
-    for ingredient in userinputs:
+    while not user_inputs.is_empty():
         # if ingredient[1] is False, the ingredient is not already in the tree (from csv)
-        if not ingredient[1]:
+        deque_peak : tuple = user_inputs.peak_front()
+        if not deque_peak[1]:
             # searchresults: list = search(head(node), ingredient[0], [])
-            subpopulate(node, ingredient[0])
+            subpopulate(node, deque_peak[0])
     # update population attribute of Node
     node.updatepopulation(nodecount(node))
     # recrusively continue to populate the tree
