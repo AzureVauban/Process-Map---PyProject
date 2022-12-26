@@ -1,0 +1,13 @@
+Tree_Key,Ingredient,Ingredient_Alias,Parent_of_Ingredient,Amount_on_Hand,Amount_Of_Parent_Made_Per_Craft,Amount_Needed_Per_Craft,Generation
+a2eiiiaz65uvpr,morphite,morphite,None,100,1,1,0
+a2eiiiaz65uvpr,irradium,irradium,morphite,200,1,2,1
+a2eiiiaz65uvpr,irradium ore,irradium_ore,irradium,400,1,2,2
+a2eiiiaz65uvpr,liquid irradium,liquid_irradium,irradium ore,1600,1,4,3
+a2eiiiaz65uvpr,liquid protocite,liquid_protocite,morphite,500,1,5,1
+a2eiiiaz65uvpr,protocite ore,protocite_ore,liquid protocite,500,1,1,2
+a2eiiiaz65uvpr,phase matter,phase_matter,morphite,200,1,2,1
+a2eiiiaz65uvpr,rekikite crystal,rekikite_crystal,phase matter,1000,1,5,2
+a2eiiiaz65uvpr,suplhuric acid,suplhuric_acid,morphite,200,1,2,1
+a2eiiiaz65uvpr,sulpur,sulpur,suplhuric acid,200,1,1,2
+a2eiiiaz65uvpr,pixel,pixel,sulpur,2000,1,10,3
+a2eiiiaz65uvpr,diamond,diamond,pixel,2000,1,1,4
