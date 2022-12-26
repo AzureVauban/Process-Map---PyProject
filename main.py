@@ -913,7 +913,8 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     ingredient_blacklist: list = []
     # append subnode ingredients to the list if there are any
     for subnode in ingredient.children.items():
-        user_inputs.enqueue_back((subnode[1].ingredient_name, True))
+        #! user_inputs.enqueue_back((subnode[1].ingredient_name, True))
+        #? ingredient_name, already created boolean (which is true)
         ingredient_blacklist.append(subnode[1].ingredient_name)
     # prompt the user for ingredients
     print('What ingredients do you have need to create',
@@ -936,7 +937,9 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
         # append to the user inputs list if all the checks pass
         else:
             # if the condition is met, append the input to the list
-            user_inputs.enqueue_back((myinput, False))
+            #! user_inputs.enqueue_back((myinput, False))
+            user_inputs.enqueue_back(myinput)
+            #? ingredient_name, already created boolean (which is true)
             ingredient_blacklist.append(myinput)
     # create subnodes for each ingredient using the subpopulate method
     while not user_inputs.is_empty():
