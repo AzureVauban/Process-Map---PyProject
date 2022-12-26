@@ -477,8 +477,9 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         for ingredient_node in temp.findendpoints({}).items():
             if ingredient_node[1].ingredient_name not in compressedendpoints:
                 compressedendpoints.update(
-                    {ingredient_node[1].ingredient_name: [(ingredient_node[1].parent_ingredient.ingredient_name,
-                                                           ingredient_node[1].amount_on_hand)]})
+                    {ingredient_node[1].ingredient_name:
+                        [(ingredient_node[1].parent_ingredient.ingredient_name,
+                          ingredient_node[1].amount_on_hand)]})
             else:
                 compressedendpoints[ingredient_node[1].ingredient_name].append(
                     (ingredient_node[1].parent_ingredient.ingredient_name,

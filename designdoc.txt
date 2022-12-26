@@ -1,0 +1,53 @@
+====Design Document ====
+have the user create an ingredient tree to find out how much of an item they can create,
+can also solve for the number of base ingredients needed to create a desired amount of a particular item
+
+===== Base =====
+stores basic info for an ingredient item
+
+- ingredient name 
+- amount on hand
+- amount needed
+- amount of parent item made per craft
+- amount of item resulted
+
+example:
+I have 901 pieces of sand, I want to find out how much silicon I can create from that,
+it takes 50 pieces of sand to create 1 piece of silicon:
+
+sand amount_on_hand = 901
+sand_to_silicon = 1/50 (for every 50 pieces of sand you get 1 piece of silicon)
+901 * (1/50) = 18.02... aprox (18 pieces of silicon from 901 pieces of sand)
+
+===== Ingredient =====
+stores advanced information about an ingredient object and links them in a tree data structure
+
+<all variables from Base>
+- parent (object pointer) ingredient object
+- children ingredients (list) objects 
+- generation number 
+- instancekey 
+
+example:
+NULL->silicon->sand->NULL
+
+example of a theorical ingerdient tree:
+NULL->[1] |-->[2]--->[5] ----> [10] -> [NULL]
+        |
+        |-->[3]--->[6]----> [11] -> [NULL]
+        |    |      |----> [12] -> [NULL]
+        |    |      |----> [13] -> [NULL]
+        |    |      |       |----> [14] -> [NULL]
+        |    |      |       |----> [15] -> [NULL]
+        |    |      |       |----> [16] -> [NULL]
+        |    |      |       
+        |    |      |----> [N] -> [NULL]
+        |    |--->[7] -> [NULL]    
+        |
+        |-->[4]--->[8] -> [NULL]
+             |--->[9] -> [NULL]
+    
+===== Features ===== 
+- write ingredient tree onto a .csv file
+- retrieve ingredient trees from a .csv file
+- able to clone ingredient objects and link them back to the ingredient tree
