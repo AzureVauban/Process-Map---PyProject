@@ -11,3 +11,11 @@ a2eiiiaz65uvpr,suplhuric acid,suplhuric_acid,morphite,200,1,2,1
 a2eiiiaz65uvpr,sulpur,sulpur,suplhuric acid,200,1,1,2
 a2eiiiaz65uvpr,pixel,pixel,sulpur,2000,1,10,3
 a2eiiiaz65uvpr,diamond,diamond,pixel,2000,1,1,4
+zc141ccmkvjpo,GENERIC ITEM,GENERIC_ITEM,None,50,1,1,0
+zc141ccmkvjpo,a,a,GENERIC ITEM,100,1,2,1
+zc141ccmkvjpo,b,b,a,300,1,3,2
+zc141ccmkvjpo,a,a1,b,1200,1,4,3
+zc141ccmkvjpo,c,c,a,3600,1,3,4
+zc141ccmkvjpo,b,b1,a,4800,1,4,4
+zc141ccmkvjpo,c,c,b,1200,1,4,3
+zc141ccmkvjpo,c,c,a,400,1,4,2
