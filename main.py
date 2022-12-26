@@ -205,7 +205,7 @@ class Base:  # pylint: disable=R0903
     amount_needed: int = 0
     amount_parent_made_per_craft: int = 0
     amount_resulted: int = 0
-    queueamountresulted: dict = {}
+    queue_amount_resulted: dict = {}
     alias_ingredient: str = ''
 
     def __init__(self, ingredient_name: str = '',
@@ -215,7 +215,7 @@ class Base:  # pylint: disable=R0903
         """
         a superclass of the Node class used to contain basic information about an ingredient
         Args:
-            ingredient (str, optional): name of the item stored. Defaults to ''.
+            ingredient_name(str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
             parent item above it. Defaults to 0.
             amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
@@ -226,7 +226,7 @@ class Base:  # pylint: disable=R0903
         self.amount_on_hand = amount_on_hand
         self.amount_parent_made_per_craft = amount_parent_made_per_craft
         self.amount_needed = amount_needed
-        self.queueamountresulted = {}
+        self.queue_amount_resulted = {}
         self.ingredient_name = ingredient_name
         self.amount_resulted = 0
         self.alias_ingredient = ingredient_name.replace(' ', '_')
@@ -246,7 +246,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     isfromcsvfile: bool = False
     population: int = 1
 
-    def __init__(self, ingredient: str = '',  # pylint: disable=R0913
+    def __init__(self, ingredient_name: str = '',  # pylint: disable=R0913
                  parent=None,
                  amount_on_hand: int = 0,
                  amount_parent_made_per_craft: int = 1,
@@ -274,7 +274,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             treekey (str, optional): a string of about 10 to 20 alphanumeric characters to help make
             each ingredient tree unique when written to a CSV file. Defaults to ''.
         """
-        super().__init__(ingredient,
+        super().__init__(ingredient_name,
                          amount_on_hand,
                          amount_parent_made_per_craft,
                          amount_needed)
@@ -348,10 +348,10 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         """
         # check and set minimum resulted if queue is not empty
         tentativeinteger: int = sys.maxsize
-        if len(self.queueamountresulted) == 0:
+        if len(self.queue_amount_resulted) == 0:
             tentativeinteger = 0
         else:
-            for myinteger in self.queueamountresulted.items():
+            for myinteger in self.queue_amount_resulted.items():
                 if myinteger[1] < tentativeinteger:
                     tentativeinteger = myinteger[1]
         red = (self.amount_parent_made_per_craft / self.amount_needed)
@@ -360,7 +360,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         self.amount_resulted = blue
         # recursively call the method
         if self.parent is not None:
-            self.parent.queueamountresulted.update(
+            self.parent.queue_amount_resulted.update(
                 {self.ingredient_name: self.amount_resulted})
             self.parent.recursivearithmetic()
         return self.amount_resulted
@@ -653,7 +653,7 @@ def parsecsv() -> dict:
         # convert the values of the dictionary to a list to see if it holds valid values
         green: list = list(purple[1].values())
         if green[3] == 'None' and green[5] == 1 and green[6] == 1 and green[7] == 0:
-            headnodes.update({green[0]: Ingredient(ingredient=green[1],
+            headnodes.update({green[0]: Ingredient(ingredient_name=green[1],
                                             parent=None,
                                             promptamountparentmade=False,  # noqa: E501 #pylint: disable=line-too-long
                                             treekey=green[0],
@@ -811,7 +811,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
     # create a copy of the parameter node
     if not clonechildren:
         if node.parent is not None and node.parent.parent is not None and isinstance(node.parent.parent, Ingredient):  # pylint:disable = line-too-long
-            bluenode: Ingredient = Ingredient(ingredient=node.ingredient_name,
+            bluenode: Ingredient = Ingredient(ingredient_name=node.ingredient_name,
                                               parent=node.parent.parent,
                                               amount_on_hand=node.amount_on_hand,
                                               amount_needed=node.amount_needed,
@@ -822,7 +822,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
         # fallback incase grandparent is not valid
         # $ go back and examine this return branch more
         return clone(node, True)
-    rednode: Ingredient = Ingredient(ingredient=node.ingredient_name,
+    rednode: Ingredient = Ingredient(ingredient_name=node.ingredient_name,
                                      parent=node.parent,
                                      amount_on_hand=node.amount_on_hand,
                                      amount_needed=node.amount_needed,
@@ -831,7 +831,7 @@ def clone(node: Ingredient, clonechildren: bool = True) -> Ingredient:
                                      promptamountsOn=False)
     # create a copy of all the children of the parameter node
     for subnode in node.children.items():
-        Ingredient(ingredient=subnode[1].ingredient,
+        Ingredient(ingredient_name=subnode[1].ingredient,
                 parent=subnode,
                 amount_on_hand=subnode[1].amount_on_hand,
                 amount_needed=subnode[1].amount_needed,
