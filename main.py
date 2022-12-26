@@ -220,7 +220,7 @@ class Base:  # pylint: disable=R0903
             parent item above it. Defaults to 0.
             amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
             this ingredient. Defaults to 1.
-            amount_needed (int, optional): amount of ingredient needed to craft the parent igredient
+            amount_needed (int, optional): amount of ingredient needed to craft the parent ingredient
             once. Defaults to 1.
         """
         self.amount_on_hand = amount_on_hand
@@ -235,7 +235,7 @@ class Base:  # pylint: disable=R0903
 class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     """
     primary class of the Ingredient, used to stored information about an ingredient as well as
-    information to identify the ingredient and its parent
+    information to identify the ingredient and its parent ingredient
     """
     parent_ingredient = None
     children: dict = {}
@@ -247,7 +247,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     population: int = 1
 
     def __init__(self, ingredient_name: str = '',  # pylint: disable=R0913
-                 parent=None,
+                 parent_ingredient=None,
                  amount_on_hand: int = 0,
                  amount_parent_made_per_craft: int = 1,
                  amount_needed: int = 1,
@@ -257,14 +257,14 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
                  treekey: str = '') -> None:
         """
         primary class of the Ingredient, used to stored information about an ingredient as well as
-        information to identify the ingredient and its parent
+        information to identify the ingredient and its parent_ingredient
         Args:
             ingredient (str, optional): name of the item stored. Defaults to ''.
             amount_on_hand (int, optional): how much of the ingredient you have to craft the direct
-            parent item above it. Defaults to 0.
+            parent ingredient above it. Defaults to 0.
             amount_parent_made_per_craft (int, optional): how much of the parent ingredient is made with
             this ingredient. Defaults to 1.
-            amount_needed (int, optional): amount of ingredient needed to craft the parent igredient
+            amount_needed (int, optional): amount of ingredient needed to craft the parent ingredient
             once. Defaults to 1.
             promptamountparentmade (bool, optional): determines if the program should prompt user to
             type in a number for the amount of the parent ingredient made per craft.
@@ -282,7 +282,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         self.isfromcsvfile = isfromcsvfile
         self.instancekey = Ingredient.instances
         self.children = {}
-        self.parent_ingredient = parent
+        self.parent_ingredient = parent_ingredient
         if self.parent_ingredient is not None:
             self.generation = self.parent_ingredient.generation + 1
             self.parent_ingredient.children.update({self.instancekey: self})
@@ -469,16 +469,16 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             temp = temp.parent_ingredient
         compressedendpoints: dict = {}
         # set the new dictionary to have unique ingredients as keys
-        # and a list of tuples of the parent of said endpoint instance and the
+        # and a list of tuples of the parent_ingredient object of said endpoint instance and the
         # amount on hand as values
         for node in temp.findendpoints({}).items():
             if node[1].ingredient not in compressedendpoints:
                 compressedendpoints.update(
-                    {node[1].ingredient: [(node[1].parent.ingredient,
+                    {node[1].ingredient: [(node[1].parent_ingredient.ingredient,
                                            node[1].amount_on_hand)]})
             else:
                 compressedendpoints[node[1].ingredient].append(
-                    (node[1].parent.ingredient,
+                    (node[1].parent_ingredient.ingredient,
                      node[1].amount_on_hand))
         output_dictionary: dict = {}
         for item_a in compressedendpoints.items():
@@ -654,7 +654,7 @@ def parsecsv() -> dict:
         green: list = list(purple[1].values())
         if green[3] == 'None' and green[5] == 1 and green[6] == 1 and green[7] == 0:
             headnodes.update({green[0]: Ingredient(ingredient_name=green[1],
-                                            parent=None,
+                                            parent_ingredient=None,
                                             promptamountparentmade=False,  # noqa: E501 #pylint: disable=line-too-long
                                             treekey=green[0],
                                             isfromcsvfile=True,
@@ -685,7 +685,7 @@ def createtree(ingredient: Ingredient, pandasrow: list) -> bool:
         3] != 'None' and pandasrow[3] == ingredient.ingredient_name and pandasrow[7] > 0 and ingredient is not None and pandasrow[7] == ingredient.generation + 1  # noqa: E501 #pylint: disable=line-too-long
     if foundemplacelocation:
         Ingredient(pandasrow[1],
-                   parent=ingredient,
+                   parent_ingredient=ingredient,
                    amount_needed=pandasrow[6],
                    amount_parent_made_per_craft=pandasrow[5],
                    amount_on_hand=pandasrow[4],
@@ -702,11 +702,11 @@ def createtree(ingredient: Ingredient, pandasrow: list) -> bool:
     return False
 
 
-def createtreefromcsv(parent: Ingredient) -> Ingredient:
+def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     """
     figures out where to create and link a new ingredient object from the csv file
     Args:
-        parent (Ingredient): potential parent ingredient object to link new ingredient object to
+        parent_ingredient (Ingredient): potential parent ingredient object to link new ingredient object to
         pandasrow (list): data from csv file, creates ingredient object from it
     Returns:
         Ingredient: parent most ingredient object of the tree
@@ -720,15 +720,15 @@ def createtreefromcsv(parent: Ingredient) -> Ingredient:
         # convert the values of the dictionary to a list
         green: list = list(purple[1].values())
         # if the tree key of the row matches the head ingredient object's tree key
-        if green[0] == parent.treekey and green[3] != 'None':
+        if green[0] == parent_ingredient.treekey and green[3] != 'None':
             # the sublist contains ingredient object only from the tree
             sublist.append(green)
     # figure out where to emplace the ingredient object
     # $ correctly finds all nodes with the same treekey from the csv file
     for row in sublist:
-        createtree(parent, row)
+        createtree(parent_ingredient, row)
         # print('row', index, 'of', len(sublist), 'rows')
-    return head(parent)
+    return head(parent_ingredient)
 
 
 def search(ingredient: Ingredient, ingredient_name: str, results: list) -> list:
@@ -761,7 +761,7 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
         subnodes (dict): a dictionary of subnodes of the parent ingredient object (emplace parent location)
     Raises:
         TypeError: dictionary does not contain int, ingredient object pairs
-        TypeError: the parent of the subnodes are not the same
+        TypeError: the parent_ingredient object of the subnodes are not the same
     Returns:
         bool: whether or not the ingredient is in the subnodes, used to help determine if the
         subnodes should be cloned
@@ -775,14 +775,14 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
         if not isinstance(subnode[1], Ingredient) and not isinstance(subnode[0], int):
             raise TypeError('subnodes is not a dictionary',
                             Ingredient, 'subnodes')
-        # check if any ingredient object instance in the convert list does not have a the same parent
-        # raise an error if the parent is not the same in all nodes
+        # check if any ingredient object instance in the convert list does not have a the same parent_ingredient
+        # raise an error if the parent_ingredient object is not the same in all nodes
         subnodeslist.append(subnode[1])
         for redindex, rednode in enumerate(subnodeslist):
             for blueindex, bluenode in enumerate(subnodeslist):
-                if redindex != blueindex and rednode.parent is not bluenode.parent:
+                if redindex != blueindex and rednode.parent_ingredient is not bluenode.parent_ingredient:
                     raise TypeError('subnodes is not a dictionary',
-                                    Ingredient, 'subnodes with the same parent')
+                                    Ingredient, 'subnodes with the same parent_ingredient object')
     # create a list of ingredient names that are within all the nodes in the dict
     subingredientnames: list = []
     for subnode in subnodeslist:
@@ -810,9 +810,9 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
 
     # create a copy of the parameter ingredient
     if not clonechildren:
-        if ingredient.parent_ingredient is not None and ingredient.parent_ingredient.parent is not None and isinstance(ingredient.parent_ingredient.parent, Ingredient):  # pylint:disable = line-too-long
+        if ingredient.parent_ingredient is not None and ingredient.parent_ingredient.parent_ingredient is not None and isinstance(ingredient.parent_ingredient.parent_ingredient, Ingredient):  # pylint:disable = line-too-long
             bluenode: Ingredient = Ingredient(ingredient_name=ingredient.ingredient_name,
-                                              parent=ingredient.parent_ingredient.parent,
+                                              parent_ingredient=ingredient.parent_ingredient.parent_ingredient,
                                               amount_on_hand=ingredient.amount_on_hand,
                                               amount_needed=ingredient.amount_needed,
                                               amount_parent_made_per_craft=ingredient.amount_parent_made_per_craft,
@@ -823,7 +823,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
         # $ go back and examine this return branch more
         return clone(ingredient, True)
     rednode: Ingredient = Ingredient(ingredient_name=ingredient.ingredient_name,
-                                     parent=ingredient.parent_ingredient,
+                                     parent_ingredient=ingredient.parent_ingredient,
                                      amount_on_hand=ingredient.amount_on_hand,
                                      amount_needed=ingredient.amount_needed,
                                      amount_parent_made_per_craft=ingredient.amount_parent_made_per_craft,
@@ -832,7 +832,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
     # create a copy of all the children of the parameter ingredient object
     for subnode in ingredient.children.items():
         Ingredient(ingredient_name=subnode[1].ingredient,
-                parent=subnode,
+                parent_ingredient=subnode,
                 amount_on_hand=subnode[1].amount_on_hand,
                 amount_needed=subnode[1].amount_needed,
                 amount_parent_made_per_craft=subnode[1].amount_parent_made_per_craft,  # noqa: E501 #pylint: disable=line-too-long
@@ -862,8 +862,8 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     # else, prompt the user to create a linkable clone of the new ingredient
     print('+ amount of', ingredient_name,
           'on Hand (needed to make 1', head(ingredient).ingredient_name, end=')\n')
-    print('++ amount of the parent made per craft')
-    print('+++ amount Needed to craft parent item once\n')
+    print('++ amount of the parent ingredient made per craft')
+    print('+++ amount Needed to craft parent ingredient item once\n')
     if MODE == ProgramState.MODE_B:
         head(ingredient).reversearithmetic(1)
     for index, subnode in enumerate(parseresults):
@@ -872,7 +872,7 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
 
         # output the choices of subnodes:
         # parent ingredient, amount_needed, amountmadepereachcraft
-        print(index+1, end=str('. ' + subnode.parent.ingredient
+        print(index+1, end=str('. ' + subnode.parent_ingredient.ingredient
                                + ' | + ' + str(subnode.amount_on_hand)
                                + ' | ++ ' + str(subnode.amount_needed)
                                + ' | +++ ' + str(subnode.amount_parent_made_per_craft)+'\n'))
