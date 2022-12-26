@@ -515,7 +515,9 @@ def nodecount(ingredient: Ingredient) -> int:
     Returns:
         int: the number of nodes in the tree (based on the size of list of nodes)
     """
-    return len(head(ingredient).pandastree_row(Deque()))
+    size_of_deque : int = head(ingredient).pandastree_row(Deque).size
+    #!len(head(ingredient).pandastree_row(Deque()))
+    return size_of_deque
 
 
 def makealiasunique(ingredient: Ingredient):
@@ -559,11 +561,11 @@ def allaliases(ingredient: Ingredient, alias: str, aliases: list) -> list:
     return aliases
 
 
-def writetreetocsv(headnode: Ingredient):
+def writetreetocsv(ingredient: Ingredient):
     """
     writes an ingredient tree onto a csv file
     Args:
-        headnode (Ingredient): the head ingredient of the ingredient tree
+        ingredient (Ingredient): the head ingredient of the ingredient tree
     """
     # check if the csv file exists
     # if the file is not in the directory, create it
@@ -572,10 +574,11 @@ def writetreetocsv(headnode: Ingredient):
         pandas.DataFrame(columns=FIELDNAMES).to_csv(
             FILENAME, index=False)
         # open file again to append to it
-        writetreetocsv(headnode)
+        writetreetocsv(ingredient)
     else:
         # then write to the file but calling the method again recursively
-        for row in headnode.pandastree_row([]):
+        # ? make sure to check this, used to be an empty list prior to change
+        for row in ingredient.pandastree_row(Deque()):
             pandas.DataFrame(row, index=[0]).to_csv(
                 FILENAME, mode='a', header=False, index=False)
 
