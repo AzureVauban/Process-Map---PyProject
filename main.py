@@ -242,7 +242,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     information to identify the ingredient and its parent ingredient
     """
     parent_ingredient = None
-    children: dict = {}
+    children_ingredients: dict = {}
     generation: int = 0
     instances: int = 0
     instancekey: int = 0
@@ -285,11 +285,11 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         self.treekey = treekey
         self.isfromcsvfile = isfromcsvfile
         self.instancekey = Ingredient.instances
-        self.children = {}
+        self.children_ingredients = {}
         self.parent_ingredient = parent_ingredient
         if self.parent_ingredient is not None:
             self.generation = self.parent_ingredient.generation + 1
-            self.parent_ingredient.children.update({self.instancekey: self})
+            self.parent_ingredient.children_ingredients.update({self.instancekey: self})
             self.treekey = self.parent_ingredient.treekey
         else:
             self.generation = 0
@@ -385,8 +385,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
                 temp = temp.parent_ingredient
                 temp.amount_on_hand += 1
         # continue method recursively
-        if len(self.children) > 0:
-            for childnode in self.children.items():
+        if len(self.children_ingredients) > 0:
+            for childnode in self.children_ingredients.items():
                 if not isinstance(childnode[1], Ingredient):
                     raise TypeError('child is not an instance of', Ingredient)
                 childnode[1].reversearithmetic(self.amount_on_hand)
@@ -394,10 +394,10 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
 
     def modifytreekey(self, newtreekey: str):
         """
-        change the tree key of the ingredient and all of its children
+        change the tree key of the ingredient and all of its children ingredients
         """
         self.treekey = newtreekey
-        for subnode in self.children.items():
+        for subnode in self.children_ingredients.items():
             subnode[1].modifytreekey(newtreekey)
 
     def pandasrow(self) -> dict:
@@ -434,7 +434,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         """
         enqueued_data = self.pandasrow()
         rows.enqueue_back(enqueued_data)
-        for child in self.children.items():
+        for child in self.children_ingredients.items():
             child[1].pandastree_row(rows)
         return rows
 
@@ -443,19 +443,19 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         sets and updates the population attribute of the Ingredient accordingly
         """
         self.population = population
-        for subnode in self.children.items():
+        for subnode in self.children_ingredients.items():
             subnode[1].updatepopulation(population)
 
     def findendpoints(self, endpoints: dict) -> dict:
         """
-        returns a dictionary of nodes with no children
+        returns a dictionary of nodes with no children ingredients
         Args:
             endpoints (dict): _description_
         Returns:
             _type_: _description_
         """
-        for subnode in self.children.items():
-            if len(subnode[1].children) == 0:
+        for subnode in self.children_ingredients.items():
+            if len(subnode[1].children_ingredients) == 0:
                 endpoints.update({subnode[1].instancekey: subnode[1]})
             else:
                 subnode[1].findendpoints(endpoints)
@@ -554,7 +554,7 @@ def makealiasunique(ingredient: Ingredient):
                 node_ingredient_duplicate_num)
             node_ingredient_duplicate_num += 1
     # recrusively call the function on each child ingredient
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         makealiasunique(subnode[1])
 
 
@@ -571,7 +571,7 @@ def allaliases(ingredient: Ingredient, alias: str, aliases: Deque) -> Deque:
     if ingredient.alias_ingredient == alias:
         aliases.enqueue_back(ingredient)
     # recrusively search for nodes that have the same ingreident alias as the passed alias
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         allaliases(subnode[1], alias, aliases)
     return aliases
 
@@ -652,7 +652,7 @@ def outputingredients(ingredient: Ingredient):
         ingredient (Ingredient): parent ingredient, the ingredient to print the subingredients of
     """
     subingredients: list = []
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         subingredients.append(subnode[1].ingredient_name)
     print('+ These ingredients are already in the tree:\n')
     # output the ingredients
@@ -726,7 +726,7 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
             '\x1B[0m'  # ingredient name
         print('emplaced ingredient', red + ' | ' + blue)
         return True
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         createtree(subnode[1], pandasrow)
     return False
 
@@ -769,7 +769,7 @@ def search(ingredient: Ingredient, ingredient_name: str, results: list) -> list:
     recursively search through the tree to find nodes with the same
     ingredient
     Args:
-        ingredient (Ingredient): parent ingredient object, parse through its children recursively to
+        ingredient (Ingredient): parent ingredient object, parse through its children ingredients recursively to
         update the search results
         ingredient (str): the name of the item you are searching for
         results (list): nodes that have the same ingredient as the parameter
@@ -780,7 +780,7 @@ def search(ingredient: Ingredient, ingredient_name: str, results: list) -> list:
     if ingredient.parent_ingredient is not None and ingredient.ingredient_name == ingredient_name:
         results.append(ingredient)
     # recrusively keep searching for nodes
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         search(subnode[1], ingredient_name, results)
     return results
 
@@ -821,7 +821,7 @@ def shouldclonechildren(ingredient: str, subnodes: dict) -> bool:
     # create a list of ingredient names that are within all the nodes in the dict
     subingredientnames: list = []
     for subnode in subnodeslist:
-        for childnode in subnode.children.items():
+        for childnode in subnode.children_ingredients.items():
             subingredientnames.append(childnode[1].ingredient_name)
     # check if the ingredient is in the list of subingredient names
     if ingredient in subingredientnames:
@@ -841,7 +841,7 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
     """
     # (industrial battery GEN==1, input protocite)
     # if the parent ingredient is in the same generation as the clone,
-    # do not clone the children, set the parent as its grandparent ingredient
+    # do not clone the children ingredients, set the parent as its grandparent ingredient
 
     # create a copy of the parameter ingredient
     if not clonechildren:
@@ -864,8 +864,8 @@ def clone(ingredient: Ingredient, clonechildren: bool = True) -> Ingredient:
                                      amount_parent_made_per_craft=ingredient.amount_parent_made_per_craft,
                                      isfromcsvfile=ingredient.isfromcsvfile,
                                      promptamountsOn=False)
-    # create a copy of all the children of the parameter ingredient object
-    for subnode in ingredient.children.items():
+    # create a copy of all the children ingredients of the parameter ingredient object
+    for subnode in ingredient.children_ingredients.items():
         Ingredient(ingredient_name=subnode[1].ingredient_name,
                 parent_ingredient=subnode[1],
                 amount_on_hand=subnode[1].amount_on_hand,
@@ -924,7 +924,7 @@ def subpopulate(ingredient: Ingredient, ingredient_name: str) -> Ingredient:
     clonenode: Ingredient = clone(
         parseresults[userchoice],  # ingredient that will be cloned
         shouldclonechildren(ingredient_name,
-                            ingredient.children))  # bool to determine to clone subnodes
+                            ingredient.children_ingredients))  # bool to determine to clone subnodes
     return clonenode
 
 
@@ -945,7 +945,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     user_inputs: Deque = Deque()  # list of tuples (string, bool)
     ingredient_blacklist: list = []
     # append subnode ingredients to the list if there are any
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         #! user_inputs.enqueue_back((subnode[1].ingredient_name, True))
         # ? ingredient_name, already created boolean (which is true)
         ingredient_blacklist.append(subnode[1].ingredient_name)
@@ -953,7 +953,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     print('What ingredients do you have need to create',
           ingredient.ingredient_name, end=':\n')
     # if there are subnodes, prompt the user to select from the list
-    if len(ingredient.children) > 0:
+    if len(ingredient.children_ingredients) > 0:
         outputingredients(ingredient)
     while True:
         # prompt the user for an ingredient
@@ -986,10 +986,10 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     ingredient.updatepopulation(nodecount(ingredient))
     # recrusively continue to populate the tree
     # ! sometimes runtime error occurs, cloning a child of the same parent?
-    for subnode in ingredient.children.items():
+    for subnode in ingredient.children_ingredients.items():
         populate(subnode[1])
-    # if the program Mode is A and the length of the children Nodes are 0
-    if MODE == ProgramState.MODE_A and len(ingredient.children) == 0:
+    # if the program Mode is A and the length of the children ingredients are 0
+    if MODE == ProgramState.MODE_A and len(ingredient.children_ingredients) == 0:
         # call the arithmetic method
         ingredient.recursivearithmetic()
     # return the head of the ingredient tree
@@ -1022,7 +1022,7 @@ def superpopulate() -> Ingredient:
     # convert the dict into a list of ingredient instances
     for ingredient in foundheadnodes.items():
         userchoices.append(ingredient[1])
-    # sort the list of nodes by the amount of children
+    # sort the list of nodes by the amount of children ingredients
     for blue in range(0, len(userchoices)-1):
         for red in range(0, len(userchoices)-1):
             if not isinstance(userchoices[red], Ingredient):
