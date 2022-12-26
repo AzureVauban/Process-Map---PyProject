@@ -914,7 +914,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
     # append subnode ingredients to the list if there are any
     for subnode in ingredient.children.items():
         user_inputs.enqueue_back((subnode[1].ingredient_name, True))
-        ingredient_blacklist.append((subnode[1].ingredient_name, True))
+        ingredient_blacklist.append(subnode[1].ingredient_name)
     # prompt the user for ingredients
     print('What ingredients do you have need to create',
           ingredient.ingredient_name, end=':\n')
