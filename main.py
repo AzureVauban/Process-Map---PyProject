@@ -289,7 +289,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
         self.parent_ingredient = parent_ingredient
         if self.parent_ingredient is not None:
             self.generation = self.parent_ingredient.generation + 1
-            self.parent_ingredient.children_ingredients.update({self.instancekey: self})
+            self.parent_ingredient.children_ingredients.update(
+                {self.instancekey: self})
             self.treekey = self.parent_ingredient.treekey
         else:
             self.generation = 0
