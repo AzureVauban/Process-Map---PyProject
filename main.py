@@ -1181,7 +1181,7 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
         # convert the values of the dictionary to a list to see if it holds valid values
         green: list = list(purple[1].values())
         # ? parent != None, ingredient name is same, treekey != parent.treekey
-        if green[3] != 'None' and green[0] != parent.treekey and green[1] == ingredient_name:
+        if green[3] != 'None' and green[0] != parent.treekey and green[1].upper() == ingredient_name.upper():
             """
             headnodes.update({green[0]: Ingredient(ingredient_name=green[1],
                                         parent_ingredient=None,
