@@ -1203,8 +1203,10 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
     # return ['CHANGE', 'ME', 'LATER']
     return subjectnodes
 
+
 def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingredient:
-    if not os.path.exists():
+    
+    if not os.path.exists(FILENAME):
         return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
     return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
 
