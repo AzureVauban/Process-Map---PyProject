@@ -1203,10 +1203,14 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
     # return ['CHANGE', 'ME', 'LATER']
     return subjectnodes
 
-
-def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingredient:
+def reworked_parse(ingredient_name,)->list:
     
+    return []
+def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingredient:
     if not os.path.exists(FILENAME):
+        for purple in pandas.read_csv(FILENAME).to_dict('index').items():
+            green: list = list(purple[1].values())
+            if green[]
         return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
     return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
 
