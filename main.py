@@ -1190,10 +1190,23 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
                                         isfromcsvfile=True,
                                         promptamountsOn=False)})
             """
+
+            # convert append data (green) into an Ingredient object
+            # parse for the parent of the ingredient node
+            # todo add a secondary parse method for this task
+            parsecsv_anything(green[1], green[3])
+            # then create a recipe tree for it
+            # then overwrite the parent to be None
+            # append to the subjectnodes list
             subjectnodes.append(green)
             print('TEST DEBUG POINT')
-    #return ['CHANGE', 'ME', 'LATER']
+    # return ['CHANGE', 'ME', 'LATER']
     return subjectnodes
+
+def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingredient:
+    if not os.path.exists():
+        return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
+    return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
 
 
 if __name__ == '__main__':
