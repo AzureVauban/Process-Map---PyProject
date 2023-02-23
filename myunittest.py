@@ -34,5 +34,5 @@ class TestIngredientSearchAndParse(unittest.TestCase):
             list(parsecsv().values())[0]).children_ingredients.values())[2].parent_ingredient
         test_list: list = combine_ingredient_tree(
             test_ingredient_name, test_ingredient_parent)
-        self.assertGreaterEqual(len(test_list), 2)
+        self.assertGreaterEqual(2,len(test_list))
         #self.assertEqual(test_ingredient_parent.ingredient_name,'industrial battery')

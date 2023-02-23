@@ -1164,7 +1164,7 @@ def remove_recipe(remove_selected_treekey: str) -> Ingredient:
     return removed_recipe_head
 
 
-def combine_ingredient_tree(ingredient_name : str,parent : Ingredient) -> list:
+def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
     """
     needs to be implemented within the subpopulate search method
     # if the user has prompted, the program will create an ingredient tree to input
@@ -1173,14 +1173,14 @@ def combine_ingredient_tree(ingredient_name : str,parent : Ingredient) -> list:
     """
     # get the ingredient name
     # create a sub-tree out of the recipe beginning with the csv dataline with
-    if not os.exist(FILENAME):
+    if not os.path.exists(FILENAME):
         raise FileExistsError('File does not exist')
     # parse through the csv and make a list of all the data lines with the same ingredient name
-    subjectnodes : list = []
+    subjectnodes: list = []
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
         # convert the values of the dictionary to a list to see if it holds valid values
         green: list = list(purple[1].values())
-        #? parent != None, ingredient name is same, treekey != parent.treekey
+        # ? parent != None, ingredient name is same, treekey != parent.treekey
         if green[3] != 'None' and green[0] != parent.treekey and green[1] == ingredient_name:
             """
             headnodes.update({green[0]: Ingredient(ingredient_name=green[1],
@@ -1192,7 +1192,7 @@ def combine_ingredient_tree(ingredient_name : str,parent : Ingredient) -> list:
             """
             subjectnodes.append(green)
             print('TEST DEBUG POINT')
-    return ['CHANGE','ME','LATER']
+    return ['CHANGE', 'ME', 'LATER']
 
 
 if __name__ == '__main__':
