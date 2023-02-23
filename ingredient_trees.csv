@@ -1,41 +1,59 @@
 Tree_Key,Ingredient,Ingredient_Alias,Parent_of_Ingredient,Amount_on_Hand,Amount_Of_Parent_Made_Per_Craft,Amount_Needed_Per_Craft,Generation
-QCAYB1qv6OY6VAF,industrial battery,industrial_battery__D3PMJp,None,5,1,1,0
-QCAYB1qv6OY6VAF,protocite bar,protocite_bar__sDJgnx2pSd,industrial battery,25,1,5,1
-QCAYB1qv6OY6VAF,protocite,protocite__d0Xz5kx74J4,protocite bar,50,1,2,2
-QCAYB1qv6OY6VAF,battery,battery__SGu05kGxs,industrial battery,10,1,2,1
-QCAYB1qv6OY6VAF,pixels,pixels__llDXxfkfOLHOp,battery,25000,1,2500,2
-QCAYB1qv6OY6VAF,quantum processor,quantum_processor__vXMjrD,industrial battery,5,1,1,1
-QCAYB1qv6OY6VAF,silicon board,silicon_board__XL0yCli,quantum processor,20,1,4,2
-QCAYB1qv6OY6VAF,protocite bar,protocite_bar__TNtne71kcMSJ,quantum processor,10,1,2,2
-QCAYB1qv6OY6VAF,thorium rod,thorium_rod__n7pZOd,industrial battery,25,1,5,1
-QCAYB1qv6OY6VAF,thorium ore,thorium_ore__DCaPsE,thorium rod,50,1,2,2
-ujnirla8c610pf25u7l,protocite bar,protocite_bar,industrial battery,450,1,5,1
-ujnirla8c610pf25u7l,protocite,protocite,protocite bar,900,1,2,2
-ujnirla8c610pf25u7l,battery,battery,industrial battery,180,1,2,1
-ujnirla8c610pf25u7l,pixels,pixels,battery,450000,1,2500,2
-ujnirla8c610pf25u7l,quantum processor,quantum_processor,industrial battery,90,1,1,1
-ujnirla8c610pf25u7l,silicon board,silicon_board,quantum processor,360,1,4,2
-ujnirla8c610pf25u7l,protocite bar,protocite_bar,quantum processor,180,1,2,2
-ujnirla8c610pf25u7l,thorium rod,thorium_rod,industrial battery,450,1,5,1
-ujnirla8c610pf25u7l,thorium ore,thorium_ore,thorium rod,900,1,2,2
-kg4vqrddvlmq2aahoii,industrial battery,industrial_battery,None,78,1,1,0
-kg4vqrddvlmq2aahoii,protocite bar,protocite_bar,industrial battery,390,1,5,1
-kg4vqrddvlmq2aahoii,protocite,protocite,protocite bar,780,1,2,2
-kg4vqrddvlmq2aahoii,battery,battery,industrial battery,156,1,2,1
-kg4vqrddvlmq2aahoii,pixels,pixels,battery,390000,1,2500,2
-kg4vqrddvlmq2aahoii,quantum processor,quantum_processor,industrial battery,78,1,1,1
-kg4vqrddvlmq2aahoii,silicon board,silicon_board,quantum processor,312,1,4,2
-kg4vqrddvlmq2aahoii,protocite bar,protocite_bar,quantum processor,156,1,2,2
-kg4vqrddvlmq2aahoii,thorium rod,thorium_rod,industrial battery,390,1,5,1
-kg4vqrddvlmq2aahoii,thorium ore,thorium_ore,thorium rod,780,1,2,2
-lgqm7pk1ubilr7ipcsx,industrial battery,industrial_battery,None,32,1,1,0
-lgqm7pk1ubilr7ipcsx,protocite bar,protocite_bar,industrial battery,160,1,5,1
-lgqm7pk1ubilr7ipcsx,protocite,protocite,protocite bar,320,1,2,2
-lgqm7pk1ubilr7ipcsx,battery,battery,industrial battery,64,1,2,1
-lgqm7pk1ubilr7ipcsx,pixels,pixels,battery,160000,1,2500,2
-lgqm7pk1ubilr7ipcsx,quantum processor,quantum_processor,industrial battery,32,1,1,1
-lgqm7pk1ubilr7ipcsx,silicon board,silicon_board,quantum processor,128,1,4,2
-lgqm7pk1ubilr7ipcsx,protocite bar,protocite_bar,quantum processor,64,1,2,2
-lgqm7pk1ubilr7ipcsx,thorium rod,thorium_rod,industrial battery,160,1,5,1
-lgqm7pk1ubilr7ipcsx,thorium ore,thorium_ore,thorium rod,320,1,2,2
-lgqm7pk1ubilr7ipcsx,protocite,protocite,industrial battery,64,1,2,1
+y8lm2zt81dvmgio9fo,industrial battery,industrial_battery,None,0,1,1,0
+y8lm2zt81dvmgio9fo,protocite bar,protocite_bar,industrial battery,25,1,5,1
+y8lm2zt81dvmgio9fo,protocite,protocite,protocite bar,50,1,2,2
+y8lm2zt81dvmgio9fo,battery,battery,industrial battery,10,1,2,1
+y8lm2zt81dvmgio9fo,pixels,pixels,battery,25000,1,2500,2
+y8lm2zt81dvmgio9fo,quantum processor,quantum_processor,industrial battery,5,1,1,1
+y8lm2zt81dvmgio9fo,silicon board,silicon_board,quantum processor,20,1,4,2
+y8lm2zt81dvmgio9fo,protocite bar,protocite_bar,quantum processor,10,1,2,2
+y8lm2zt81dvmgio9fo,thorium rod,thorium_rod,industrial battery,25,1,5,1
+y8lm2zt81dvmgio9fo,thorium ore,thorium_ore,thorium rod,50,1,2,2
+db0uzq9tf8yq4d5po0,blue concrete powder,blue_concrete_powder,None,0,1,1,0
+db0uzq9tf8yq4d5po0,blue dye,blue_dye,blue concrete powder,5000,1,1,1
+db0uzq9tf8yq4d5po0,sand,sand,blue concrete powder,20000,1,4,1
+db0uzq9tf8yq4d5po0,gravel,gravel,sand,20000,1,1,2
+db0uzq9tf8yq4d5po0,cobblestone,cobblestone,gravel,20000,1,1,3
+db0uzq9tf8yq4d5po0,cobblestone,cobblestone,gravel,20000,1,1,3
+db0uzq9tf8yq4d5po0,gravel,gravel,blue concrete powder,20000,1,4,1
+2diwiq6ygt2ydf,ABCD,ABCD,None,0,1,1,0
+2diwiq6ygt2ydf,A,A,ABCD,0,1,1,1
+2diwiq6ygt2ydf,B,B,ABCD,0,1,1,1
+2diwiq6ygt2ydf,C,C,ABCD,0,1,1,1
+2diwiq6ygt2ydf,D,D,ABCD,0,1,1,1
+52tg6fxhvu,Cut Iron,Cut_Iron,None,144,1,1,0
+52tg6fxhvu,Plate Iron,Plate_Iron,Cut Iron,576,1,4,1
+52tg6fxhvu,Block of Iron,Block_of_Iron,Plate Iron,2304,1,4,2
+52tg6fxhvu,Iron ingot,Iron_ingot,Block of Iron,20736,1,9,3
+0xnkj5to5g6v,Iron Ingot,Iron_Ingot,None,0,1,1,0
+0xnkj5to5g6v,Block of Iron,Block_of_Iron,Iron Ingot,0,1,9,1
+0xnkj5to5g6v,Plate Iron,Plate_Iron,Block of Iron,0,1,2,2
+0xnkj5to5g6v,Cut Iron,Cut_Iron,Plate Iron,144,1,4,3
+qtub0bs1vaerq1lp,Block of Wheat,Block_of_Wheat,None,50,1,1,0
+qtub0bs1vaerq1lp,Wheat,Wheat,Block of Wheat,450,1,9,1
+2fkwd61lsoc,Capture Bot,Capture_Bot,None,9999,1,1,0
+2fkwd61lsoc,Spare Parts,Spare_Parts,Capture Bot,39996,1,4,1
+2fkwd61lsoc,Carbon Plate,Carbon_Plate,Capture Bot,49995,1,5,1
+2fkwd61lsoc,Lead,Lead,Carbon Plate,49995,1,1,2
+2fkwd61lsoc,Carbon,Carbon,Carbon Plate,99990,1,2,2
+2fkwd61lsoc,Laser Diode,Laser_Diode,Capture Bot,19998,1,2,1
+2fkwd61lsoc,Iron Bar,Iron_Bar,Laser Diode,19998,1,1,2
+2fkwd61lsoc,Carbon Dioxide,Carbon_Dioxide,Laser Diode,19998,1,1,2
+2fkwd61lsoc,Glass,Glass,Laser Diode,19998,1,1,2
+2fkwd61lsoc,Capture Pod,Capture_Pod,Capture Bot,39996,1,4,1
+2fkwd61lsoc,Pixels,Pixels,Capture Pod,29997000,1,750,2
+2fkwd61lsoc,Quantum Processor,Quantum_Processor,Capture Bot,9999,1,1,1
+68z8i8plcuy,Capture Bot,Capture_Bot,None,1000,1,1,0
+68z8i8plcuy,Spare Parts,Spare_Parts,Capture Bot,4000,1,4,1
+68z8i8plcuy,Carbon Plate,Carbon_Plate,Capture Bot,5000,1,5,1
+68z8i8plcuy,Lead,Lead,Carbon Plate,5000,1,1,2
+68z8i8plcuy,Carbon,Carbon,Carbon Plate,10000,1,2,2
+68z8i8plcuy,Laser Diode,Laser_Diode,Capture Bot,2000,1,2,1
+68z8i8plcuy,Iron Bar,Iron_Bar,Laser Diode,2000,1,1,2
+68z8i8plcuy,Carbon Dioxide,Carbon_Dioxide,Laser Diode,2000,1,1,2
+68z8i8plcuy,Glass,Glass,Laser Diode,2000,1,1,2
+68z8i8plcuy,Capture Pod,Capture_Pod,Capture Bot,4000,1,4,1
+68z8i8plcuy,Pixels,Pixels,Capture Pod,3000000,1,750,2
+68z8i8plcuy,Quantum Processor,Quantum_Processor,Capture Bot,1000,1,1,1
+68z8i8plcuy,Silicon Board,Silicon_Board,Quantum Processor,4000,1,4,2
+68z8i8plcuy,Protocite Bar,Protocite_Bar,Quantum Processor,2000,1,2,2

@@ -1,6 +1,13 @@
 # pylint:disable=C0302
 """
 Reformat of main.py
+TODOS:
+- add functionality/feature enhancements:
+- - combining ingredient tree if user input is equal to the head of an ingredient tree
+- - displaying part of the ingredient tree to the console
+- - possibly organizing ingredient trees into groups (add some kind of hash code in the event of duplicate group names)
+- - if numeric input is blank, default user input to 1
+- - removing ingredient trees from saved csv file
 """
 
 import math
@@ -182,7 +189,7 @@ class Deque:
         raise ValueError('the container is empty, there are no values to peak')
 
 
-def promptint() -> int:
+def promptint(default_input_to_one: bool = False) -> int:
     """
     prompts the user for an postive integer and returns it
     Returns:
@@ -190,7 +197,11 @@ def promptint() -> int:
     """
     while True:
         myinput = input('').strip()
-        if not myinput.isdigit():
+        if len(myinput) == 0 and default_input_to_one:  # todo check this
+            return 1
+        elif len(myinput) == 0 and not default_input_to_one:  # todo check this
+            return 0
+        elif not myinput.isdigit():
             print('you can only type in a positive integer')
         elif int(myinput) < 0:
             print('please type in a postive integer')
@@ -320,7 +331,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             while promptamountparentmade:  # ? should this be prompted depending on if it was cloned
                 print('How much', self.parent_ingredient.ingredient_name,
                       'do you create each time you craft it: ')
-                self.amount_parent_made_per_craft = promptint()
+                self.amount_parent_made_per_craft = promptint(True)
                 if self.amount_parent_made_per_craft < 1:
                     print('That number is not valid')
                 else:
@@ -330,7 +341,7 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
             while True:
                 print('How much', self.ingredient_name, 'do you need to craft',
                       self.parent_ingredient.ingredient_name, '1 time: ')
-                self.amount_needed = promptint()
+                self.amount_needed = promptint(True)
                 if self.amount_needed < 1:
                     print('That number is not valid')
                 else:
@@ -691,7 +702,7 @@ def parsecsv() -> dict:
     return headnodes
 
 
-def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
+def createtree(ingredient: Ingredient, pandasrow: Deque, showemplacedmsg: bool = True) -> bool:
     """
     figure out where to emplace the Ingredient in the tree
     Args:
@@ -721,18 +732,19 @@ def createtree(ingredient: Ingredient, pandasrow: Deque) -> bool:
                    treekey=data_row_dequeued[0],
                    # isfromcsvfile=True,
                    promptamountsOn=False)
-        red: str = '\x1B[31m' + ingredient.ingredient_name + \
-            '\x1B[0m'  # parent ingredient namedeque_peak_value
-        blue: str = '\x1B[36m' + data_row_dequeued[1] + \
-            '\x1B[0m'  # ingredient name
-        print('emplaced ingredient', red + ' | ' + blue)
+        if showemplacedmsg:
+            red: str = '\x1B[31m' + ingredient.ingredient_name + \
+                '\x1B[0m'  # parent ingredient namedeque_peak_value
+            blue: str = '\x1B[36m' + data_row_dequeued[1] + \
+                '\x1B[0m'  # ingredient name
+            print('emplaced ingredient', red + ' | ' + blue)
         return True
     for subnode in ingredient.children_ingredients.items():
-        createtree(subnode[1], pandasrow)
+        createtree(subnode[1], pandasrow, showemplacedmsg)
     return False
 
 
-def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
+def createtreefromcsv(parent_ingredient: Ingredient, showemplacedmsg: bool = True) -> Ingredient:
     """
     figures out where to create and link a new ingredient object from the csv file
     Args:
@@ -760,7 +772,7 @@ def createtreefromcsv(parent_ingredient: Ingredient) -> Ingredient:
     #! for row in sublist:
         #! createtree(parent_ingredient, row)
     while not sublist.is_empty():
-        createtree(parent_ingredient, sublist)
+        createtree(parent_ingredient, sublist, showemplacedmsg)
         # print('row', index, 'of', len(sublist), 'rows')
     return head(parent_ingredient)
 
@@ -951,7 +963,7 @@ def populate(ingredient: Ingredient) -> Ingredient:  # pylint: disable=R0912
         # ? ingredient_name, already created boolean (which is true)
         ingredient_blacklist.append(subnode[1].ingredient_name)
     # prompt the user for ingredients
-    print('What ingredients do you have need to create',
+    print('What ingredients do you need to create',
           ingredient.ingredient_name, end=':\n')
     # if there are subnodes, prompt the user to select from the list
     if len(ingredient.children_ingredients) > 0:
@@ -1054,7 +1066,7 @@ def superpopulate() -> Ingredient:
     return ingredient_tree
 
 
-def prompt_print():
+def help_menu():
     """print the operations the user has the ability to perform with the script
     """
     print('Which mode do you want to use:')
@@ -1064,7 +1076,123 @@ def prompt_print():
     print('Mode B - You are trying to figure out how much base materials'
           ' you need to create a certain amount of your desired item, ('
           'Type in B)')
+    # todo add code to check if the csv file exists and has any trees in it
+    print('Mode D - if you want to remove an ingredient tree from the csv file')
+    print('Mode Q - exits the program')
     print("Type in 'H' if you need a reminder of the prompt\n")
+
+# todo finish this functions
+
+
+def check_for_multipletrees() -> bool:
+    """
+    # returns true if the file is present and there are multiple ingredient trees
+    # parse the file and make a list the multiple unique tree keys 
+    """
+    # the file must exists and the inquiry of the csv must not be {-1:None}
+    return os.path.exists(FILENAME) and parsecsv is not {-1: None}
+
+
+def get_removal_treekey() -> str:
+    """
+    # prompts the user to for a choice of ingredient tree to remove
+    # parse the file and make a queue of queues of the ingredients trees to rewrite
+    """
+    # make a dataframe for the pandas csv file, parse through the file and make a list of ingredient keys
+    if not check_for_multipletrees():
+        # no file or head nodes (unable to remove anything)
+        print('THERE ARE NO RECIPIES TO REMOVE')
+        return 'None'
+    # prompt the user for which ingredients
+    list_of_head_ingredients: list = []
+    for _ in parsecsv().items():
+        list_of_head_ingredients.append(_)
+    # display the choices the user has
+    print('SELECT A CORROSPONDING NUMBER FOR WHICH TREE YOU WANT TO REMOVE FROM THE CSV FILE')
+    for index, _ in enumerate(list_of_head_ingredients):  # todo finish debugging this
+        print(index+1, _[1].ingredient_name, ':', _[0])
+    #user_choice_integer: int = random.randint(0, len(list_of_head_ingredients))
+    user_choice_integer: int = promptint(True)-1
+    # if 0 don't select anything
+    while True:
+        if user_choice_integer == 0:
+            return 'None'
+        # out of range
+        elif user_choice_integer < -1 and user_choice_integer > len(list_of_head_ingredients):
+            print('INVALD CHOICE, OUT OF RANGE, PLEASE CHOOSE WITHIN RANGE')
+            continue
+        else:
+            selected_treekey: str = list_of_head_ingredients[user_choice_integer][0]
+            return selected_treekey
+
+
+def remove_recipe(remove_selected_treekey: str) -> Ingredient:
+    """
+    # parse through the csv and make a list of all the head nodes in the tree excluding this treekey
+    # for each head node make a queue of a queue for each node in the csv file
+    - B is a queue containing a recipe from the csv file
+    # overwrite contents of the csv file
+    # return the recipe that was removed in the 
+    """
+    if remove_selected_treekey == 'None':
+        return Ingredient(remove_selected_treekey, None, promptamountsOn=False)
+    # create a list of all the head ingredients
+    list_of_head_ingredients: list = []
+    removed_recipe_head: Ingredient = None
+    for _ in parsecsv().items():
+        if not _[0] == remove_selected_treekey:
+            #! _[1].treekey = _[1].gen_treekey()
+            list_of_head_ingredients.append(_)
+        else:
+            removed_recipe_head = createtreefromcsv(_[1], True)
+    primary_queue: Deque = Deque()
+    #   loop through the list creating a queue for each recipe (head ingredient)
+    for _ in list_of_head_ingredients:
+        recipe: Ingredient = createtreefromcsv(_[1], False)
+        secondary_queue: Deque = recipe.pandastree_row(
+            Deque(nodecount(head(recipe))))
+        #! not needed
+        primary_queue.enqueue_front(recipe)
+    # delete csv file
+    os.remove(FILENAME)
+    # write new contents to the csv file
+    while not primary_queue.is_empty():
+        recipe = primary_queue.dequeue_back()
+        # change the ingredient key for the entire tree
+        recipe.modifytreekey(recipe.gen_treekey())
+        writetreetocsv(recipe)
+    return removed_recipe_head
+
+
+def combine_ingredient_tree(ingredient_name : str,parent : Ingredient) -> list:
+    """
+    needs to be implemented within the subpopulate search method
+    # if the user has prompted, the program will create an ingredient tree to input
+    # into the current ingredient tree that the user is making, the head ingredient (aka node)
+    # must have the same ingredient name as the current user input
+    """
+    # get the ingredient name
+    # create a sub-tree out of the recipe beginning with the csv dataline with
+    if not os.exist(FILENAME):
+        raise FileExistsError('File does not exist')
+    # parse through the csv and make a list of all the data lines with the same ingredient name
+    subjectnodes : list = []
+    for purple in pandas.read_csv(FILENAME).to_dict('index').items():
+        # convert the values of the dictionary to a list to see if it holds valid values
+        green: list = list(purple[1].values())
+        #? parent != None, ingredient name is same, treekey != parent.treekey
+        if green[3] != 'None' and green[0] != parent.treekey and green[1] == ingredient_name:
+            """
+            headnodes.update({green[0]: Ingredient(ingredient_name=green[1],
+                                        parent_ingredient=None,
+                                        promptamountparentmade=False,  # noqa: E501 #pylint: disable=line-too-long
+                                        treekey=green[0],
+                                        isfromcsvfile=True,
+                                        promptamountsOn=False)})
+            """
+            subjectnodes.append(green)
+            print('TEST DEBUG POINT')
+    return ['CHANGE','ME','LATER']
 
 
 if __name__ == '__main__':
@@ -1073,11 +1201,11 @@ if __name__ == '__main__':
     print('Welcome to Process Map (Python) v2.0!\n')
     # program runtime loop
     while True:
-        prompt_print()
+        help_menu()
         # prompt user which mode they want to run the program in
         while True:
             userinput = input('').strip().upper()
-            if userinput not in ('A', 'B', 'H'):
+            if userinput not in ('A', 'B', 'D', 'H', 'Q'):
                 print("That input is not valid, please type in 'A' or 'B'")
             elif len(userinput) > 1:
                 print('Your input is too long, please only type in one'
@@ -1086,38 +1214,48 @@ if __name__ == '__main__':
                 MODE = ProgramState.MODE_B
                 break
             elif userinput == 'H':
-                # print prompt again
-                prompt_print()
+                # reprints prompt
+                help_menu()
+            elif userinput == 'D':
+                print('removed',  remove_recipe(get_removal_treekey()
+                                                ).ingredient_name, 'from the csv file')
+                help_menu()
+            elif userinput == 'Q':
+                break
             else:
                 MODE = ProgramState.MODE_A
                 break
+        if userinput == 'Q':
+            break
         # populate the ingredient tree
-        ingredienttree: Ingredient = superpopulate()
+        subjectrecipe: Ingredient = superpopulate()
         # if the programde mode is B
         if MODE == ProgramState.MODE_B:
             # prompt the user for how much an item they want to make
-            print('How much of the item do you want to make?')
-            ingredienttree.reversearithmetic(promptint())
+            print('How much of the', subjectrecipe.ingredient_name,
+                  'do you want to make?')
+            # ! must be set to True, otherwise "n/0 error"
+            subjectrecipe.reversearithmetic(promptint(True))
         # $ this is where results of the arithmetic methods would be printed
         # ? if MODE B and population > 1
-        if ingredienttree.population >= 2 and MODE == ProgramState.MODE_B:
-            ingredienttree.reformat_output()
+        if subjectrecipe.population >= 2 and MODE == ProgramState.MODE_B:
+            subjectrecipe.reformat_output()
             print('\n')
         # ? if MODE A and population > 1
-        elif ingredienttree.population >= 2 and MODE == ProgramState.MODE_A:
-            print('You can make', ingredienttree.amount_resulted, 'of',
-                  ingredienttree.ingredient_name, 'with the materials you have')
+        elif subjectrecipe.population >= 2 and MODE == ProgramState.MODE_A:
+            print('You can make', subjectrecipe.amount_resulted, 'of',
+                  subjectrecipe.ingredient_name, 'with the materials you have')
             # ? output the endpoint ingredient names and amounts resulted
-            for item in ingredienttree.findendpoints({}).items():
+            for item in subjectrecipe.findendpoints({}).items():
                 print('You would use',
                       item[1].amount_resulted, 'of', item[1].ingredient_name)
         # ? population == 1
         else:
-            print('You would need', ingredienttree.amount_resulted, 'to create',
-                  ingredienttree.amount_resulted, 'of', ingredienttree.ingredient_name)
+            print('You would need', subjectrecipe.amount_resulted, 'to create',
+                  subjectrecipe.amount_resulted, 'of', subjectrecipe.ingredient_name)
         # prompt the user if they want to output the ingredient tree onto A csv file
         print('Do you want to save your tree to create',
-              ingredienttree.ingredient_name, 'to a csv file? (Y/N)')
+              subjectrecipe.ingredient_name, 'to a csv file? (Y/N)')
         while True:
             userinput = input('').strip().upper()
             if userinput not in ('Y', 'N'):
@@ -1127,12 +1265,12 @@ if __name__ == '__main__':
                       ' character')
             elif userinput == 'Y':
                 # change the tree key
-                ingredienttree.modifytreekey(
-                    ingredienttree.gen_treekey())
+                subjectrecipe.modifytreekey(
+                    subjectrecipe.gen_treekey())
                 # make sure each ingredient alias is unique
-                makealiasunique(ingredienttree)
+                makealiasunique(subjectrecipe)
                 # write onto file
-                writetreetocsv(ingredienttree)
+                writetreetocsv(subjectrecipe)
                 break
             else:
                 break

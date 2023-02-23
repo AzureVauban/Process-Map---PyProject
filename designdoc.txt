@@ -31,7 +31,7 @@ stores advanced information about an ingredient object and links them in a tree 
 example:
 NULL->silicon->sand->NULL
 
-example of a theorical ingerdient tree:
+example of a theorical ingredient tree:
 NULL->[1]|-->[2]--->[5] ----> [10] -> [NULL]
        |
        |-->[3]--->[6]----> [11] -> [NULL]
@@ -46,8 +46,17 @@ NULL->[1]|-->[2]--->[5] ----> [10] -> [NULL]
        |
        |-->[4]--->[8] -> [NULL]
             |--->[9] -> [NULL]
-    
+=====================================
+revised verison of a displayed ingredient tree
+NULL -----|----> [1.INGREDIENT_NAME]
+          |              |
+          |              [X.INGREDIENT_NAME]--------
+          |----> [2.INGREDIENT_NAME] ----> [3.INGREDIENT_NAME] 
+          |
+          |----> [4.INGREDIENT_NAME] ----> [5.INGREDIENT_NAME]
 ===== Features ===== 
 - write ingredient tree onto a .csv file
+= ability to remove ingredient trees from the .csv file
 - retrieve ingredient trees from a .csv file
 - able to clone ingredient objects and link them back to the ingredient tree
+- ability to work with decimals (floats)
