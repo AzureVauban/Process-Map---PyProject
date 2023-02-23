@@ -1192,7 +1192,8 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
             """
             subjectnodes.append(green)
             print('TEST DEBUG POINT')
-    return ['CHANGE', 'ME', 'LATER']
+    #return ['CHANGE', 'ME', 'LATER']
+    return subjectnodes
 
 
 if __name__ == '__main__':
