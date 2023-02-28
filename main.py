@@ -1206,13 +1206,26 @@ def combine_ingredient_tree(ingredient_name: str, parent: Ingredient) -> list:
 
 def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingredient:
     if not os.path.exists(FILENAME):
-        return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
+        parent_of_default: Ingredient = Ingredient(
+            parent_ingredient_name, None, promptamountsOn=False)
+        return Ingredient(ingredient_name, promptamountsOn=False)
     # parse through the entire csv file for the parent Node
+    # if parse is successful, parse for any children nodes
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
-        blue : list = list(purple[1].values())
-    return Ingredient(ingredient_name, Ingredient(parent_ingredient_name, None, promptamountsOn=False), promptamountsOn=False)
+        blue: list = list(purple[1].values())
+        parent_of_default: Ingredient = Ingredient(
+            parent_ingredient_name, None, promptamountsOn=False)
+        return Ingredient(ingredient_name, promptamountsOn=False)
 
 
+def create_subtree() -> Ingredient:
+    """
+    Purpose: one
+    """
+    pass
+
+
+# end def
 if __name__ == '__main__':
     MODE: ProgramState = ProgramState.MODE_A
     # prompt program mode

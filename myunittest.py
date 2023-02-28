@@ -13,8 +13,7 @@ class TestIngredientSearchAndParse(unittest.TestCase):
 
     def testsearch(self):
         #! add back later recipe : Ingredient = createtreefromcsv(parent_ingredient,False)
-        test_ingredient_name: str = list(createtreefromcsv(list(parsecsv().values())[
-                                         0]).children_ingredients.values())[2].ingredient_name
+        test_ingredient_name: str = list(createtreefromcsv(list(parsecsv().values())[0]).children_ingredients.values())[2].ingredient_name
         test_ingredient_parent: Ingredient = list(createtreefromcsv(
             list(parsecsv().values())[0]).children_ingredients.values())[2].parent_ingredient
         test_list: list = combine_ingredient_tree(
@@ -24,4 +23,8 @@ class TestIngredientSearchAndParse(unittest.TestCase):
 
     def test_createsubtree(self):  # todo finish later
         test_ingredient: Ingredient = create_subtree()
-        self.assertNotEqual()
+        self.skipTest('test not implemented yet')
+    def test_parsesearch_anylevel(self):
+        # test the function that will search for any parent ingredient and then search for its children, returns as a list
+        
+        self.skipTest('test not implemented yet')
