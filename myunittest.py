@@ -1,21 +1,6 @@
 import unittest
 from random import randint
-from main import Ingredient, parsecsv, combine_ingredient_tree, createtreefromcsv,create_subtree
-
-
-def fib(n: int) -> int:
-    if n <= 1:
-        return 1
-    return fib(n-1)+fib(n-2)
-
-
-class test_setup(unittest.TestCase):
-
-    def test_setup(self):
-        fibelements: list = []
-        for _ in range(10):
-            fibelements.append(_+1)
-        self.assertGreaterEqual(len(fibelements), 5)
+from main import Ingredient, parsecsv, combine_ingredient_tree, createtreefromcsv
 
 
 class TestIngredientSearchAndParse(unittest.TestCase):
@@ -34,8 +19,9 @@ class TestIngredientSearchAndParse(unittest.TestCase):
             list(parsecsv().values())[0]).children_ingredients.values())[2].parent_ingredient
         test_list: list = combine_ingredient_tree(
             test_ingredient_name, test_ingredient_parent)
-        self.assertGreaterEqual(2,len(test_list))
-        #self.assertEqual(test_ingredient_parent.ingredient_name,'industrial battery')
-    def test_createsubtree(self): # todo finish later
-        test_ingredient : Ingredient = create_subtree()
+        self.assertGreaterEqual(2, len(test_list))
+        # self.assertEqual(test_ingredient_parent.ingredient_name,'industrial battery')
+
+    def test_createsubtree(self):  # todo finish later
+        test_ingredient: Ingredient = create_subtree()
         self.assertNotEqual()
