@@ -7,8 +7,7 @@ class TestIngredientSearchAndParse(unittest.TestCase):
     # ? instant conversion from dict to list : list(parsecsv().values())[I]
     def testdict_parsesearch(self):  # todo finish this
         #! the first head ingredient in the csv file : list(parsecsv().values())[0]
-        prime_val = list(createtreefromcsv(list(parsecsv().values())[
-                         0]).children_ingredients.values())[2].ingredient_name
+        prime_val = list(createtreefromcsv(list(parsecsv().values())[0]).children_ingredients.values())[2].ingredient_name
         self.assertEqual(prime_val, 'quantum processor')
 
     def testsearch(self):
@@ -26,5 +25,5 @@ class TestIngredientSearchAndParse(unittest.TestCase):
         self.skipTest('test not implemented yet')
     def test_parsesearch_anylevel(self):
         # test the function that will search for any parent ingredient and then search for its children, returns as a list
-        
+        parsecsv_anything()
         self.skipTest('test not implemented yet')

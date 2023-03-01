@@ -1211,18 +1211,18 @@ def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingr
         return Ingredient(ingredient_name, promptamountsOn=False)
     # parse through the entire csv file for the parent Node
     # if parse is successful, parse for any children nodes
+    parent_of_default : Ingredient = None
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
         blue: list = list(purple[1].values())
-        parent_of_default: Ingredient = Ingredient(
-            parent_ingredient_name, None, promptamountsOn=False)
-        return Ingredient(ingredient_name, promptamountsOn=False)
+        parent_of_default= Ingredient(parent_ingredient_name, None, promptamountsOn=False)
+    return Ingredient(ingredient_name, promptamountsOn=False)
 
 
 def create_subtree() -> Ingredient:
     """
     Purpose: one
     """
-    pass
+    return Ingredient('TEST INGREDIENT NODE',None)
 
 
 # end def
