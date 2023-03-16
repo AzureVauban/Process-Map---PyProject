@@ -8,6 +8,7 @@ TODOS:
 - - possibly organizing ingredient trees into groups (add some kind of hash code in the event of duplicate group names)
 - - if numeric input is blank, default user input to 1
 - - removing ingredient trees from saved csv file
+- - add functionality to rename the recipe tree if it is recreated from the CSV file 
 """
 
 import math
