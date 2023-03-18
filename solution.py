@@ -1,9 +1,11 @@
 """
-Reworked Main Process Map with needed changes
+Reworked Process Map with needed changes:
+Improved Recursive math method
+- calculation with floats
+
 Reworked csv parsing and writing
 - parsing works at any level from any node
 - ability to organize recipes into groups with their own unique string key
-Caculation with floats
 - commands
 - - view (render the recipe tree into the console)
 - - rename (any ingredient in the recipe)
@@ -11,6 +13,8 @@ Caculation with floats
 
 # FORMAT TO PEP8 STANDARDS
 """
+
+from time import sleep
 
 
 class Queue:
@@ -107,24 +111,49 @@ class Queue:
 
 class Base:
     # TODO ADD/IMPORT
-    pass
+    name: str = 'None'
+    on_hand: float = 0
+    needed_per_craft: float = 0  # quantity of item it takes to craft resultant once
+    # todo determine if resultant_made_per_craft type should be a float/int
+    resultant_made_per_craft: int = 0  # quantity of resultant made per craft
+    resultant_resulted: float = 0  # quantity of resultant made
+
+    def __init__(self, name: str = '',
+                 on_hand: float = 0,
+                 needed_per_craft: float = 1,
+                 parent_made_per_craft: float = 0) -> None:
+        self.name = name
+        self.on_hand = on_hand
+        self.needed_per_craft = needed_per_craft
+        self.resultant_made_per_craft = parent_made_per_craft
+        self.resultant_resulted = 0
 
 
 class Ingredient(Base):
     # TODO ADD/IMPORT
+    parent_ingredient = None  # todo rename to parent
+    children: list = []
     pass
 
 
 class Recipe:
     # TODO ADD/IMPORT
-    tentative: Ingredient = None
+    resultant_item: Ingredient = None
+    group_identifer_key: str = 'N/A'
+    population: int = 0
+
+    def __init__(self, ingredient: Ingredient) -> None:
+        if not isinstance(ingredient, Ingredient):
+            raise TypeError(
+                'input ingredient node must be an instance of', Ingredient)
+        self.resultant_item = head(ingredient)
 
 
 def head(current: Ingredient) -> Ingredient:
     """
-    traverse to the parent most Ingredient
+    traverse to the parent-most Ingredient
     Args:
-        ingredient (Ingredient): starting Ingredient
+        current (Ingredient): starting Ingredient
     Returns:
         Ingredient: parent most Ingredient of the starting Ingredient
     """
@@ -133,5 +162,16 @@ def head(current: Ingredient) -> Ingredient:
     return current
 
 
+def populate(current: Ingredient) -> Ingredient:
+    return head(current)
+
+
 if __name__ == '__main__':
     print('Hello World from the devel 3.0!')
+    # close program in 10 seconds
+    print('the program will close in 10 seconds')
+    NANI: int = 10
+    while NANI > 0:
+        sleep(1)
+        NANI -= 1
+    print('terminating program')
