@@ -69,6 +69,42 @@ class Queue:
             return self.size > self.max_size
         return False
 
+    def enqueue(self, data):
+        """add data to the back of the container instance"""
+        if self.is_empty():
+            # ? overwrite the head Node
+            self.head = self.Node(None, data, None)
+        else:
+            # append a new node to the end of the container instance
+            old_endpoint: self.Node = self.__get_end()
+            self.__check_data_typing(old_endpoint, data)
+            # link Node pointers of old and new endpoint
+            new_endpoint: self.Node = self.Node(old_endpoint, data, None)
+            old_endpoint.after = new_endpoint
+        # set the new indicies
+        self.__set_index()
+        # change the size of the container instance
+        self.size += 1
+
+    def dequeue(self) -> None:
+        """remove data from the back of the container instance"""
+        if self.is_empty():
+            raise ValueError('cannot pop any values from an empty container')
+        if self.is_full():
+            raise ValueError("The container is full")
+        old_head_node: self.Node = self.head
+        return_data = old_head_node.data
+        new_head_node: self.Node = None
+        if old_head_node.after is not None:
+            new_head_node = old_head_node.after
+            new_head_node.before = None
+        self.head = new_head_node
+        del old_head_node
+        self.size -= 1
+        # set the new indicies
+        self.__set_index()
+        return return_data
+
 
 class Base:
     # TODO ADD/IMPORT
