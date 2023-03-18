@@ -14,7 +14,6 @@ Caculation with floats
 
 
 class Queue:
-    # TODO ADD/IMPORT
     class Node:
         index: int
         data = None
@@ -121,6 +120,18 @@ class Recipe:
     tentative: Ingredient = None
 
 
-def head(current: Ingredient = None) -> Ingredient:
-    # TODO ADD/IMPORT
+def head(current: Ingredient) -> Ingredient:
+    """
+    traverse to the parent most Ingredient
+    Args:
+        ingredient (Ingredient): starting Ingredient
+    Returns:
+        Ingredient: parent most Ingredient of the starting Ingredient
+    """
+    while current.parent_ingredient is not None:
+        current = current.parent_ingredient
     return current
+
+
+if __name__ == '__main__':
+    print('Hello World from the devel 3.0!')
