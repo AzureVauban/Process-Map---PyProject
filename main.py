@@ -9,6 +9,7 @@ TODOS:
 - - if numeric input is blank, default user input to 1
 - - removing ingredient trees from saved csv file
 - - add functionality to rename the recipe tree if it is recreated from the CSV file 
+- - debug MODE A when recreated from the recipe tree CSV file
 """
 
 import math
@@ -259,6 +260,8 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
     instances: int = 0
     instancekey: int = 0
     treekey: str = ''
+    grouping_recipe_key: str = ' '
+    #! new variable, should be treated like the treekey, mean't to classify multiple recipes into a subgroup of each other
     isfromcsvfile: bool = False
     population: int = 1
 
@@ -525,6 +528,27 @@ class Ingredient(Base):  # pylint: disable=R0913 #pylint: disable=R0902
                 else:
                     print(string, end=', ')
             print(')')
+
+
+class Recipe:  # ? tentative class
+    recipe_name: str = ''
+    resultant_item: Ingredient = None
+    recipe_populaton: int = 0
+    # store options for editing the Recipe Tree
+    enable_editing_amounts: bool = False
+    enable_renaming_ingredients: bool = False
+
+    def __init__(self, resultant_item: Ingredient = None) -> None:
+        self.resultant_item = head(resultant_item)
+        if self.resultant_item is not None:
+            self.recipe_name = resultant_item.ingredient_name
+            self.recipe_populaton = nodecount(self.resultant_item)
+        else:
+            self.recipe_name = 'NONE_DEFAULT'
+            self.recipe_populaton = 0
+
+    def getter_recipe_head(self) -> Ingredient:
+        return head(self.resultant_item)
 
 
 def nodecount(ingredient: Ingredient) -> int:
@@ -1212,10 +1236,11 @@ def parsecsv_anything(ingredient_name: str, parent_ingredient_name: str) -> Ingr
         return Ingredient(ingredient_name, promptamountsOn=False)
     # parse through the entire csv file for the parent Node
     # if parse is successful, parse for any children nodes
-    parent_of_default : Ingredient = None
+    parent_of_default: Ingredient = None
     for purple in pandas.read_csv(FILENAME).to_dict('index').items():
         blue: list = list(purple[1].values())
-        parent_of_default= Ingredient(parent_ingredient_name, None, promptamountsOn=False)
+        parent_of_default = Ingredient(
+            parent_ingredient_name, None, promptamountsOn=False)
     return Ingredient(ingredient_name, promptamountsOn=False)
 
 
@@ -1223,7 +1248,7 @@ def create_subtree() -> Ingredient:
     """
     Purpose: one
     """
-    return Ingredient('TEST INGREDIENT NODE',None)
+    return Ingredient('TEST INGREDIENT NODE', None)
 
 
 # end def
