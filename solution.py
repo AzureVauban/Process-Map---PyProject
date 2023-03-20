@@ -16,6 +16,19 @@ Reworked csv parsing and writing
 
 from time import sleep
 
+valid_commands_list: list = ['--help',  # outputs a list of commands
+                                        # for the user*
+                             '--view',  # renders the local branch of the
+                                        # recipe tree*
+                             '--edit',  # output a list of Nodes in the
+                                        # recipe tree and prompts the user to
+                                        # choose one to modify*
+                             '--preview'  # outputs a list of Nodes in the
+                                          # recipe tree and prompts the
+                                          # user to choose one to preview
+                                          # the resulting amount*
+                             ]  # commands with * in the desc should be used during the populate method
+
 
 class Queue:
     class Node:
@@ -131,9 +144,21 @@ class Base:
 
 class Ingredient(Base):
     # TODO ADD/IMPORT
-    parent_ingredient = None  # todo rename to parent
-    children: list = []
-    pass
+    parent = None  # todo rename to parent
+    children: list= []
+    generation: int = 0
+
+    def __init__(self, name: str = '',
+                 parent=None,
+                 on_hand: float = 0,
+                 needed_per_craft: float = 1,
+                 parent_made_per_craft: float = 0) -> None:
+        super().__init__(name, on_hand, needed_per_craft, parent_made_per_craft)
+        self.parent = parent
+        if parent is not None and not isinstance(parent,Ingredient):
+            raise TypeError()
+        self.parent = parent
+        self.children = []
 
 
 class Recipe:
