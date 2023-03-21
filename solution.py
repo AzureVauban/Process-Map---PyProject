@@ -145,8 +145,7 @@ class Base:
 class Ingredient(Base):
     # TODO ADD/IMPORT
     parent = None  # todo rename to parent
-    children: list= []
-    generation: int = 0
+    children: list = []
 
     def __init__(self, name: str = '',
                  parent=None,
@@ -154,9 +153,9 @@ class Ingredient(Base):
                  needed_per_craft: float = 1,
                  parent_made_per_craft: float = 0) -> None:
         super().__init__(name, on_hand, needed_per_craft, parent_made_per_craft)
-        self.parent = parent
-        if parent is not None and not isinstance(parent,Ingredient):
-            raise TypeError()
+        if parent is not None and not isinstance(parent, Ingredient):
+            raise TypeError('Parent must be', None,
+                            'or and instance of', Ingredient)
         self.parent = parent
         self.children = []
 
@@ -182,19 +181,99 @@ def head(current: Ingredient) -> Ingredient:
     Returns:
         Ingredient: parent most Ingredient of the starting Ingredient
     """
-    while current.parent_ingredient is not None:
-        current = current.parent_ingredient
+    while current.parent is not None:
+        current = current.parent
     return current
 
 
+def command_prompt(command_string_input: str,  # command string
+                   ingredient: Ingredient  # ingredient Node
+                   ):
+    if command_string_input == '--help':
+        help_recipe()
+    elif command_string_input == '--view':
+        view_recipe()
+    elif command_string_input == '--edit':
+        # parse through the recipe tree and prompt the user if they want to edit a node
+        edit_recipe(ingredient) # TODO finish
+    elif command_string_input == '--preview':
+        preview_recipe()
+    else:
+        print('not a valid command')
+
+
+def help_recipe():
+    pass
+
+
+def view_recipe():
+    pass
+
+def parse_and_enqueue(ingredient: Ingredient,
+                      enqueued_recipe : list)->list:
+    for child in ingredient.children:
+        parse_and_enqueue(child,enqueued_recipe)
+    return enqueued_recipe
+
+def edit_recipe(ingredient: Ingredient)->Ingredient:
+    # have a parse through method, parse through the entire recipe tree 
+    # enqueue all ingredients in the recipe, then have the user select
+    # which node they want to change the details of, return selected node
+    ingredients : list = parse_and_enqueue(ingredient,[])
+    for ingredient in ingredients:
+        # todo finish later
+    return ingredient
+
+
+def preview_recipe():
+    pass
+
+
 def populate(current: Ingredient) -> Ingredient:
+    new_ingredients: Queue = Queue()
+    # todo add ingredient blacklist later
+    ingredient_blacklist: list = [head(current).name]
+    if current.parent is not None:
+        ingredient_blacklist.append(current.parent.name)
+    # prompt user for additional ingredients in the recipe
+    print('What do you need to create', current.name, end=':\n')
+    while True:
+        ingredient_str: str = input().strip()
+        if len(ingredient_str) == 0:
+            break
+        elif ingredient_str in ingredient_blacklist:
+            print('YOU CANNOT REPEAT INPUTS')
+        elif ingredient_str in valid_commands_list:
+            command_prompt(ingredient_str)
+            continue
+        else:
+            new_ingredients.enqueue(ingredient_str)
+            ingredient_blacklist.append(ingredient_str)
+    # create add ingredients to the recipe
+    while not new_ingredients.is_empty():
+        current.children.append(Ingredient(new_ingredients.dequeue(), current))
+    # link ingredients to the recipe recursively
+    for child in current.children:
+        populate(child)
     return head(current)
+
+
+def superpopulate() -> Ingredient:
+    print('What is the name of the item you want to create:', end='\n')
+    while True:
+        recipe_title: str = input().strip()
+        if len(recipe_title) > 0:
+            break
+    # todo add functionality for numeric input
+    return populate(Ingredient(recipe_title, None))
 
 
 if __name__ == '__main__':
     print('Hello World from the devel 3.0!')
+    recipe_tree: Ingredient = superpopulate()
     # close program in 10 seconds
     print('the program will close in 10 seconds')
+    del recipe_tree
     NANI: int = 10
     while NANI > 0:
         sleep(1)
