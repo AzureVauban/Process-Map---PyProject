@@ -193,11 +193,11 @@ def trail(ingredient: Ingredient):
     """
     print('TRAIL: ', end='')
     while True:
-        if ingredient.parent_ingredient is not None:
-            print(ingredient.ingredient_name, '-> ', end='')
-            ingredient = ingredient.parent_ingredient
+        if ingredient.parent is not None:
+            print(ingredient.name, '-> ', end='')
+            ingredient = ingredient.parent
         else:
-            print(ingredient.ingredient_name)
+            print(ingredient.name)
             break
 
 def command_prompt(command_string_input: str,  # command string
@@ -274,7 +274,7 @@ def populate(current: Ingredient) -> Ingredient:
             continue
         else:
             new_ingredients.enqueue(ingredient_str)
-            ingredient_blacklist.append(ingredient_str)
+            ingredient_blacklist.append(ingredient_str)x
     # create add ingredients to the recipe
     while not new_ingredients.is_empty():
         current.children.append(Ingredient(new_ingredients.dequeue(), current))
