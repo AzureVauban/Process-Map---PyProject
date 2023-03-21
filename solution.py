@@ -15,7 +15,7 @@ Reworked csv parsing and writing
 """
 
 from time import sleep
-
+from random import randint
 valid_commands_list: list = ['--help',  # outputs a list of commands
                                         # for the user*
                              '--view',  # renders the local branch of the
@@ -185,6 +185,20 @@ def head(current: Ingredient) -> Ingredient:
         current = current.parent
     return current
 
+def trail(ingredient: Ingredient):
+    """
+    print the ingredient trail leading up to the parent most Ingredient
+    Args:
+        ingredient (Ingredient): starting Ingredient
+    """
+    print('TRAIL: ', end='')
+    while True:
+        if ingredient.parent_ingredient is not None:
+            print(ingredient.ingredient_name, '-> ', end='')
+            ingredient = ingredient.parent_ingredient
+        else:
+            print(ingredient.ingredient_name)
+            break
 
 def command_prompt(command_string_input: str,  # command string
                    ingredient: Ingredient  # ingredient Node
@@ -241,15 +255,22 @@ def populate(current: Ingredient) -> Ingredient:
     if current.parent is not None:
         ingredient_blacklist.append(current.parent.name)
     # prompt user for additional ingredients in the recipe
+    trail(current)
     print('What do you need to create', current.name, end=':\n')
     while True:
         ingredient_str: str = input().strip()
         if len(ingredient_str) == 0:
             break
+        elif ingredient_str == '--r':
+            # randomly generate a random amount of ingredient names 
+            random_generated_names : list = []
+            for _ in range (randint(0,10)):
+                pass
+            continue
         elif ingredient_str in ingredient_blacklist:
             print('YOU CANNOT REPEAT INPUTS')
         elif ingredient_str in valid_commands_list:
-            command_prompt(ingredient_str)
+            command_prompt(ingredient_str,current)
             continue
         else:
             new_ingredients.enqueue(ingredient_str)
