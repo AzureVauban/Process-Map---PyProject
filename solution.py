@@ -195,7 +195,7 @@ def command_prompt(command_string_input: str,  # command string
         view_recipe()
     elif command_string_input == '--edit':
         # parse through the recipe tree and prompt the user if they want to edit a node
-        edit_recipe(ingredient) # TODO finish
+        edit_recipe(ingredient)  # TODO finish
     elif command_string_input == '--preview':
         preview_recipe()
     else:
@@ -209,20 +209,25 @@ def help_recipe():
 def view_recipe():
     pass
 
+
 def parse_and_enqueue(ingredient: Ingredient,
-                      enqueued_recipe : list)->list:
+                      enqueued_recipe: list) -> list:
     for child in ingredient.children:
-        parse_and_enqueue(child,enqueued_recipe)
+        parse_and_enqueue(child, enqueued_recipe)
     return enqueued_recipe
 
-def edit_recipe(ingredient: Ingredient)->Ingredient:
-    # have a parse through method, parse through the entire recipe tree 
+
+def edit_recipe(ingredient: Ingredient) -> Ingredient:
+    # have a parse through method, parse through the entire recipe tree
     # enqueue all ingredients in the recipe, then have the user select
     # which node they want to change the details of, return selected node
-    ingredients : list = parse_and_enqueue(ingredient,[])
-    for ingredient in ingredients:
+    ingredients: list = parse_and_enqueue(ingredient, [])
+    for index, ingredient in enumerate(ingredients):
         # todo finish later
-    return ingredient
+        print(index, ingredient.name)
+    return ingredients[int(input(
+        'Which ingredient do you want to edit (choose between 0 and',
+        len(ingredients), ')'))]
 
 
 def preview_recipe():
