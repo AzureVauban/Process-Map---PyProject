@@ -173,6 +173,26 @@ class Recipe:
         self.resultant_item = head(ingredient)
 
 
+def promptint(default_input_to_one: bool = False) -> int:
+    """
+    prompts the user for an postive integer and returns it
+    Returns:
+        int: postive integer from user input
+    """
+    while True:
+        myinput = input('').strip()
+        if len(myinput) == 0 and default_input_to_one:  # todo check this
+            return 1
+        elif len(myinput) == 0 and not default_input_to_one:  # todo check this
+            return 0
+        elif not myinput.isdigit():
+            print('you can only type in a positive integer')
+        elif int(myinput) < 0:
+            print('please type in a postive integer')
+        else:
+            return int(myinput)
+
+
 def head(current: Ingredient) -> Ingredient:
     """
     traverse to the parent-most Ingredient
@@ -184,6 +204,7 @@ def head(current: Ingredient) -> Ingredient:
     while current.parent is not None:
         current = current.parent
     return current
+
 
 def trail(ingredient: Ingredient):
     """
@@ -199,6 +220,7 @@ def trail(ingredient: Ingredient):
         else:
             print(ingredient.name)
             break
+
 
 def command_prompt(command_string_input: str,  # command string
                    ingredient: Ingredient  # ingredient Node
@@ -239,9 +261,9 @@ def edit_recipe(ingredient: Ingredient) -> Ingredient:
     for index, ingredient in enumerate(ingredients):
         # todo finish later
         print(index, ingredient.name)
-    return ingredients[int(input(
-        'Which ingredient do you want to edit (choose between 0 and',
-        len(ingredients), ')'))]
+        print('Which ingredient do you want to edit (choose between 0 and',
+              len(ingredients), ')')
+    return ingredients[promptint(False)-1]
 
 
 def preview_recipe():
@@ -262,15 +284,15 @@ def populate(current: Ingredient) -> Ingredient:
         if len(ingredient_str) == 0:
             break
         elif ingredient_str == '--r':
-            # randomly generate a random amount of ingredient names 
-            random_generated_names : list = []
-            for _ in range (randint(0,10)):
+            # randomly generate a random amount of ingredient names
+            random_generated_names: list = []
+            for _ in range(randint(0, 10)):
                 pass
             continue
         elif ingredient_str in ingredient_blacklist:
             print('YOU CANNOT REPEAT INPUTS')
         elif ingredient_str in valid_commands_list:
-            command_prompt(ingredient_str,current)
+            command_prompt(ingredient_str, current)
             continue
         else:
             new_ingredients.enqueue(ingredient_str)
