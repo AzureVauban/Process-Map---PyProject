@@ -29,7 +29,8 @@ valid_commands_list: list = ['--help',  # outputs a list of commands
                                           # the resulting amount*
                              ]  # commands with * in the desc should be used during the populate method
 
-
+def generate_settings_file()->None:
+    return None
 class Queue:
     class Node:
         index: int
@@ -240,7 +241,8 @@ def command_prompt(command_string_input: str,  # command string
         view_recipe()
     elif command_string_input == '--edit':
         # parse through the recipe tree and prompt the user if they want to edit a node
-        edit_recipe(ingredient)  # TODO finish
+        # edit_recipe(ingredient)  # TODO finish (disable for now, 0-print)
+        pass 
     elif command_string_input == '--preview':
         preview_recipe()
     else:
@@ -329,6 +331,7 @@ def superpopulate() -> Ingredient:
 
 
 if __name__ == '__main__':
+    # check for settings file 
     print('Hello World from the devel 3.0!')
     recipe_tree: Ingredient = superpopulate()
     # close program in 10 seconds
