@@ -318,13 +318,13 @@ def populate(current: Ingredient, preview: Ingredient) -> Ingredient:
         else:
             new_ingredients.enqueue(ingredient_str)
             ingredient_blacklist.append(ingredient_str)
-            Ingredient(generated_str,preview)
+            Ingredient(ingredient_str,preview)
     # create add ingredients to the recipe
     while not new_ingredients.is_empty():
         current.children.append(Ingredient(new_ingredients.dequeue(), current))
     # link ingredients to the recipe recursively
-    for child in enmuerate(current.children):
-        populate(child)
+    for index,child in enumerate(current.children):
+        populate(child,preview.children[index])
     return head(current)
 
 
