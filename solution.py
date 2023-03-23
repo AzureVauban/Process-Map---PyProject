@@ -323,8 +323,8 @@ def populate(current: Ingredient, preview: Ingredient) -> Ingredient:
     while not new_ingredients.is_empty():
         current.children.append(Ingredient(new_ingredients.dequeue(), current))
     # link ingredients to the recipe recursively
-    for child in current.children:
-        populate(child, preview)
+    for child in enmuerate(current.children):
+        populate(child)
     return head(current)
 
 
@@ -335,7 +335,7 @@ def superpopulate() -> Ingredient:
         if len(recipe_title) > 0:
             break
     # todo add functionality for numeric input
-    preview_tree : Ingredient(recipe_title,None)
+    preview_tree : Ingredient = Ingredient(recipe_title,None)
     return populate(Ingredient(recipe_title, None),preview_tree)
 
 
