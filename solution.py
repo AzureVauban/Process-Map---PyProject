@@ -15,7 +15,7 @@ Reworked csv parsing and writing
 """
 
 from time import sleep
-from random import randint,choice
+from random import randint, choice
 valid_commands_list: list = ['--help',  # outputs a list of commands
                                         # for the user*
                              '--view',  # renders the local branch of the
@@ -29,8 +29,11 @@ valid_commands_list: list = ['--help',  # outputs a list of commands
                                           # the resulting amount*
                              ]  # commands with * in the desc should be used during the populate method
 
-def generate_settings_file()->None:
+
+def generate_settings_file() -> None:
     return None
+
+
 class Queue:
     class Node:
         index: int
@@ -222,15 +225,17 @@ def trail(ingredient: Ingredient):
             print(ingredient.name)
             break
 
+
 def RAND_STR_GEN(maxlength: int = randint(10, 20)) -> str:
-        """
-        generate a unique tree key of random alphumeric characters
-        """
-        treekey = ''
-        for _ in range(0, maxlength):
-            treekey += choice(
-                '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-        return treekey
+    """
+    generate a unique tree key of random alphumeric characters
+    """
+    treekey = ''
+    for _ in range(0, maxlength):
+        treekey += choice(
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    return treekey
+
 
 def command_prompt(command_string_input: str,  # command string
                    ingredient: Ingredient  # ingredient Node
@@ -242,7 +247,7 @@ def command_prompt(command_string_input: str,  # command string
     elif command_string_input == '--edit':
         # parse through the recipe tree and prompt the user if they want to edit a node
         # edit_recipe(ingredient)  # TODO finish (disable for now, 0-print)
-        pass 
+        pass
     elif command_string_input == '--preview':
         preview_recipe()
     else:
@@ -271,7 +276,7 @@ def edit_recipe(ingredient: Ingredient) -> Ingredient:
     ingredients: list = parse_and_enqueue(ingredient, [])
     for index, ingredient in enumerate(ingredients):
         # todo finish later
-        print(index,':',ingredient.name)
+        print(index, ':', ingredient.name)
         print('Which ingredient do you want to edit (choose between 0 and',
               len(ingredients), ')')
     return ingredients[promptint(False)-1]
@@ -298,10 +303,10 @@ def populate(current: Ingredient) -> Ingredient:
             # randomly generate a random amount of ingredient names
             random_generated_names: list = []
             for _ in range(randint(0, 10)):
-                generated_str : str = RAND_STR_GEN(randint(4,20))
+                generated_str: str = RAND_STR_GEN(randint(4, 20))
                 ingredient_blacklist.append(generated_str)
                 new_ingredients.enqueue(generated_str)
-                print('ADDED STRING:',end=generated_str+'\n')
+                print('ADDED STRING:', end=generated_str+'\n')
             continue
         elif ingredient_str in ingredient_blacklist:
             print('YOU CANNOT REPEAT INPUTS')
@@ -331,7 +336,7 @@ def superpopulate() -> Ingredient:
 
 
 if __name__ == '__main__':
-    # check for settings file 
+    # check for settings file
     print('Hello World from the devel 3.0!')
     recipe_tree: Ingredient = superpopulate()
     # close program in 10 seconds
