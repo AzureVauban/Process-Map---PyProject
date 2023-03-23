@@ -286,7 +286,8 @@ def preview_recipe():
     pass
 
 
-def populate(current: Ingredient) -> Ingredient:
+def populate(current: Ingredient, preview: Ingredient) -> Ingredient:
+    # preview is an mock recipe tree that can be rendered,update concurrently with I/O
     new_ingredients: Queue = Queue()
     # todo add ingredient blacklist later
     ingredient_blacklist: list = [head(current).name]
@@ -306,6 +307,7 @@ def populate(current: Ingredient) -> Ingredient:
                 generated_str: str = RAND_STR_GEN(randint(4, 20))
                 ingredient_blacklist.append(generated_str)
                 new_ingredients.enqueue(generated_str)
+                preview.children.append(Ingredient(generated_str,preview))
                 print('ADDED STRING:', end=generated_str+'\n')
             continue
         elif ingredient_str in ingredient_blacklist:
@@ -316,12 +318,13 @@ def populate(current: Ingredient) -> Ingredient:
         else:
             new_ingredients.enqueue(ingredient_str)
             ingredient_blacklist.append(ingredient_str)
+            Ingredient(generated_str,preview)
     # create add ingredients to the recipe
     while not new_ingredients.is_empty():
         current.children.append(Ingredient(new_ingredients.dequeue(), current))
     # link ingredients to the recipe recursively
     for child in current.children:
-        populate(child)
+        populate(child, preview)
     return head(current)
 
 
@@ -332,7 +335,8 @@ def superpopulate() -> Ingredient:
         if len(recipe_title) > 0:
             break
     # todo add functionality for numeric input
-    return populate(Ingredient(recipe_title, None))
+    preview_tree : Ingredient(recipe_title,None)
+    return populate(Ingredient(recipe_title, None),preview_tree)
 
 
 if __name__ == '__main__':
