@@ -264,7 +264,7 @@ def view_recipe():
 
 def parse_and_enqueue(ingredient: Ingredient,
                       enqueued_recipe: list) -> list:
-    enqueued_recipe.append(enqueued_recipe)
+    enqueued_recipe.append(ingredient.name)
     for child in ingredient.children:
         parse_and_enqueue(child, enqueued_recipe)
     
@@ -276,9 +276,9 @@ def edit_recipe(ingredient: Ingredient) -> Ingredient:
     # enqueue all ingredients in the recipe, then have the user select
     # which node they want to change the details of, return selected node
     ingredients: list = parse_and_enqueue(ingredient, [])
-    for index, ingredient in enumerate(ingredients):
+    for index, ingredient_name in enumerate(ingredients):
         # todo finish later
-        print(index, ':', ingredient.name)
+        print(index, ':', ingredient_name)
         print('Which ingredient do you want to edit (choose between 0 and',
               len(ingredients), ')')
     return ingredients[promptint(False)-1]
