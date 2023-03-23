@@ -238,7 +238,8 @@ def RAND_STR_GEN(maxlength: int = randint(10, 20)) -> str:
 
 
 def command_prompt(command_string_input: str,  # command string
-                   ingredient: Ingredient  # ingredient Node
+                   ingredient: Ingredient,  # ingredient Node
+                   preview : Ingredient # preview recipe Node
                    ):
     if command_string_input == '--help':
         help_recipe()
@@ -246,10 +247,9 @@ def command_prompt(command_string_input: str,  # command string
         view_recipe()
     elif command_string_input == '--edit':
         # parse through the recipe tree and prompt the user if they want to edit a node
-        # edit_recipe(ingredient)  # TODO finish (disable for now, 0-print)
-        pass
+        edit_recipe(head(preview))  # TODO finish (disable for now, 0-print)
     elif command_string_input == '--preview':
-        preview_recipe()
+        preview_recipe(head(preview_recipe))
     else:
         print('not a valid command')
 
@@ -313,7 +313,7 @@ def populate(current: Ingredient, preview: Ingredient) -> Ingredient:
         elif ingredient_str in ingredient_blacklist:
             print('YOU CANNOT REPEAT INPUTS')
         elif ingredient_str in valid_commands_list:
-            command_prompt(ingredient_str, current)
+            command_prompt(ingredient_str, current,preview)
             continue
         else:
             new_ingredients.enqueue(ingredient_str)
