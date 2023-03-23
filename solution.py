@@ -264,7 +264,7 @@ def view_recipe():
 
 def parse_and_enqueue(ingredient: Ingredient,
                       enqueued_recipe: list) -> list:
-    parse_and_enqueue.append(enqueued_recipe)
+    enqueued_recipe.append(enqueued_recipe)
     for child in ingredient.children:
         parse_and_enqueue(child, enqueued_recipe)
     
