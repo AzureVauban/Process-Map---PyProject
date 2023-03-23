@@ -150,7 +150,7 @@ class Ingredient(Base):
     # TODO ADD/IMPORT
     parent = None  # todo rename to parent
     children: list = []
-
+    ingredient_identifier : str = ''
     def __init__(self, name: str = '',
                  parent=None,
                  on_hand: float = 0,
@@ -162,6 +162,7 @@ class Ingredient(Base):
                             'or and instance of', Ingredient)
         self.parent = parent
         self.children = []
+        self.ingredient_identifier = RAND_STR_GEN(randint(5,30))
 
 
 class Recipe:
@@ -264,24 +265,27 @@ def view_recipe():
 
 def parse_and_enqueue(ingredient: Ingredient,
                       enqueued_recipe: list) -> list:
-    enqueued_recipe.append(ingredient.name)
+    enqueued_recipe.append(tuple(ingredient.name,ingredient.ingredient_identifier))
     for child in ingredient.children:
         parse_and_enqueue(child, enqueued_recipe)
     
     return enqueued_recipe
 
+test : dict = {}
 
 def edit_recipe(ingredient: Ingredient) -> Ingredient:
     # have a parse through method, parse through the entire recipe tree
     # enqueue all ingredients in the recipe, then have the user select
     # which node they want to change the details of, return selected node
     ingredients: list = parse_and_enqueue(ingredient, [])
+    # prompt user to select the ingredient they want to modify
     for index, ingredient_name in enumerate(ingredients):
         # todo finish later
         print(index, ':', ingredient_name)
-        print('Which ingredient do you want to edit (choose between 0 and',
-              len(ingredients), ')')
-    return ingredients[promptint(False)-1]
+    print('Which ingredient do you want to edit (choose between 0 and',
+            len(ingredients), ')')
+    selected_node  = ingredients[promptint(True)-1] # get the ingredient name and unique id
+    return selected_node
 
 
 def preview_recipe():
