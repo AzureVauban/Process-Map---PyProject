@@ -263,28 +263,31 @@ def view_recipe():
     pass
 
 
-def parse_and_enqueue(ingredient: Ingredient,
+def parse_and_list(ingredient: Ingredient,
                       enqueued_recipe: list) -> list:
     enqueued_recipe.append(tuple(ingredient.name,ingredient.ingredient_identifier))
     for child in ingredient.children:
-        parse_and_enqueue(child, enqueued_recipe)
-    
+        parse_and_list(child, enqueued_recipe)
     return enqueued_recipe
-
-test : dict = {}
+def paarse_and_obtain(current: Ingredient, #source of recipe
+                            inquiry_name : str, # name of ingredient to search for
+                            inquiry_ID:str)->Ingredient: # ID of ingredient to search for
+    if current.name == inquiry_name and current.ingredient_identifier == inquiry_ID:
+        return current
+    return Ingredient('DNE',None,-1,-1,-1) # return if doesn't exist in tree
 
 def edit_recipe(ingredient: Ingredient) -> Ingredient:
     # have a parse through method, parse through the entire recipe tree
     # enqueue all ingredients in the recipe, then have the user select
     # which node they want to change the details of, return selected node
-    ingredients: list = parse_and_enqueue(ingredient, [])
+    ingredients: list = parse_and_list(ingredient, [])
     # prompt user to select the ingredient they want to modify
     for index, ingredient_name in enumerate(ingredients):
         # todo finish later
         print(index, ':', ingredient_name)
-    print('Which ingredient do you want to edit (choose between 0 and',
-            len(ingredients), ')')
-    selected_node  = ingredients[promptint(True)-1] # get the ingredient name and unique id
+    print('Which ingredient do you want to edit (choose between 0 and',len(ingredients), ')')
+    search_target : tuple = ingredients[promptint(True)-1] # get the ingredient name and unique id
+    selected_node : Ingredient = paarse_and_obtain(head(ingredient),search_target[0],search_target[1]) # find node with the same ingredient name and ID
     return selected_node
 
 
